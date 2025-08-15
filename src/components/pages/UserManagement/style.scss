@@ -1,0 +1,53 @@
+@import "../../_settings/_variables.scss";
+
+.title-user-management {
+    padding: 10px 10px 0 6px;
+}
+
+.searching-user-management {
+    width: 25%;
+    margin: 0px 0px 20px 10px;
+
+}
+
+.table-user {
+    margin-left: 10px;
+}
+
+.active-button-user-management {
+    text-align: center;
+    width: 200px;
+}
+
+.button-lock-user {
+    width: 170px;
+}
+
+/* Mobile: width < 740px */
+@media only screen and (max-width:739px){
+
+}
+/* Tablet: width >= 740px and with < 1024px */
+@media only screen and (max-width: 1023px) {
+    .email-text {
+        width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .fullname-text {
+        width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .address-text {
+        width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .button-lock-user {
+        width: 100%;
+    }
+}

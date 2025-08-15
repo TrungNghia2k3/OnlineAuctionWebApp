@@ -1,0 +1,48 @@
+@import "../../_settings/_variables.scss";
+
+.no-header-footer-template {
+  min-height: 100vh;
+  min-width: 100%;
+}
+
+.body-content {
+  display: flex;
+  background-image: url("~/public/images/backgroundlogin.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.left {
+  min-height: 100vh;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.right {
+  min-height: 100vh;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile: width < 740px */
+@media only screen and (max-width: 739px) {
+  .right {
+    width: 100%;
+    margin-right: 80px;
+    padding: 10px;
+  }
+}
+
+/* Tablet: width >= 740px and with < 1024px */
+@media only screen and (min-width: 740px) and (max-width: 1023px) {
+  .right {
+    width: 100%;
+    margin-right: 160px;
+    padding: 10px;
+  }
+}

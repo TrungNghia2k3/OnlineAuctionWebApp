@@ -1,0 +1,6 @@
+{
+  "nguoiDung": "api/he-thong/nguoi-dung",
+  "nguoiDungModule": "api/he-thong/nguoi-dung-module",
+  "nhanSu": "api/danh-muc/nhan-su",
+  "donViTinh": "api/danh-muc/don-vi-tinh"
+}

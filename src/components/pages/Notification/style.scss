@@ -1,0 +1,59 @@
+@import "../../_settings/_variables.scss";
+
+.userName {
+    font-weight: bold;
+}
+
+.itemName {
+    font-weight: bold;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.notification-card-mark {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+.notification-card-un-mark {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #E5EFFA;
+    cursor: pointer;
+}
+
+.nofitication-card-body {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.notification-info-card-body {
+    text-align: start;
+}
+
+.bookMarkIcon {
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 12px;
+}
+
+.productImageNotification {
+    margin: 10px 20px;
+    width: 200px;
+    height: 140px;
+}
+
+.message {
+    width: 900px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

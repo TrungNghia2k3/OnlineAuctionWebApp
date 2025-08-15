@@ -1,0 +1,15 @@
+@import "../../_settings/_variables.scss";
+
+.search-results-items {
+    display: flex;
+    flex-wrap: wrap;
+
+    .search-results-no-item {
+        width: 100%;
+        text-align: center;
+
+        .no-item-information {
+            color: darkgray;
+        }
+    }
+}

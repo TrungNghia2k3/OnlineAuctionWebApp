@@ -1,0 +1,19 @@
+@import '../../../_settings/_variables.scss';
+.image-title {
+  margin-right: 5px;
+  margin-bottom: 4px;
+  width: $image-button-width;
+  height: $image-button-height;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: space-between;
+
+  .buttons-right {
+    display: flex;
+    .btn {
+      margin-left: 4px;
+    }
+  }
+}

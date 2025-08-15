@@ -1,0 +1,15 @@
+@import "../../_settings/_variables.scss";
+
+.buttons-profile {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+
+    .checkbox-lock-account {
+        margin-top: -14px;
+    }
+
+    .buttons-refresh-profile {
+        margin-right: 12px;
+    }
+}
