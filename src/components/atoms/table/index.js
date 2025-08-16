@@ -1,11 +1,36 @@
-import * as React from 'react'
-// import classnames from 'classnames'
-// import styles from './style.scss'
-import { Table as TableLib } from 'react-bootstrap';
+import React from 'react';
+import './style.scss';
 
-function Table({ headers, data }) {
-  return (
-      <TableLib striped bordered hover>
+function Table({ 
+  headers = [], 
+  data = [], 
+  striped = false,
+  bordered = false,
+  borderless = false,
+  hover = false,
+  size,
+  responsive = false,
+  variant,
+  className = '',
+  ...props 
+}) {
+  let classes = 'table';
+  
+  // Add table modifiers
+  if (striped) classes += ' table-striped';
+  if (bordered) classes += ' table-bordered';
+  if (borderless) classes += ' table-borderless';
+  if (hover) classes += ' table-hover';
+  if (size) classes += ` table-${size}`;
+  if (variant) classes += ` table-${variant}`;
+  
+  // Add custom classes
+  if (className) {
+    classes += ` ${className}`;
+  }
+
+  const tableElement = (
+    <table className={classes} {...props}>
       <thead>
         <tr>
           {headers.map((header, index) => (
@@ -22,8 +47,18 @@ function Table({ headers, data }) {
           </tr>
         ))}
       </tbody>
-    </TableLib>
+    </table>
   );
+
+  if (responsive) {
+    return (
+      <div className="table-responsive">
+        {tableElement}
+      </div>
+    );
+  }
+
+  return tableElement;
 }
 
 export default Table;

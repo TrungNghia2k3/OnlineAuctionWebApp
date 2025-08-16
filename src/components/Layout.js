@@ -1,18 +1,17 @@
-import React, { Component } from 'react'
-import './_settings/_base.scss'
-import './Layout.scss'
-import { Container } from 'reactstrap'
+import React, { Component } from 'react';
+import './_settings/_base.scss';
+import './Layout.scss';
 
 export class Layout extends Component {
-  static displayName = Layout.name
+  static displayName = Layout.name;
 
   render() {
     return (
       <div>
-        <Container tag='main' className='main'>
+        <main className="container main">
           {this.props.children}
-        </Container>
+        </main>
       </div>
-    )
+    );
   }
 }

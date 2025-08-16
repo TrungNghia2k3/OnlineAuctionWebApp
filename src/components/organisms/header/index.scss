@@ -15,4 +15,43 @@
       cursor: pointer;
     }
   }
+
+  .guest-buttons {
+    margin-right: 20px;
+    
+    .login-btn, .register-btn {
+      min-width: 80px;
+      height: 40px;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+    
+    .login-btn {
+      border: 2px solid #007bff;
+      color: #007bff;
+      background: transparent;
+      
+      &:hover {
+        background: #007bff;
+        color: white;
+      }
+    }
+    
+    .register-btn {
+      background: #007bff;
+      border: 2px solid #007bff;
+      color: white;
+      
+      &:hover {
+        background: #0056b3;
+        border-color: #0056b3;
+      }
+    }
+  }
 }

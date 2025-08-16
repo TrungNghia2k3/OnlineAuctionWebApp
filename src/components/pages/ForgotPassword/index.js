@@ -1,14 +1,13 @@
 import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
-import { Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 import UserApi from '../../../api/user'
 import { errorMessages } from '../../../common'
 import InformationModal from '../../atoms/modals/Information'
-import AlertFail from '../../molecules/alerts/alert-fail'
-import Button from '../../molecules/buttons/button'
-import TextField from '../../molecules/forms/text-field'
+import AlertFail from '../../molecules/AlertFail'
+import Button from '../../molecules/Button'
+import TextField from '../../molecules/TextField'
 import Template from '../../templates/without-login-template'
 import './style.scss'
 
@@ -57,7 +56,7 @@ const ForgotPassword = () => {
 
   const login = (
     <>
-      <Form onSubmit={formik.handleSubmit} className='forgot-password-page'>
+      <form onSubmit={formik.handleSubmit} className='forgot-password-page'>
         <h1>Forgot Password</h1>
         {showBadge && <AlertFail message={errorMessage} show={!!errorMessage} />}
         <TextField label='Enter your email' name='email' {...formik} />
@@ -70,7 +69,7 @@ const ForgotPassword = () => {
           text='Send login code'
           disabled={!(formik.isValid && formik.dirty)}
         />
-      </Form>
+      </form>
       <InformationModal
         body='Password and username have been sent to your email, please check your email !!!'
         onHide={handleClickLogin}

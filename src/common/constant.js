@@ -1,5 +1,7 @@
 const constant = {
-  apiDomain: process.env.NODE_ENV === 'development' ? 'https://localhost:7021/api' : 'http://oaapi.runasp.net/api',
+  apiDomain: 'http://localhost:8080/api/v1',
+  api: 'http://localhost:8080/api/v1',
+  apiNet: 'http://localhost:7021/api'
 }
-
+  
 export default constant

@@ -1,86 +1,115 @@
-﻿import { useContext, useState } from 'react'
-import { Nav, Navbar } from 'react-bootstrap'
-import Stack from 'react-bootstrap/Stack'
-import { useNavigate } from 'react-router-dom'
-import NotificationApi from '../../../api/notification'
-import { confirmMessages } from '../../../common'
-import { AuthContext } from '../../../contexts/AuthContext'
-import SignOutModal from '../../atoms/modals/confirmation'
-import './index.scss'
-import SearchBoxHeader from './SearchBoxHeader'
-import UserInformation from './UserInformation'
+﻿import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import NotificationApi from '../../../api/notification';
+import { confirmMessages } from '../../../common';
+import { AuthContext } from '../../../contexts/AuthContext';
+import Button from '../../molecules/Button';
+import SignOutModal from '../../atoms/modals/confirmation';
+import './index.scss';
+import SearchBoxHeader from './SearchBoxHeader';
+import UserInformation from './UserInformation';
 
 function Header() {
-  const [showLogOutModel, setShowLogOutModel] = useState(false)
+  const [showLogOutModel, setShowLogOutModel] = useState(false);
   const { currentUser, updateCurrentUser, listCategory, countNotifications, setCountNotifications } =
-    useContext(AuthContext)
-  const navigate = useNavigate()
+    useContext(AuthContext);
+  const navigate = useNavigate();
 
-  let token = null
+  let token = null;
   if (currentUser) {
-    token = currentUser.token
+    token = currentUser.token;
   }
 
   const handleLogOut = () => {
-    setShowLogOutModel(true)
-  }
+    setShowLogOutModel(true);
+  };
 
   const handleConfirmLogout = async () => {
-    sessionStorage.removeItem('CurrentUser')
-    localStorage.removeItem('CurrentUser')
-    await updateCurrentUser(null)
-    setShowLogOutModel(false)
-    navigate('/login')
-  }
+    sessionStorage.removeItem('CurrentUser');
+    localStorage.removeItem('CurrentUser');
+    await updateCurrentUser(null);
+    setShowLogOutModel(false);
+    navigate('/login');
+  };
 
   const handleCreateItem = () => {
-    navigate('/bid-detail?mode=create')
-  }
+    navigate('/bid-detail?mode=create');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
+  const handleRegister = () => {
+    navigate('/register');
+  };
 
   const handleCategoryBrowser = (categoryName) => {
-    const foundCategory = listCategory.find((item) => item.name === categoryName)
-    navigate(`/category-browser?id=${foundCategory.id}`)
-  }
+    const foundCategory = listCategory.find((item) => item.name === categoryName);
+    navigate(`/category-browser?id=${foundCategory.id}`);
+  };
 
   const handleClick = async (item) => {
     if (!item) {
-      return
+      return;
     }
 
     if (item.name === 'notification') {
-      await NotificationApi.updateNotification(token)
+      await NotificationApi.updateNotification(token);
     }
-    setCountNotifications(0)
-    navigate(item.path)
-  }
+    setCountNotifications(0);
+    navigate(item.path);
+  };
 
   return (
     <>
-      <Stack direction='horizontal' className='header-container'>
-        <SearchBoxHeader></SearchBoxHeader>
-        <UserInformation
-          maxIndex={countNotifications}
-          handleClick={handleClick}
-          text={currentUser?.fullName}
-          handleDangXuat={handleLogOut}
-          role={currentUser?.role}
-          currentUser={currentUser}
-          handleCreateItem={handleCreateItem}
-        ></UserInformation>
-      </Stack>
-      <Navbar bg='dark' data-bs-theme='dark' className='d-flex justify-content-center'>
-        {currentUser?.role !== 2 ? (
-          <div>
-            <Nav className='me-auto'>
-              {listCategory.map((item, index) => (
-                <Nav.Link key={index} className='px-4  text-white' onClick={() => handleCategoryBrowser(item.name)}>
-                  {item.name}
-                </Nav.Link>
-              ))}
-            </Nav>
+      <div className="d-flex align-items-center header-container">
+        <SearchBoxHeader />
+        {currentUser ? (
+          <UserInformation
+            maxIndex={countNotifications}
+            handleClick={handleClick}
+            text={currentUser?.fullName}
+            handleDangXuat={handleLogOut}
+            role={currentUser?.role}
+            currentUser={currentUser}
+            handleCreateItem={handleCreateItem}
+          />
+        ) : (
+          <div className="guest-buttons d-flex gap-2 align-items-center">
+            <Button
+              variant="outline-primary"
+              text="Login"
+              onClick={handleLogin}
+              className="login-btn"
+            />
+            <Button
+              variant="primary"
+              text="Register"
+              onClick={handleRegister}
+              className="register-btn"
+            />
           </div>
-        ) : null}
-      </Navbar>
+        )}
+      </div>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div className="container-fluid justify-content-center">
+          {currentUser?.role !== 2 && (
+            <div className="navbar-nav">
+              {listCategory.map((item, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="nav-link btn btn-link text-white px-4"
+                  onClick={() => handleCategoryBrowser(item.name)}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </nav>
       <SignOutModal
         body={confirmMessages.signOut}
         show={showLogOutModel}
@@ -88,7 +117,7 @@ function Header() {
         onClick={handleConfirmLogout}
       />
     </>
-  )
+  );
 }
 
-export default Header
+export default Header;

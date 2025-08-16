@@ -1,21 +1,20 @@
 import { useFormik } from 'formik'
 import { useContext, useEffect } from 'react'
-import { Container, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 import ItemApi from '../../../api/item'
 import { errorMessages } from '../../../common'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Alert from '../../atoms/alert'
-import Input from '../../atoms/forms/input'
-import Label from '../../atoms/forms/label'
-import Image from '../../atoms/image'
+import Alert from '../../atoms/Alert'
+import Input from '../../atoms/Input'
+import Label from '../../atoms/Label'
+import Image from '../../atoms/Image'
 import InformationModal from '../../atoms/modals/Information'
-import Button from '../../molecules/buttons/button'
-import AutoSuggest from '../../molecules/forms/auto-suggest'
-import DatePicker from '../../molecules/forms/date-picker'
-import NumberField from '../../molecules/forms/number-field'
-import TextField from '../../molecules/forms/text-field'
+import Button from '../../molecules/Button'
+import AutoSuggest from '../../molecules/AutoSuggest'
+import DatePicker from '../../molecules/DatePicker'
+import NumberField from '../../molecules/NumberField'
+import TextField from '../../molecules/TextField'
 import './style.scss'
 
 const BidDetailSeller = ({ item, listCategory, titleBidDetailPage }) => {
@@ -186,8 +185,8 @@ const BidDetailSeller = ({ item, listCategory, titleBidDetailPage }) => {
     <>
       {currentUser?.role === 1 ? (
         <div>
-          <Container className='fs-6'>
-            <Form noValidate onSubmit={formik.handleSubmit}>
+          <div className='container fs-6'>
+            <form noValidate onSubmit={formik.handleSubmit}>
               <Alert
                 variant='info'
                 message={
@@ -249,7 +248,7 @@ const BidDetailSeller = ({ item, listCategory, titleBidDetailPage }) => {
                   text={formik.values.imageName ? formik.values.imageName : 'Click here to upload an image'}
                 />
               </div>
-              <Form.Control.Feedback type='invalid'>{formik.errors.imageFile}</Form.Control.Feedback>
+              <div className='invalid-feedback d-block'>{formik.errors.imageFile}</div>
 
               <Label text='Document file' />
               <Input name='documentFile' id='uploadDocument' type='file' hidden onChange={fileChangedHandler} />
@@ -276,8 +275,8 @@ const BidDetailSeller = ({ item, listCategory, titleBidDetailPage }) => {
                   onClick={handleCreateItem}
                 />
               </div>
-            </Form>
-          </Container>
+            </form>
+          </div>
         </div>
       ) : (
         <InformationModal

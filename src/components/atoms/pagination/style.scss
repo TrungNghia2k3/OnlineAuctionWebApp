@@ -1,0 +1,31 @@
+@import '../../_settings/_variables.scss';
+
+.pagination {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.page-link {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+  }
+}
+
+.page-item.active .page-link {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.page-item.disabled .page-link {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

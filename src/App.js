@@ -1,15 +1,16 @@
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom'
-import { useState, useCallback, useMemo, useEffect } from 'react'
-import _ from 'lodash'
+import "bootstrap-icons/font/bootstrap-icons.css"
+import "bootstrap/dist/css/bootstrap.min.css"
 import { jwtDecode } from 'jwt-decode'
-import { AuthContext } from './contexts/AuthContext'
+import _ from 'lodash'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import AppRoutes from './AppRoutes'
+import CategoriesApi from './api/categories'
 import { Layout } from './components/Layout'
-import LoadingPage from './components/atoms/loading-page'
-import Header from './components/organisms/header'
+import LoadingPage from './components/atoms/LoadingPage'
 import Footer from './components/organisms/footer'
-import CategoryApi from './api/category'
-import NotificationApi from './api/notification'
+import Header from './components/organisms/header'
+import { AuthContext } from './contexts/AuthContext'
 
 const App = () => {
   const navigate = useNavigate()
@@ -20,22 +21,38 @@ const App = () => {
   const [listCategory, setListCategory] = useState([])
   const [countNotifications, setCountNotifications] = useState(null)
 
+  // Helper function to convert string roles to numeric roles for backward compatibility
+  const getRoleNumber = useCallback((roleString) => {
+    switch (roleString) {
+      case 'ROLE_ADMIN':
+        return 2
+      case 'ROLE_USER':
+        return 1
+      default:
+        return 0 // Guest or unknown role
+    }
+  }, [])
+
   // Helper function to decode user data from token
   const getUserFromToken = useCallback((token) => {
     try {
       const decoded = jwtDecode(token)
+      const roleString = decoded.scope // 'scope' field contains role (ROLE_USER or ROLE_ADMIN)
       return {
-        id: decoded.Id,
-        username: decoded.Username,
-        role: parseInt(decoded.Role),
-        fullName: decoded.FullName,
+        username: decoded.sub, // 'sub' field contains username
+        role: getRoleNumber(roleString), // Convert to numeric for backward compatibility
+        roleString: roleString, // Keep original string role for new logic
+        issuer: decoded.iss, // 'iss' field contains issuer
+        tokenId: decoded.jti, // 'jti' field contains token ID
+        issuedAt: decoded.iat, // 'iat' field contains issued at timestamp
+        expiresAt: decoded.exp, // 'exp' field contains expiration timestamp
         token: token
       }
     } catch (error) {
       console.error('Invalid token:', error)
       return null
     }
-  }, [])
+  }, [getRoleNumber])
 
   const updateCurrentUser = useCallback(async (tokenOrUserData) => {
     if (!tokenOrUserData) {
@@ -62,13 +79,13 @@ const App = () => {
 
   useEffect(() => {
     if (currentUser) {
-      if (currentUser?.role === 2) {
-        if (pathname === '/' || pathname === '/login') {
+      if (currentUser?.role === 2) { // Admin role (converted from ROLE_ADMIN)
+        if (pathname === '/login') {
           navigate('/category-management')
         }
         return
       }
-      if (pathname === '/' || pathname === '/login') {
+      if (pathname === '/login') {
         navigate(indexRoute)
       }
       return
@@ -109,13 +126,9 @@ const App = () => {
       }
     }
 
-    if (pathname === '/register') {
-      navigate('/register')
-      return
-    }
-
-    if (pathname === '/forgot-password') {
-      navigate('/forgot-password')
+    // Allow access to these pages without authentication
+    const publicPages = ['/', '/register', '/forgot-password', '/category-browser', '/bid-detail', '/search-results']
+    if (publicPages.includes(pathname)) {
       return
     }
 
@@ -123,35 +136,28 @@ const App = () => {
   }, [currentUser, navigate, pathname, indexRoute, getUserFromToken])
 
   useEffect(() => {
-    if (currentUser) {
-      const getListCategory = async () => {
-        const result = await CategoryApi.getAllCategoryActive(currentUser.token)
-        setListCategory(result)
+    const getListCategory = async () => {
+      try {
+        // Try to get categories without authentication first for public access
+        const response = await CategoriesApi.getAllCategory()
+        setListCategory(response.result)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+        setListCategory([])
       }
-      getListCategory()
     }
-  }, [currentUser])
+    getListCategory()
+  }, [])
 
-  useEffect(() => {
-    if (currentUser) {
-      const getListNotifications = async () => {
-        const result = await NotificationApi.getAllNotificationsByIdUser(currentUser.token)
-        handleFilterNotifications(result)
-      }
-      getListNotifications()
-    }
-  }, [currentUser])
-
-  const handleFilterNotifications = (data) => {
-    const foundNotifications = data.filter((notification) => notification.markRead === false)
-    let maxIndex = 0
-    foundNotifications.forEach((item, index) => {
-      if (index >= maxIndex) {
-        maxIndex = index + 1
-      }
-    })
-    setCountNotifications(maxIndex)
-  }
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     const getListNotifications = async () => {
+  //       const result = await NotificationApi.getAllNotificationsByIdUser(currentUser.token)
+  //       handleFilterNotifications(result)
+  //     }
+  //     getListNotifications()
+  //   }
+  // }, [currentUser])
 
   const authContextValue = useMemo(
     () => ({
@@ -176,9 +182,13 @@ const App = () => {
     ],
   )
 
+  // Pages that should not show Header and Footer
+  const authPages = ['/login', '/register', '/forgot-password']
+  const isAuthPage = authPages.includes(pathname)
+
   return (
     <AuthContext.Provider value={authContextValue}>
-      {currentUser && <Header />}
+      {!isAuthPage && <Header />}
       <Layout>
         <Routes>
           {AppRoutes.map((route, index) => {
@@ -188,7 +198,7 @@ const App = () => {
         </Routes>
       </Layout>
       {showLoadingPage && <LoadingPage />}
-      {currentUser && <Footer />}
+      {!isAuthPage && <Footer />}
     </AuthContext.Provider>
   )
 }

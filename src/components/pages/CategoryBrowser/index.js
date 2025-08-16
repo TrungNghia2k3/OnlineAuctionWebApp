@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from 'react'
-import { Container, Row } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
-import CategoryApi from '../../../api/category'
+import CategoryApi from '../../../api/categories'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Select from '../../atoms/forms/select'
-import Pagination from '../../atoms/pagination'
+import Select from '../../atoms/Select'
+import Pagination from '../../atoms/Pagination'
 import ProtectedRoute from '../../protected-route'
 import Template from '../../templates/default/no-separation-template'
 import ViewItemDetailLabel from '../ViewItemDetailLabel'
@@ -14,7 +13,7 @@ const CategoryBrowser = () => {
   const [category, setCategory] = useState(null)
   const [activeNumber, setActiveNumber] = useState(1)
   const [filteredItems, setFilteredItems] = useState(category?.itemResponses)
-  let [searchParams, setSearchParams] = useSearchParams()
+  let [searchParams] = useSearchParams()
   const termIdCategory = searchParams.get('id')
 
   const { currentUser } = useContext(AuthContext)
@@ -73,19 +72,19 @@ const CategoryBrowser = () => {
 
   const content = (
     <>
-      <Container fluid>
-        <Row>
+      <div className="container-fluid">
+        <div className="row">
           <div className='sort-by-category-page'>
             <h5 className='mt-1'>Sort by</h5>
             <div className='selected-category'>
               <Select options={options} onChange={handleSelectedSortBy} />
             </div>
           </div>
-        </Row>
+        </div>
         <div className='view-item-detail'>
           <ViewItemDetailLabel items={filteredItems}></ViewItemDetailLabel>
         </div>
-      </Container>
+      </div>
       <div className='pagination-category-browser'>
         <Pagination
           firstNumbers={[1, 2, 3]}

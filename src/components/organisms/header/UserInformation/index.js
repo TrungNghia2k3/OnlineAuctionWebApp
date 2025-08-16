@@ -1,4 +1,4 @@
-import Button from '../../../molecules/buttons/button'
+import Button from '../../../molecules/Button'
 import NavbarHeader from './../NavbarHeader'
 import './style.scss'
 

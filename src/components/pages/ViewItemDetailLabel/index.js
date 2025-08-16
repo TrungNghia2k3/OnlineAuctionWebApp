@@ -1,24 +1,29 @@
-import { Row } from 'react-bootstrap'
-import Card from 'react-bootstrap/Card'
 import { useNavigate } from 'react-router-dom'
-import Label from '../../atoms/forms/label'
-import Image from '../../atoms/image'
-import Button from '../../molecules/buttons/button'
+import Label from '../../atoms/Label'
+import Image from '../../atoms/Image'
+import Button from '../../molecules/Button'
 import './style.scss'
 
 const ViewItemDetailLabel = ({ items }) => {
   const navigate = useNavigate()
 
-  const handleChangeBidStatus = (bidStatus) => {
-    return bidStatus === 0 ? 'UPCOMING' : bidStatus === 1 ? 'HAPPENING' : 'ENDING'
+  const handleChangeBidStatus = (status) => {
+    return status === 'UPCOMING' ? 'UPCOMING' : status === 'ACTIVE' ? 'HAPPENING' : 'ENDING'
   }
 
-  const handleChangeTitleDate = (bidStatus) => {
-    return bidStatus === 0 ? 'Starts in:' : bidStatus === 1 ? 'Ends in:' : 'End date:'
+  const handleChangeTitleDate = (status) => {
+    return status === 'UPCOMING' ? 'Starts in:' : status === 'ACTIVE' ? 'Ends in:' : 'End date:'
   }
 
-  const handleChangeDate = (bidStatus, auctionStartDate, auctionEndDate) => {
-    const apiDate = new Date(bidStatus === 0 ? auctionStartDate : auctionEndDate)
+  const handleChangeDate = (status, auctionStartDate, auctionEndDate) => {
+    // Handle the new date format [year, month, day, hour, minute]
+    const dateArray = status === 'UPCOMING' ? auctionStartDate : auctionEndDate
+    if (Array.isArray(dateArray) && dateArray.length >= 3) {
+      const [year, month, day] = dateArray
+      return `${year}/${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`
+    }
+    // Fallback for old date format
+    const apiDate = new Date(status === 'UPCOMING' ? auctionStartDate : auctionEndDate)
     const year = apiDate.getFullYear()
     const month = (apiDate.getMonth() + 1).toString().padStart(2, '0')
     const day = apiDate.getDate().toString().padStart(2, '0')
@@ -52,6 +57,28 @@ const ViewItemDetailLabel = ({ items }) => {
     }
   }
 
+  const getMainImage = (item) => {
+    // Handle new API format with images array
+    if (item.images && Array.isArray(item.images)) {
+      const mainImage = item.images.find(img => img.type === 'MAIN')
+      if (mainImage) {
+        return mainImage.imageUrl
+      }
+      // Fallback to first image if no main image found
+      if (item.images.length > 0) {
+        return item.images[0].imageUrl
+      }
+    }
+    
+    // Fallback for old format
+    if (item.imageFile) {
+      return `data:image/;base64,${item.imageFile}`
+    }
+    
+    // Default placeholder if no image
+    return 'images/placeholder.jpg'
+  }
+
   const displayFormatCurrentBidPrice = (item) => {
     if (item == null) {
       return ''
@@ -69,38 +96,38 @@ const ViewItemDetailLabel = ({ items }) => {
     <>
       {items &&
         items.map((item) => (
-          <Row key={item.id}>
-            <Card className='happening-item-category-card my-3'>
+          <div key={item.id} className="row">
+            <div className='card happening-item-category-card my-3'>
               <div className='left-side-card'>
-                <div className={`tag-status-${handleChangeBidStatus(item.bidStatus).toLowerCase()}`}>
-                  <span className='ribbon__content'>{handleChangeBidStatus(item.bidStatus)}</span>
+                <div className={`tag-status-${handleChangeBidStatus(item.status).toLowerCase()}`}>
+                  <span className='ribbon__content'>{handleChangeBidStatus(item.status)}</span>
                 </div>
-                <Image path={`data:image/;base64,${item.imageFile}`} className={{ productImageCategoryPage: true }} />
+                <Image path={getMainImage(item)} className="productImageCategoryPage" />
               </div>
-              <Card.Body className='right-side-card'>
-                <Card.Title className='name-item-category-page'>{handleMaxLengthName(item.name)}</Card.Title>
-                <Card.Subtitle className='fullname-buyer-category-page'>
+              <div className='card-body right-side-card'>
+                <h5 className='card-title name-item-category-page'>{handleMaxLengthName(item.name)}</h5>
+                <h6 className='card-subtitle fullname-buyer-category-page'>
                   {handleMaxLengthDescription(item.description)}
-                </Card.Subtitle>
-                <Card.Text className='description-item-category-page'>
+                </h6>
+                <p className='card-text description-item-category-page'>
                   Min increase:{displayFormatCurrentBidPrice(item.minIncreasePrice)}
-                </Card.Text>
+                </p>
                 <div className='bid-item-category-page'>
-                  <Label className={{ 'label-bid-item-category-page': true }} text={'Current bid:'} />
-                  <Card.Text className='bid-item-category-page'>
-                    {displayFormatCurrentBidPrice(item.currentBidPrice)}
-                  </Card.Text>
+                  <Label className="label-bid-item-category-page" text={'Current bid:'} />
+                  <p className='card-text bid-item-category-page'>
+                    {displayFormatCurrentBidPrice(item.startingPrice)}
+                  </p>
                 </div>
                 <div className='time-item-category-page'>
                   <Label
-                    className={{ 'label-time-item-category-page': true }}
-                    text={handleChangeTitleDate(item.bidStatus)}
+                    className="label-time-item-category-page"
+                    text={handleChangeTitleDate(item.status)}
                   />
-                  <Card.Text className='date-item-category-page'>
-                    {handleChangeDate(item.bidStatus, item.auctionStartDate, item.auctionEndDate)}
-                  </Card.Text>
+                  <p className='card-text date-item-category-page'>
+                    {handleChangeDate(item.status, item.auctionStartDate, item.auctionEndDate)}
+                  </p>
                 </div>
-              </Card.Body>
+              </div>
               <div className='btn-view-auction'>
                 <Button
                   type='submit'
@@ -109,8 +136,8 @@ const ViewItemDetailLabel = ({ items }) => {
                   onClick={() => handleViewDetailItem(item.id)}
                 />
               </div>
-            </Card>
-          </Row>
+            </div>
+          </div>
         ))}
       {items?.length <= 0 && <div className='item-detail-no-data'>There is no data</div>}
     </>

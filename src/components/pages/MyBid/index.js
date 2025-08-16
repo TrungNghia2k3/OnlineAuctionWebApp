@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react'
-import { Container, Nav } from 'react-bootstrap'
 import ItemApi from '../../../api/item'
 import { AuthContext } from '../../../contexts/AuthContext'
 import ProtectedRoute from '../../protected-route'
@@ -10,14 +9,11 @@ import './style.scss'
 const MyBid = () => {
   const [items, setItems] = useState(null)
   const [filteredItems, setFilteredItems] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
 
   const { currentUser } = useContext(AuthContext)
   let token = null
-  let role = null
   if (currentUser) {
     token = currentUser.token
-    role = currentUser.role
   }
 
   useEffect(() => {
@@ -52,25 +48,49 @@ const MyBid = () => {
 
   const content = (
     <>
-      <Container fluid>
-        <Nav className='nav-my-bid' activeKey='/my-bid' onSelect={handleSelect}>
-          <Nav.Item>
-            <Nav.Link eventKey='All'>All</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey='0'>Upcoming</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey='1'>Happening</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey='2'>Ending</Nav.Link>
-          </Nav.Item>
-        </Nav>
+      <div className='container-fluid'>
+        <ul className='nav nav-my-bid'>
+          <li className='nav-item'>
+            <button 
+              className='nav-link btn btn-link' 
+              type='button'
+              onClick={() => handleSelect('All')}
+            >
+              All
+            </button>
+          </li>
+          <li className='nav-item'>
+            <button 
+              className='nav-link btn btn-link' 
+              type='button'
+              onClick={() => handleSelect('0')}
+            >
+              Upcoming
+            </button>
+          </li>
+          <li className='nav-item'>
+            <button 
+              className='nav-link btn btn-link' 
+              type='button'
+              onClick={() => handleSelect('1')}
+            >
+              Happening
+            </button>
+          </li>
+          <li className='nav-item'>
+            <button 
+              className='nav-link btn btn-link' 
+              type='button'
+              onClick={() => handleSelect('2')}
+            >
+              Ending
+            </button>
+          </li>
+        </ul>
         <div className='my-bid-items'>
           <ViewItemDetailLabel items={filteredItems}></ViewItemDetailLabel>
         </div>
-      </Container>
+      </div>
     </>
   )
 

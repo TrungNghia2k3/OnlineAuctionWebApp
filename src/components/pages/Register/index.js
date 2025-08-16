@@ -1,17 +1,16 @@
 import { useFormik } from 'formik'
 import { useState } from 'react'
-import { Col, Form, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 import UserApi from '../../../api/user'
 import { constant, errorMessages } from '../../../common'
-import Label from '../../atoms/forms/label'
+import Label from '../../atoms/Label'
 import InformationModal from '../../atoms/modals/Information'
-import AlertFail from '../../molecules/alerts/alert-fail'
-import Button from '../../molecules/buttons/button'
-import PasswordField from '../../molecules/forms/password-field'
-import RadioBoxList from '../../molecules/forms/radio-box-list'
-import TextField from '../../molecules/forms/text-field'
+import AlertFail from '../../molecules/AlertFail'
+import Button from '../../molecules/Button'
+import PasswordField from '../../molecules/PasswordField'
+import RadioBoxList from '../../molecules/RadioBoxList'
+import TextField from '../../molecules/TextField'
 import Template from '../../templates/without-login-template'
 import './style.scss'
 
@@ -72,47 +71,47 @@ const Register = () => {
 
   const content = (
     <>
-      <Form noValidate onSubmit={formik.handleSubmit} className='register'>
+      <form noValidate onSubmit={formik.handleSubmit} className='register'>
         <h1>Hello</h1>
         <h4>Sign up to get started</h4>
         <AlertFail message={errorMessage} show={!!errorMessage} />
-        <Row>
-          <Col>
+        <div className="row">
+          <div className="col">
             <TextField label='Username' name='userName' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             <PasswordField label='Password' name='passWord' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             <TextField label='Email address' name='email' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             <TextField label='FullName' name='fullName' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             <TextField label='PhoneNumber' name='phoneNumber' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             <TextField label='Address' name='address' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             <RadioBoxList label='Choose a role' options={options} name='role' {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col className='buttons'>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col buttons">
             <Button
               className={'w-100'}
               type='submit'
@@ -122,15 +121,15 @@ const Register = () => {
               onClick={handleRegister}
               disabled={!(formik.isValid && formik.dirty)}
             />
-          </Col>
-        </Row>
-        <Row className='text-center my-2'>
+          </div>
+        </div>
+        <div className="row text-center my-2">
           <p>
-            Already have an account? <Label text='Log in' className={{ 'log-in': true }} onClick={handleClickLogin} />
+            Already have an account? <Label text='Log in' className="log-in" onClick={handleClickLogin} />
           </p>
-        </Row>
+        </div>
         <InformationModal body='Account successfully created' onHide={handleClickLogin} show={showInformationModal} />
-      </Form>
+      </form>
     </>
   )
 

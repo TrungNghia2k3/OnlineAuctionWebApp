@@ -2,7 +2,7 @@ import constant from '../common/constant'
 
 const bid = {
   create: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/bid/create`, {
+    const response = await fetch(`${constant.apiDomain}/bids`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -18,12 +18,11 @@ const bid = {
       throw new Error('Failed to create item')
     }
   },
-  GetAllBid: async (token, itemId) => {
-    const response = await fetch(`${constant.apiDomain}/bid/${itemId}`, {
+  GetAllBid: async (itemId) => {
+    const response = await fetch(`${constant.apiDomain}/bids/${itemId}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
     })
 

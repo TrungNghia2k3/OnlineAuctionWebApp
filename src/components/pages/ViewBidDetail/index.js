@@ -1,11 +1,10 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { Card, Col, Container, Form, Overlay, Popover, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import bidApi from '../../../api/bid'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Label from '../../atoms/forms/label'
-import Text from '../../atoms/forms/text'
-import Image from '../../atoms/image'
+import Label from '../../atoms/Label'
+import Text from '../../atoms/Text'
+import Image from '../../atoms/Image'
 import './style.scss'
 
 const ViewBidDetail = ({ item }) => {
@@ -18,7 +17,7 @@ const ViewBidDetail = ({ item }) => {
   let roleUser = null
   let token = null
   if (currentUser) {
-    userId = currentUser.id
+    userId = currentUser.username // Use username for new format
     roleUser = currentUser.role
     token = currentUser.token
   }
@@ -35,23 +34,32 @@ const ViewBidDetail = ({ item }) => {
   }, [token, item])
 
   const getBidStatusColor = () => {
-    switch (item?.bidStatus) {
-      case 0:
+    switch (item?.status) {
+      case 'UPCOMING':
         return 'Upcoming'
-      case 1:
+      case 'ACTIVE':
         return 'Happening'
-      case 2:
+      case 'SOLD':
+      case 'EXPIRED':
+      case 'CANCELLED':
         return 'Ended'
       default:
-        return
+        return item?.status || 'Unknown'
     }
   }
 
   const displayFormatDate = (value) => {
-    if (item == null) {
+    if (item == null || !value) {
       return ''
     }
 
+    // Handle new array format [year, month, day, hour, minute]
+    if (Array.isArray(value) && value.length >= 3) {
+      const [year, month, day] = value
+      return `${year}/${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`
+    }
+
+    // Fallback for old date format
     const apiDate = new Date(value)
     const year = apiDate.getFullYear()
     const month = (apiDate.getMonth() + 1).toString().padStart(2, '0')
@@ -76,6 +84,28 @@ const ViewBidDetail = ({ item }) => {
   const handleEditClick = () => {
     navigate(`/bid-detail?id=${item?.id}&mode=edit`)
   }
+
+  const getMainImage = () => {
+    // Handle new API format with images array
+    if (item?.images && Array.isArray(item.images)) {
+      const mainImage = item.images.find(img => img.type === 'MAIN')
+      if (mainImage) {
+        return mainImage.imageUrl
+      }
+      // Fallback to first image if no main image found
+      if (item.images.length > 0) {
+        return item.images[0].imageUrl
+      }
+    }
+    
+    // Fallback for old format
+    if (item?.imageFile) {
+      return `data:image/;base64,${item.imageFile}`
+    }
+    
+    // Default placeholder if no image
+    return 'images/placeholder.jpg'
+  }
   const handleMaxLengthDescription = (text) => {
     if (text) {
       const words = text.split(' ')
@@ -91,16 +121,16 @@ const ViewBidDetail = ({ item }) => {
 
   return (
     <div>
-      <Container fluid>
+      <div className='container-fluid'>
         <div>
-          <Row>
-            <Col sm={4}>
-              <Image path={`data:image/;base64,${item?.imageFile}`} className={{ 'image-item-bid-bdpage': true }} />
-            </Col>
-            <Col sm={8}>
+          <div className='row'>
+            <div className='col-sm-4'>
+              <Image path={getMainImage()} className={{ 'image-item-bid-bdpage': true }} />
+            </div>
+            <div className='col-sm-8'>
               <div className='item_name-bdpage'>
                 <Label as='h4' className={{ 'mb-1 text-start': true }} text={item?.name} />
-                {userId !== item?.sellerId || item?.bidStatus !== 0 ? null : (
+                {userId !== item?.seller?.username || item?.status !== 'UPCOMING' ? null : (
                   <Image
                     path={'images/edit.svg'}
                     className={{ 'icon-edit-bdpage': true }}
@@ -112,119 +142,110 @@ const ViewBidDetail = ({ item }) => {
               <div className='item-description-bdpage'>
                 <Text text={handleMaxLengthDescription(item?.description)} />
               </div>
-              <Card className='bid-information-card-bdpage'>
-                <Row>
-                  <Col>
-                    <Card.Title as={'h4'}>Bid information</Card.Title>
-                  </Col>
-                  {roleUser === 1 && bids.length > 0 && item?.bidStatus !== 0 ? (
-                    <Col className='box-top-bids'>
-                      <Form.Label
+              <div className='card bid-information-card-bdpage'>
+                <div className='row'>
+                  <div className='col'>
+                    <h4 className='card-title'>Bid information</h4>
+                  </div>
+                  {roleUser === 1 && bids.length > 0 && item?.status !== 'UPCOMING' ? (
+                    <div className='col box-top-bids'>
+                      <label
                         className='label-top-bids'
-                        variant='success'
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', color: '#198754' }}
                         ref={target}
                         onClick={() => setShow(!show)}
                       >
                         Top bids
-                      </Form.Label>
-                      <Overlay
-                        show={show}
-                        target={target.current}
-                        placement='bottom'
-                        rootClose={true}
-                        onHide={() => setShow(false)}
-                      >
-                        <Popover id='popover-basic'>
-                          <Popover.Header as='h3' className='header-popover-history'>
-                            All Users Bid
-                          </Popover.Header>
-                          <Popover.Body>
+                      </label>
+                      {show && (
+                        <div className='position-absolute bg-white border rounded shadow p-3' style={{ zIndex: 1000, minWidth: '300px' }}>
+                          <h5 className='header-popover-history mb-2'>All Users Bid</h5>
+                          <div>
                             {bids.map((bid, index) => {
                               if (index < 10) {
                                 return (
-                                  <Row>
-                                    <Col xs={3}>User {index + 1}: </Col>
-                                    <Col xs={5}>{displayFormatDate(bid.createdDate)}</Col>
-                                    <Col xs={4}>{displayFormatBidPrice(bid.amount)}</Col>
-                                  </Row>
+                                  <div className='row' key={index}>
+                                    <div className='col-3'>User {index + 1}: </div>
+                                    <div className='col-5'>{displayFormatDate(bid.createdDate)}</div>
+                                    <div className='col-4'>{displayFormatBidPrice(bid.amount)}</div>
+                                  </div>
                                 )
                               }
                               return null
                             })}
-                          </Popover.Body>
-                        </Popover>
-                      </Overlay>
-                    </Col>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   ) : null}
-                </Row>
+                </div>
                 <hr className='singleline' />
                 <div className='bid-status-bdpage'>
-                  <Row>
-                    <Col>
+                  <div className='row'>
+                    <div className='col'>
                       <Label className={{ 'label-card': true }} text='Bid status:' />
-                    </Col>
-                    <Col className='content-card-bdpage'>
+                    </div>
+                    <div className='col content-card-bdpage'>
                       <Text className={getBidStatusColor()} text={getBidStatusColor()} />
-                    </Col>
-                  </Row>
+                    </div>
+                  </div>
                 </div>
                 <hr className='singleline' />
                 <div className='date-bdpage'>
-                  <Row>
-                    <Col>
+                  <div className='row'>
+                    <div className='col'>
                       <Label className={{ 'label-card': true }} text='Start date:' />
-                    </Col>
-                    <Col className='content-card-bdpage'>
+                    </div>
+                    <div className='col content-card-bdpage'>
                       <Text className='time' text={displayFormatDate(item?.auctionStartDate)} />
-                    </Col>
-                  </Row>
+                    </div>
+                  </div>
                 </div>
                 <hr className='singleline' />
                 <div className='date-bdpage'>
-                  <Row>
-                    <Col>
+                  <div className='row'>
+                    <div className='col'>
                       <Label className={{ 'label-card': true }} text='End date:' />
-                    </Col>
-                    <Col className='content-card-bdpage'>
+                    </div>
+                    <div className='col content-card-bdpage'>
                       <Text className='time' text={displayFormatDate(item?.auctionEndDate)} />
-                    </Col>
-                  </Row>
+                    </div>
+                  </div>
                 </div>
                 <hr className='singleline' />
                 <div className='min-bid-bdpage'>
-                  <Row>
-                    <Col>
+                  <div className='row'>
+                    <div className='col'>
                       <Label className={{ 'label-card': true }} text='Min increase:' />
-                    </Col>
-                    <Col className='content-card-bdpage'>
+                    </div>
+                    <div className='col content-card-bdpage'>
                       <Text className='minPrice' text={displayFormatBidPrice(item?.minIncreasePrice)} />
-                    </Col>
-                  </Row>
+                    </div>
+                  </div>
                 </div>
                 <hr className='singleline' />
                 <div className='current-bid-bdpage'>
-                  <Row>
-                    <Col>
+                  <div className='row'>
+                    <div className='col'>
                       <Label className={{ 'label-card': true }} text='Current bid:' />
-                    </Col>
-                    <Col className='content-card-bdpage'>
-                      <Text className='currentPrice' text={displayFormatBidPrice(item?.currentBidPrice)} />
-                    </Col>
-                  </Row>
+                    </div>
+                    <div className='col content-card-bdpage'>
+                      <Text className='currentPrice' text={displayFormatBidPrice(item?.startingPrice)} />
+                    </div>
+                  </div>
                 </div>
                 {item?.buyerBid?.amount && (
                   <>
                     <hr className='singleline' />
                     <div className='current-bid-bdpage'>
-                      <Row>
-                        <Col>
+                      <div className='row'>
+                        <div className='col'>
                           <Label className={{ 'label-card': true }} text='Your bid:' />
-                        </Col>
-                        <Col className='content-card-bdpage'>
+                        </div>
+                        <div className='col content-card-bdpage'>
                           <Text className='currentPrice' text={displayFormatBidPrice(item.buyerBid.amount)} />
-                        </Col>
-                      </Row>
+                        </div>
+                      </div>
                     </div>
                   </>
                 )}
@@ -232,22 +253,22 @@ const ViewBidDetail = ({ item }) => {
                   <>
                     <hr className='singleline' />
                     <div className='date-bdpage'>
-                      <Row>
-                        <Col>
+                      <div className='row'>
+                        <div className='col'>
                           <Label className={{ 'label-card': true }} text='Date of bid:' />
-                        </Col>
-                        <Col className='content-card-bdpage'>
+                        </div>
+                        <div className='col content-card-bdpage'>
                           <Text className='time' text={displayFormatDate(item.buyerBid.createdDate)} />
-                        </Col>
-                      </Row>
+                        </div>
+                      </div>
                     </div>
                   </>
                 )}
-              </Card>
-            </Col>
-          </Row>
+              </div>
+            </div>
+          </div>
         </div>
-      </Container>
+      </div>
     </div>
   )
 }

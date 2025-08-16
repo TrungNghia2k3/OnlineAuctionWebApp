@@ -1,0 +1,20 @@
+@import '../../_settings/variables.scss';
+
+// Custom select styles
+.form-select {
+  // Additional custom styles can be added here
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+  }
+
+  &.is-invalid:focus {
+    border-color: $danger;
+    box-shadow: 0 0 0 0.2rem rgba($danger, 0.25);
+  }
+
+  &.is-valid:focus {
+    border-color: $success;
+    box-shadow: 0 0 0 0.2rem rgba($success, 0.25);
+  }
+}

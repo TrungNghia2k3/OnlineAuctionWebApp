@@ -24,7 +24,7 @@ const BidDetail = () => {
   let userId = null
   if (currentUser) {
     token = currentUser.token
-    userId = currentUser.id
+    userId = currentUser.username // Use username instead of id for the new format
   }
 
   useEffect(() => {
@@ -48,8 +48,26 @@ const BidDetail = () => {
     if (token) {
       const getItem = async () => {
         if (idItem) {
-          const item = await ItemApi.getById(idItem, token)
-          setItem(item)
+          try {
+            const response = await ItemApi.getById(idItem, token)
+            console.log('BidDetail API response:', response)
+            
+            // Handle the new API response format
+            if (response && response.code === 200 && response.result) {
+              console.log('Setting item from result:', response.result)
+              setItem(response.result)
+            } else if (response && !response.code) {
+              // Fallback for old format
+              console.log('Setting item from direct response:', response)
+              setItem(response)
+            } else {
+              console.error('Unexpected API response format:', response)
+              setItem(null)
+            }
+          } catch (error) {
+            console.error('Error fetching item:', error)
+            setItem(null)
+          }
         }
       }
       getItem()
@@ -64,7 +82,7 @@ const BidDetail = () => {
           <div>
             <ViewBidDetail item={item} />
             <PlaceAmount item={item} />
-            {item?.userId === userId || item?.buyerBid?.isAchieved === true ? <RatingInformation item={item}></RatingInformation> : null}
+            {item?.seller?.username === userId || item?.buyerBid?.isAchieved === true ? <RatingInformation item={item}></RatingInformation> : null}
           </div>
         </>
       )}

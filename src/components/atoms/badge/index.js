@@ -1,8 +1,29 @@
-// import styles from './style.scss'
-import { Badge as BadgeLib } from 'react-bootstrap'
+import React from 'react';
+import './style.scss';
 
-function Badge({ variant, text }) {
-  return <BadgeLib bg={variant}>{text}</BadgeLib>
+function Badge({ 
+  variant = 'primary', 
+  text, 
+  children,
+  pill = false,
+  className = '',
+  ...props 
+}) {
+  let classes = `badge bg-${variant}`;
+  
+  if (pill) {
+    classes += ' rounded-pill';
+  }
+  
+  if (className) {
+    classes += ` ${className}`;
+  }
+
+  return (
+    <span className={classes} {...props}>
+      {text || children}
+    </span>
+  );
 }
 
-export default Badge
+export default Badge;

@@ -1,13 +1,12 @@
 import { useFormik } from 'formik'
 import { useContext } from 'react'
-import { Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 import bidApi from '../../../api/bid'
 import { errorMessages } from '../../../common'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Button from '../../molecules/buttons/button'
-import NumberField from '../../molecules/forms/number-field'
+import Button from '../../molecules/Button'
+import NumberField from '../../molecules/NumberField'
 import './style.scss'
 
 const PlaceAmount = ({ item }) => {
@@ -17,7 +16,7 @@ const PlaceAmount = ({ item }) => {
   let roleUser = null
   let token = null
   if (currentUser) {
-    userId = currentUser.id
+    userId = currentUser.username // Use username for new format
     roleUser = currentUser.role
     token = currentUser.token
   }
@@ -31,11 +30,11 @@ const PlaceAmount = ({ item }) => {
     enableReinitialize: true,
     validationSchema: yup.object().shape({
       id: yup.number(),
-      buyerId: yup.number(),
+      buyerId: yup.string(), // Changed to string since userId is now username
       itemId: yup.number(),
       amount: yup
         .number()
-        .min(item?.currentBidPrice + item?.minIncreasePrice, errorMessages.amount.isValid)
+        .min((item?.startingPrice || 0) + (item?.minIncreasePrice || 1), errorMessages.amount.isValid)
         .integer()
         .required(errorMessages.amount.required),
     }),
@@ -43,13 +42,13 @@ const PlaceAmount = ({ item }) => {
 
   const handleCreateBid = async () => {
     const data = formik.values
-    if (data.amount != 0) {
+    if (data.amount !== 0) {
       await bidApi.create(data, token)
       navigate(`/bid-detail?id=${data.itemId}&mode=viewamount`)
     }
   }
   return (
-    <Form noValidate onSubmit={formik.handleSubmit}>
+    <form noValidate onSubmit={formik.handleSubmit}>
       <div>
         {userId !== item?.sellerId && item?.bidStatus === 1 && roleUser === 0 && item?.buyerBid === null ? (
           <>
@@ -67,7 +66,7 @@ const PlaceAmount = ({ item }) => {
           </>
         ) : null}
       </div>
-    </Form>
+    </form>
   )
 }
 

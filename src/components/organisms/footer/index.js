@@ -1,16 +1,17 @@
-﻿import React from 'react'
-import { Container } from 'react-bootstrap'
-import './style.scss'
+﻿import React from 'react';
+import './style.scss';
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
   return (
     <footer>
-      <Container className='footer-container p-0' fluid>
-        <p className='mb-0 bg-dark text-white text-center border border-1'>
-          Copyright &copy; 2024 AUCTION TEAM, Inc. Contact: 0905060606
+      <div className="container-fluid footer-container p-0">
+        <p className="mb-0 bg-dark text-white text-center border border-1">
+          Copyright &copy; {currentYear} AUCTION TEAM
         </p>
-      </Container>
+      </div>
     </footer>
-  )
-}
-export default Footer
+  );
+};
+
+export default Footer;

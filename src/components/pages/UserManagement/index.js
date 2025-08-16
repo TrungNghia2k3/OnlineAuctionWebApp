@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
-import Table from 'react-bootstrap/Table'
-import { Container } from 'reactstrap'
 import userApi from '../../../api/user'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Button from '../../molecules/buttons/button'
+import Button from '../../molecules/Button'
 import Template from '../../templates/default/no-separation-template'
 import './style.scss'
 
@@ -55,8 +53,8 @@ const UserManagement = () => {
 
   const content = (
     <>
-      <Container fluid>
-        <Table striped className='table-user'>
+      <div className='container-fluid'>
+        <table className='table table-striped table-user'>
           <thead>
             <tr>
               <th>#</th>
@@ -100,10 +98,11 @@ const UserManagement = () => {
                   </tr>
                 )
               }
+              return null
             })}
           </tbody>
-        </Table>
-      </Container>
+        </table>
+      </div>
     </>
   )
 

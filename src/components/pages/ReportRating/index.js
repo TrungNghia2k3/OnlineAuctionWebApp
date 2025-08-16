@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react'
-import { Table } from 'react-bootstrap'
 import RatingApi from '../../../api/rating'
 import { AuthContext } from '../../../contexts/AuthContext'
 import Template from '../../templates/default/no-separation-template'
@@ -26,7 +25,7 @@ const ReportRating = () => {
 
   const content = (
     <>
-      <Table striped className='table-item'>
+      <table className='table table-striped table-item'>
         <thead>
           <tr>
             <th>Top Rating</th>
@@ -45,7 +44,7 @@ const ReportRating = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </table>
     </>
   )
   return (

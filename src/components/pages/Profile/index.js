@@ -1,18 +1,17 @@
 import { useFormik } from 'formik'
 import { useContext, useEffect, useState } from 'react'
-import { Col, Container, Form, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import * as yup from 'yup'
 import UserApi from '../../../api/user'
 import { errorMessages } from '../../../common'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Label from '../../atoms/forms/label'
+import Label from '../../atoms/Label'
 import InformationModal from '../../atoms/modals/Information'
 import LockAccountModal from '../../atoms/modals/confirmation'
-import AlertFail from '../../molecules/alerts/alert-fail'
-import Button from '../../molecules/buttons/button'
-import PasswordField from '../../molecules/forms/password-field'
-import TextField from '../../molecules/forms/text-field'
+import AlertFail from '../../molecules/AlertFail'
+import Button from '../../molecules/Button'
+import PasswordField from '../../molecules/PasswordField'
+import TextField from '../../molecules/TextField'
 import ProtectedRoute from '../../protected-route'
 import Template from '../../templates/default/no-separation-template'
 import './style.scss'
@@ -116,49 +115,53 @@ const Profile = () => {
 
   const content = (
     <>
-      <Container>
-        <Form noValidate onSubmit={formik.handleSubmit}>
+      <div className="container">
+        <form noValidate onSubmit={formik.handleSubmit}>
           <AlertFail message={errorMessage} show={!!errorMessage} />
-          <Row>
-            <Col>
+          <div className="row">
+            <div className="col">
               <TextField label='Username' name='username' {...formik} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
               <PasswordField label='Password' name='password' {...formik} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
               <TextField label='Email address' name='email' {...formik} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
               <TextField label='FullName' name='fullName' {...formik} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
               <TextField label='PhoneNumber' name='phoneNumber' {...formik} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
               <TextField label='Address' name='address' {...formik} />
-            </Col>
-          </Row>
-          <Row>
-            <Col className='buttons-profile'>
-              <Form className='checkbox-lock-account'>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col buttons-profile">
+              <div className='checkbox-lock-account'>
                 <Label text='Lock account' />
-                <Form.Check
-                  type='switch'
-                  checked={formik.values.isActive}
-                  onChange={(e) => formik.setFieldValue('isActive', e.target.checked)}
-                />
-              </Form>
+                <div className="form-check form-switch">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    checked={formik.values.isActive}
+                    onChange={(e) => formik.setFieldValue('isActive', e.target.checked)}
+                  />
+                </div>
+              </div>
               <div className='box-buttons-profile'>
                 <Button
                   className='buttons-refresh-profile'
@@ -177,8 +180,8 @@ const Profile = () => {
                   disabled={!(formik.isValid && formik.dirty)}
                 />
               </div>
-            </Col>
-          </Row>
+            </div>
+          </div>
           <InformationModal body='Account updated successfully' onHide={handleCloseModal} show={showInformationModal} />
           <LockAccountModal
             body='Are you sure you want to lock your account?'
@@ -186,8 +189,8 @@ const Profile = () => {
             onHide={handleCancelLockAccount}
             onClick={handleConfirmLockAccount}
           />
-        </Form>
-      </Container>
+        </form>
+      </div>
     </>
   )
 

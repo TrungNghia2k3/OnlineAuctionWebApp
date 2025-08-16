@@ -21,29 +21,33 @@ const AppRoutes = [
     name: 'home',
     title: 'Home page',
     icon: 'images/iconnav/danh_muc.png',
-    roles: [0, 1],
+    roles: [0, 1, 2], // Allow guests (no login), users, and admins
+    isPublic: true, // Can access without authentication
   },
   {
-    index: true,
     path: '/category-browser',
     element: <CategoryBrowser />,
     name: 'category-browser',
-    roles: [0, 1],
+    roles: [0, 1, 2],
+    isPublic: true, // Can access without authentication
   },
   {
     path: '/login',
     element: <Login />,
     name: 'login',
+    isPublic: true,
   },
   {
     path: '/register',
     element: <Register />,
     name: 'register',
+    isPublic: true,
   },
   {
     path: '/forgot-password',
     element: <ForgotPassword />,
     name: 'forgot-password',
+    isPublic: true,
   },
   {
     path: '/category-management',
@@ -67,13 +71,15 @@ const AppRoutes = [
     path: '/bid-detail',
     element: <BidDetail />,
     name: 'bid-detail',
-    roles: [0, 1],
+    roles: [0, 1, 2],
+    isPublic: true, // Can view auction details without login
   },
   {
     path: '/search-results',
     element: <SearchResult />,
     name: 'search-results',
-    roles: [0, 1],
+    roles: [0, 1, 2],
+    isPublic: true, // Can search without login
   },
   {
     path: '/notification',
@@ -120,11 +126,6 @@ const AppRoutes = [
     isMenu: true,
     roles: [0, 1, 2],
   },
-
-  // {
-  //   path: '/allcontrols',
-  //   element: <AllControls />,
-  // },
 ]
 
 export default AppRoutes

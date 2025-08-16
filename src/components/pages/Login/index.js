@@ -1,144 +1,147 @@
-import { useFormik } from 'formik'
-import { jwtDecode } from 'jwt-decode'
-import { useContext, useState } from 'react'
-import { Col, Form, Row } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
-import UserApi from '../../../api/user'
-import { constant } from '../../../common'
-import { AuthContext } from '../../../contexts/AuthContext'
-import Badge from '../../atoms/badge'
-import Label from '../../atoms/forms/label'
-import Button from '../../molecules/buttons/button'
-import CheckBox from '../../molecules/forms/check-box-single'
-import PasswordField from '../../molecules/forms/password-field'
-import TextField from '../../molecules/forms/text-field'
-import Template from '../../templates/without-login-template'
-import './style.scss'
+import { useFormik } from 'formik';
+import { jwtDecode } from 'jwt-decode';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthApi from '../../../api/authentication';
+import { constant } from '../../../common';
+import { AuthContext } from '../../../contexts/AuthContext';
+import Badge from '../../atoms/Badge';
+import Label from '../../atoms/Label';
+import Button from '../../molecules/Button';
+import CheckBox from '../../molecules/CheckBoxSingle';
+import PasswordField from '../../molecules/PasswordField';
+import TextField from '../../molecules/TextField';
+import Template from '../../templates/without-login-template';
+import './style.scss';
 
 const Login = () => {
-  const navigate = useNavigate()
-  const { updateCurrentUser, setShowLoadingPage } = useContext(AuthContext)
-  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate();
+  const { updateCurrentUser, setShowLoadingPage } = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const formik = useFormik({
     initialValues: {
-      userName: '',
-      passWord: '',
+      username: '',
+      password: '',
       rememberPassword: false,
     },
-  })
+  });
 
   const handleClickRegister = () => {
-    navigate('/register')
-  }
+    navigate('/register');
+  };
+
   const handleLogin = async (e) => {
-    e.preventDefault()
-    setShowLoadingPage(true)
+    e.preventDefault();
+    setShowLoadingPage(true);
 
     try {
-      const data = formik.values
-      if (!data.userName || !data.passWord) {
-        setErrorMessage('Please enter Username and Password')
-        setShowLoadingPage(false)
-        return
+      const data = formik.values;
+      if (!data.username || !data.password) {
+        setErrorMessage('Please enter username and password');
+        setShowLoadingPage(false);
+        return;
       }
 
-      const nguoiDung = await UserApi.authentication(data.userName, data.passWord)
-      if (!nguoiDung) {
-        setErrorMessage('Username or Password is invalid')
-        setShowLoadingPage(false)
-        return
+      const response = await AuthApi.authenticate(data.username, data.password);
+      if (!response || response.code !== 1000) {
+        setErrorMessage('Username or Password is invalid');
+        setShowLoadingPage(false);
+        return;
       }
 
-      // Extract just the token from the response
-      const token = nguoiDung.token
-      
+      // Extract the token from the new API response format
+      const token = response.result.token;
+
+      console.log('Login successful, token:', token);
+
       // Update current user with the token (App.js will decode it)
-      await updateCurrentUser(token)
+      await updateCurrentUser(token);
       
       // Store only the token
-      sessionStorage.setItem('CurrentUser', JSON.stringify(token))
+      sessionStorage.setItem('CurrentUser', JSON.stringify(token));
       if (data.rememberPassword) {
-        localStorage.setItem('CurrentUser', JSON.stringify(token))
+        localStorage.setItem('CurrentUser', JSON.stringify(token));
       }
       
       // Decode token to get role for navigation
       try {
-        const decoded = jwtDecode(token)
-        const userRole = parseInt(decoded.Role)
-        if (userRole === 2) {
-          navigate('/category-management')
-          setShowLoadingPage(false)
-          return
+        const decoded = jwtDecode(token);
+        const userRole = decoded.scope; // Use 'scope' field which contains role info
+        if (userRole === 'ROLE_ADMIN') {
+          navigate('/category-management');
+          setShowLoadingPage(false);
+          return;
         }
+        // For ROLE_USER, navigate to home page
+        navigate('/');
       } catch (decodeError) {
-        console.error('Error decoding token:', decodeError)
+        console.error('Error decoding token:', decodeError);
+        navigate('/'); // Default navigation if decode fails
       }
-      
-      navigate('/')
     } catch (error) {
-      setErrorMessage()
+      setErrorMessage();
     }
 
-    setShowLoadingPage(false)
-  }
+    setShowLoadingPage(false);
+  };
 
   const handleForgotPassword = () => {
-    navigate('/forgot-password')
-  }
+    navigate('/forgot-password');
+  };
 
   const login = (
     <>
-      <Form className='login-page'>
+      <form className="login-page">
         <h1>Hello Again!</h1>
         <h4>Welcome Back</h4>
-        <Row>
-          <Col>
-            <TextField label='Username' name='userName' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <PasswordField label='Password' name='passWord' maxLength={constant.tenNguoiDungMax} {...formik} />
-          </Col>
-        </Row>
-        <Col className='error-message'>
-          <Badge text={errorMessage} variant='danger' />
-        </Col>
-        <Row>
-          <Col className='remember'>
-            <CheckBox className='remember-password' name='rememberPassword' labelCheckBox='Remember' {...formik} />
+        <div className="row">
+          <div className="col">
+            <TextField label="Username" name="username" maxLength={constant.usernameMax} {...formik} />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <PasswordField label="Password" name="password" maxLength={constant.passwordMax} {...formik} />
+          </div>
+        </div>
+        <div className="col error-message">
+          <Badge text={errorMessage} variant="danger" />
+        </div>
+        <div className="row">
+          <div className="col remember">
+            <CheckBox className="remember-password" name="rememberPassword" labelCheckBox="Remember" {...formik} />
             <Label
-              text='Forgot Password?'
+              text="Forgot Password?"
               onClick={() => handleForgotPassword()}
-              className={{ 'forgot-password': true }}
-            ></Label>
-          </Col>
-        </Row>
+              className="forgot-password"
+            />
+          </div>
+        </div>
 
-        <Row>
-          <Col className='buttons'>
+        <div className="row">
+          <div className="col buttons">
             <Button
-              className='button-login'
-              type='submit'
-              iconPath='images/login.png'
-              variant='success'
-              text='Login'
+              className="button-login"
+              type="submit"
+              iconPath="images/login.png"
+              variant="success"
+              text="Login"
               onClick={handleLogin}
             />
-          </Col>
-        </Row>
-        <Row className='text-center my-2'>
+          </div>
+        </div>
+        <div className="row text-center my-2">
           <p>
             Don't have a Clarity account?{' '}
-            <Label text='Register here' className={{ 'register-now': true }} onClick={handleClickRegister} />
+            <Label text="Register here" className="register-now" onClick={handleClickRegister} />
           </p>
-        </Row>
-      </Form>
+        </div>
+      </form>
     </>
-  )
+  );
 
-  return <Template content={login} />
-}
+  return <Template content={login} />;
+};
 
-export default Login
+export default Login;

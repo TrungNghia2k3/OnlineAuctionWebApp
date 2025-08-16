@@ -1,14 +1,13 @@
 import { useFormik } from 'formik'
 import { useContext, useState } from 'react'
-import { Col, Form, Row, Table } from 'react-bootstrap'
 import * as yup from 'yup'
 import ItemApi from '../../../api/item'
 import { errorMessages } from '../../../common'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Label from '../../atoms/forms/label'
-import Button from '../../molecules/buttons/button'
-import DatePicker from '../../molecules/forms/date-picker'
-import RadioBoxList from '../../molecules/forms/radio-box-list'
+import Label from '../../atoms/Label'
+import Button from '../../molecules/Button'
+import DatePicker from '../../molecules/DatePicker'
+import RadioBoxList from '../../molecules/RadioBoxList'
 import ProtectedRoute from '../../protected-route'
 import Template from '../../templates/default/horizontal-separation-template'
 import './style.scss'
@@ -69,18 +68,18 @@ const ReportItems = () => {
 
   const top = (
     <>
-      <Row className='input-item-export'>
-        <Col xs={3}>
+      <div className='row input-item-export'>
+        <div className='col-3'>
           <DatePicker label='Start date' name='startDate' className={{ 'form-control': true }} {...formik} />
-        </Col>
-        <Col xs={3}>
+        </div>
+        <div className='col-3'>
           <DatePicker label='End date' name='endDate' className={{ 'form-control': true }} {...formik} />
-        </Col>
-        <Col xs={2} className='bid-status-export'>
+        </div>
+        <div className='col-2 bid-status-export'>
           <Label text='Select a status' />
           <RadioBoxList options={options} className='bid-status-value-export' name='bidStatus' {...formik} />
-        </Col>
-        <Col xs={3} className='button-bid-status-export'>
+        </div>
+        <div className='col-3 button-bid-status-export'>
           <Button
             className='button-export'
             type='submit'
@@ -90,13 +89,13 @@ const ReportItems = () => {
             iconPath='images/export.svg'
             onClick={handleGetStatistics}
           />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </>
   )
   const bottom = (
     <>
-      <Table striped className='table-item'>
+      <table className='table table-striped table-item'>
         <thead>
           <tr>
             <th>#Id</th>
@@ -121,15 +120,15 @@ const ReportItems = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </table>
     </>
   )
   return (
     <>
       <ProtectedRoute />
-      <Form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit}>
         <Template headerIcon='images/export.svg' headerTitle='Report Items' top={top} bottom={bottom} />
-      </Form>
+      </form>
     </>
   )
 }

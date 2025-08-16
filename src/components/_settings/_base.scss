@@ -1,5 +1,8 @@
 @import './_variables.scss';
 
+// Import Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
 html,
 body {
   color: var(--color-type-body);
@@ -12,38 +15,4 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-}
-
-.list-view {
-  table {
-    table-layout: fixed;
-  }
-
-  td {
-    word-break: break-all;
-  }
-
-  .edit {
-    width: 88px;
-    text-align: center;
-  }
-
-  .delete {
-    width: 50px;
-    text-align: center;
-  }
-
-  .stt {
-    min-width: 82px;
-  }
-
-  .kich-hoat {
-    min-width: 82px;
-    text-align: center;
-  }
-
-  .date {
-    min-width: 92px;
-    text-align: center;
-  }
 }

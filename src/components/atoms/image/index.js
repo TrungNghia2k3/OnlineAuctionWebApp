@@ -1,18 +1,48 @@
-import * as React from 'react'
-import classnames from 'classnames'
-// import styles from './style.scss'
-import { Image as ImageLibrary } from 'react-bootstrap'
+import './style.scss';
 
-function Image({ path, rounded, roundedCircle, className, handleClick }) {
+function Image({ 
+  path, 
+  src,
+  alt = '',
+  rounded = false, 
+  roundedCircle = false, 
+  fluid = false,
+  thumbnail = false,
+  className = '', 
+  handleClick,
+  onClick,
+  ...props 
+}) {
+  let classes = '';
+  
+  if (rounded) {
+    classes += ' rounded';
+  }
+  if (roundedCircle) {
+    classes += ' rounded-circle';
+  }
+  if (fluid) {
+    classes += ' img-fluid';
+  }
+  if (thumbnail) {
+    classes += ' img-thumbnail';
+  }
+  if (className) {
+    classes += ` ${className}`;
+  }
+
+  const handleImageClick = handleClick || onClick;
+  const imageSrc = path || src;
+
   return (
-    <ImageLibrary
-      src={path}
-      rounded={rounded}
-      roundedCircle={roundedCircle}
-      className={classnames({ ...className })}
-      onClick={handleClick}
+    <img
+      src={imageSrc}
+      alt={alt}
+      className={classes.trim()}
+      onClick={handleImageClick}
+      {...props}
     />
-  )
+  );
 }
 
-export default Image
+export default Image;

@@ -1,1 +1,17 @@
 @import '../../_settings/_variables.scss';
+
+// Custom alert styles
+.alert {
+  // Additional custom styles can be added here
+  &.alert-custom {
+    background-color: $brand-2;
+    border-color: $brand-1;
+    color: $grey-1;
+  }
+
+  .alert-icon {
+    width: $alert-icon-width;
+    height: $alert-icon-height;
+    margin-right: 0.5rem;
+  }
+}

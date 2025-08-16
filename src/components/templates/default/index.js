@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Body from '../../organisms/body'
-import Toast from '../../atoms/toast'
+import Toast from '../../atoms/Toast'
 import './styles.scss'
 
 const DefaultTemplate = ({ headerIcon, headerTitle, children }) => {

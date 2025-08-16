@@ -1,13 +1,12 @@
 import { useRef } from 'react'
-import { Form } from 'react-bootstrap'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import Input from '../../../atoms/forms/input'
-import Image from '../../../atoms/image'
-import Button from '../../../molecules/buttons/button'
+import Input from '../../../atoms/Input'
+import Image from '../../../atoms/Image'
+import Button from '../../../molecules/Button'
 import './style.scss'
 
 const SearchBoxHeader = () => {
-  let [searchParams, setSearchParams] = useSearchParams()
+  let [searchParams] = useSearchParams()
   const keyWord = searchParams.get('keyword')
 
   const navigate = useNavigate()
@@ -20,9 +19,9 @@ const SearchBoxHeader = () => {
   }
 
   return (
-    <Form>
+    <form onSubmit={handleSearch}>
       <div className='header-sreachbox'>
-        <Image path='/images/logo.jpg' className={{ 'header-logo': true }} handleClick={() => navigate('/')} />
+        <Image path='/images/logo.jpg' className="header-logo" handleClick={() => navigate('/')} />
         <Input type='text' innerRef={inputRef} className='searching-header-homepage' defaultValue={keyWord} />
         <Button
           type='submit'
@@ -32,7 +31,7 @@ const SearchBoxHeader = () => {
           iconPath={'images/search.svg'}
         />
       </div>
-    </Form>
+    </form>
   )
 }
 

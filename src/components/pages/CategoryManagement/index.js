@@ -1,16 +1,13 @@
 import { useFormik } from 'formik'
 import { useContext, useEffect, useState } from 'react'
-import { Col, Form, Row } from 'react-bootstrap'
-import Table from 'react-bootstrap/Table'
-import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
-import CategoryApi from '../../../api/category'
+import CategoriesApi from '../../../api/categories'
 import { errorMessages } from '../../../common'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Badge from '../../atoms/badge'
-import Input from '../../atoms/forms/input'
-import Label from '../../atoms/forms/label'
-import Button from '../../molecules/buttons/button'
+import Badge from '../../atoms/Badge'
+import Input from '../../atoms/Input'
+import Label from '../../atoms/Label'
+import Button from '../../molecules/Button'
 import ProtectedRoute from '../../protected-route'
 import Template from '../../templates/default/horizontal-2-separations-template'
 import './style.scss'
@@ -30,7 +27,6 @@ const CategoryManagement = () => {
     }
   }, [])
 
-  const navigate = useNavigate()
   const { currentUser } = useContext(AuthContext)
   let token = null
   let role = null
@@ -41,8 +37,8 @@ const CategoryManagement = () => {
   useEffect(() => {
     if (token && role === 2) {
       const getListItem = async () => {
-        const result = await CategoryApi.getAllCategory(token, role)
-        setCategories(result)
+        const response = await CategoriesApi.getAllCategory()
+        setCategories(response.result)
       }
       getListItem()
     }
@@ -58,7 +54,7 @@ const CategoryManagement = () => {
       name: '',
       role: 0,
       description: '',
-      isActive: true,
+      active: true,
     },
     validationSchema: yup.object().shape({
       id: yup.number(),
@@ -75,15 +71,15 @@ const CategoryManagement = () => {
         }),
       role: yup.number(),
       description: yup.string(),
-      isActive: yup.bool(),
+      active: yup.bool(),
     }),
   })
   const refreshListView = (newData) => {
-    const { id, name, description, isActive } = newData
+    const { id, name, description, active } = newData
 
     const updatedList = categories.map((row) => {
       if (row.id === id) {
-        return { ...row, name, description, isActive }
+        return { ...row, name, description, active }
       }
       return row
     })
@@ -94,7 +90,7 @@ const CategoryManagement = () => {
     const data = formik.values
     data.role = role
     if (data.id) {
-      const result = await CategoryApi.update(data, token)
+      const result = await CategoriesApi.update(data, token)
       if (!result) {
         setErrorMessage('Fail to save category')
         return
@@ -102,7 +98,7 @@ const CategoryManagement = () => {
       refreshListView(data)
       formik.resetForm()
     } else {
-      const result = await CategoryApi.create(data, token)
+      const result = await CategoriesApi.create(data, token)
       categories.push(result)
       formik.resetForm()
     }
@@ -110,9 +106,9 @@ const CategoryManagement = () => {
 
   const handleChangeUpdate = async (category) => {
     const data = category
-    data.isActive = !data.isActive
+    data.active = !data.active
     data.role = role
-    const result = await CategoryApi.update(data, token)
+    const result = await CategoriesApi.update(data, token)
     if (result) {
       refreshListView(result)
     }
@@ -121,9 +117,9 @@ const CategoryManagement = () => {
   const top = (
     <>
       {' '}
-      <Row>
-        <Row>
-          <Col xs={3}>
+      <div className='row'>
+        <div className='row'>
+          <div className='col-3'>
             <Label text='Category Name' />
             <Input
               placeholder='Enter a category name'
@@ -133,9 +129,9 @@ const CategoryManagement = () => {
               isValid={formik.touched.name && !formik.errors.name}
               isInvalid={formik.errors.name}
             />
-            <Form.Control.Feedback type='invalid'>{formik.errors.name}</Form.Control.Feedback>
-          </Col>
-          <Col xs={3}>
+            <div className='invalid-feedback d-block'>{formik.errors.name}</div>
+          </div>
+          <div className='col-3'>
             <Label text='Description' />
             <Input
               placeholder='Enter a description'
@@ -143,20 +139,22 @@ const CategoryManagement = () => {
               value={formik.values.description}
               onChange={formik.handleChange}
             />
-          </Col>
-          <Col>
+          </div>
+          <div className='col'>
             <Label text='Set active' />
-            <Form.Check
-              type='switch'
-              onChange={formik.handleChange}
-              checked={formik.values.isActive}
-              name='isActive'
-              className='mt-2'
-            />
-          </Col>
-        </Row>
-        <Col>{showBadge && <Badge text={errorMessage} variant='danger' />}</Col>
-      </Row>
+            <div className='form-check form-switch'>
+              <input
+                className='form-check-input mt-2'
+                type='checkbox'
+                onChange={formik.handleChange}
+                checked={formik.values.active}
+                name='active'
+              />
+            </div>
+          </div>
+        </div>
+        <div className='col'>{showBadge && <Badge text={errorMessage} variant='danger' />}</div>
+      </div>
     </>
   )
   const middle = (
@@ -181,7 +179,7 @@ const CategoryManagement = () => {
   )
   const bottom = (
     <>
-      <Table striped className='table-category'>
+      <table className='table table-striped table-category'>
         <thead>
           <tr>
             <th>#</th>
@@ -200,9 +198,14 @@ const CategoryManagement = () => {
                 <p className='description-text'>{category.description}</p>
               </td>
               <td>
-                <Form>
-                  <Form.Check type='switch' checked={category.isActive} onChange={() => handleChangeUpdate(category)} />
-                </Form>
+                <div className='form-check form-switch'>
+                  <input
+                    className='form-check-input'
+                    type='checkbox'
+                    checked={category.active}
+                    onChange={() => handleChangeUpdate(category)}
+                  />
+                </div>
               </td>
               <td>
                 <Button
@@ -216,14 +219,14 @@ const CategoryManagement = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </table>
     </>
   )
 
   return (
     <>
       <ProtectedRoute />
-      <Form noValidate onSubmit={formik.handleSubmit}>
+      <form noValidate onSubmit={formik.handleSubmit}>
         <Template
           headerIcon={'images/list-solid.svg'}
           headerTitle={'Categories management'}
@@ -231,7 +234,7 @@ const CategoryManagement = () => {
           middle={middle}
           bottom={bottom}
         />
-      </Form>
+      </form>
     </>
   )
 }

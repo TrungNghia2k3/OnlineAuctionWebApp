@@ -1,44 +1,58 @@
-:root {
-  /*
-  * Colors
-  */
-  --brand: #2995c0;
-  --grey-1: #474747;
-  --grey-2: #919191;
-  --grey-3: #dadada;
-  --grey-4: #ededed;
-  --color-type-body: var(--grey-1);
-  --success: #2a7e2e;
-  --atenttion: #2196f3;
-  --wait: #fff8dd;
-  --error: #d92525;
+// Bootstrap custom variables (must be imported before Bootstrap)
+$primary: #2995c0;
+$secondary: #6c757d;
+$success: #2a7e2e;
+$info: #2196f3;
+$warning: #ffc107;
+$danger: #d92525;
+$light: #f8f9fa;
+$dark: #343a40;
 
-  /*
-  * Fonts
-  */
-  --base-font-family: sans-serif;
-  --headers-font-family: serif;
-  --base-font-lineheight: 1.5em;
-}
-
-/*
-* Colors
-*/
+// Custom brand colors
 $brand-1: lightblue;
 $brand-2: #f0f8ff;
 $brand-3: #fbecd0;
 $brand-4: #ff7f50;
 
-/*
-* Fonts
-*/
+// Grey scale
+$grey-1: #474747;
+$grey-2: #919191;
+$grey-3: #dadada;
+$grey-4: #ededed;
 
-/*
-* Image Size
-*/
+// Fonts
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-family-serif: Georgia, "Times New Roman", Times, serif;
+$font-family-base: $font-family-sans-serif;
+$line-height-base: 1.5;
+
+// Component sizes
 $image-button-width: 22px;
 $image-button-height: 22px;
 $image-toast-width: 30px;
 $image-toast-height: 30px;
 $alert-icon-width: 30px;
 $alert-icon-height: 30px;
+
+:root {
+  /*
+  * Colors
+  */
+  --brand: #{$primary};
+  --grey-1: #{$grey-1};
+  --grey-2: #{$grey-2};
+  --grey-3: #{$grey-3};
+  --grey-4: #{$grey-4};
+  --color-type-body: #{$grey-1};
+  --success: #{$success};
+  --attention: #{$info};
+  --wait: #fff8dd;
+  --error: #{$danger};
+
+  /*
+  * Fonts
+  */
+  --base-font-family: #{$font-family-base};
+  --headers-font-family: #{$font-family-serif};
+  --base-font-lineheight: #{$line-height-base};
+}

@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
-import { FaStar } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import RatingApi from '../../../api/rating'
 import { AuthContext } from '../../../contexts/AuthContext'
-import Button from '../../molecules/buttons/button'
+import Button from '../../molecules/Button'
 import './style.scss'
 
 const RatingInformation = ({ item }) => {
@@ -50,10 +49,13 @@ const RatingInformation = ({ item }) => {
             value={currentRating}
             onClick={!item?.scoreRating ? () => handleRatingChange(currentRating) : null}
           />
-          <FaStar
-            className='star'
-            size={40}
-            color={currentRating <= (hoverRating || rating) ? '#ffc107' : '#e4d5e9'}
+          <i
+            className={`bi bi-star${currentRating <= (hoverRating || rating) ? '-fill' : ''} star`}
+            style={{ 
+              fontSize: '40px', 
+              color: currentRating <= (hoverRating || rating) ? '#ffc107' : '#e4d5e9',
+              cursor: !item?.scoreRating ? 'pointer' : 'default'
+            }}
             onMouseEnter={!item?.scoreRating ? () => handleStarHover(currentRating) : null}
             onMouseLeave={!item?.scoreRating ? () => handleStarHover(null) : null}
           />
