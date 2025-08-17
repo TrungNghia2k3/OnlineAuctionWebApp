@@ -1,0 +1,96 @@
+/* Loading Spinner Styles */
+.loading-spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.95);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s ease-in-out;
+  
+  &.fade-out {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.loading-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-spinner {
+  &.spinner-sm {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  &.spinner-md {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  &.spinner-lg {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+  
+  &.fade-out {
+    animation: fadeOutSpinner 0.5s ease-in-out forwards;
+  }
+}
+
+.loading-message {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c757d;
+  animation: fadeInMessage 0.3s ease-in-out;
+}
+
+/* Keyframe animations */
+@keyframes fadeOutSpinner {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .loading-spinner {
+    &.spinner-md {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+    
+    &.spinner-lg {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
+  
+  .loading-message {
+    font-size: 0.9rem;
+  }
+}

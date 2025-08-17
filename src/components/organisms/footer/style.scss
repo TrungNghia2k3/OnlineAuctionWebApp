@@ -1,3 +1,69 @@
 @import '../../_settings/_variables.scss';
 
+/* Footer Styles - Centered Container with White Space */
+.app-footer {  
+  h5, h6 {
+    color: #fff !important;
+    margin-bottom: 1rem;
+  }
+  
+  h5 {
+    font-weight: bold;
+  }
+  
+  h6 {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  a {
+    transition: color 0.2s ease-in-out;
+    
+    &:hover {
+      color: #007bff !important;
+    }
+  }
+  
+  .text-muted {
+    color: #adb5bd !important;
+    line-height: 1.6;
+  }
+  
+  ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .border-secondary {
+    border-color: #495057 !important;
+  }
+}
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-footer {
+    padding: 1rem 0.5rem; /* Reduce side margins on mobile */
+    
+    .footer-content {
+      padding: 1.5rem;
+      border-radius: 0.5rem; /* Slightly smaller border radius on mobile */
+    }
+    
+    .col-md-6.text-md-end {
+      text-align: center !important;
+      margin-top: 1rem;
+    }
+
+  }
+}
+
+@media (max-width: 576px) {
+  .app-footer {
+    padding: 0.5rem 0.25rem; /* Minimal margins on small screens */
+    
+    .footer-content {
+      padding: 1rem; /* Reduce content padding on small screens */
+    }
+  }
+}

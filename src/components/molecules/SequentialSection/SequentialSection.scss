@@ -1,0 +1,87 @@
+/* Sequential Section Styles */
+.sequential-section {
+  transition: all 0.4s ease-in-out;
+  
+  &.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    visibility: hidden;
+  }
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    
+    &.loading {
+      opacity: 0.7;
+    }
+    
+    &.loaded {
+      opacity: 1;
+    }
+  }
+}
+
+/* Animation for different sections */
+.sequential-section[data-section="header"] {
+  &.visible {
+    animation: slideInFromTop 0.4s ease-out;
+  }
+}
+
+.sequential-section[data-section="body"] {
+  &.visible {
+    animation: fadeInUp 0.5s ease-out;
+  }
+}
+
+.sequential-section[data-section="footer"] {
+  &.visible {
+    animation: slideInFromBottom 0.4s ease-out;
+  }
+}
+
+/* Keyframe animations */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sequential-section {
+    &.hidden,
+    &.visible {
+      transform: translateY(15px);
+    }
+  }
+}

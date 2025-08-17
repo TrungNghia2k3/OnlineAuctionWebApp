@@ -22,6 +22,15 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# IDE
+.idea
 .github
 .vscode
 .prettierrc
+
+# MD
+ARCHITECTURE.md
+TYPESCRIPT_GUIDE.md
+CONTAINER_ALIGNMENT_SYSTEM.md
+UNICODE_BOM_FIX.md
+SEQUENTIAL_LOADING_IMPLEMENTATION.md
