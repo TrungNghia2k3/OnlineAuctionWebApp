@@ -1,5 +1,5 @@
-import { AuthContext } from '../contexts/AuthContext'
-import { useAuth } from '../hooks/useAuth'
+import { AuthContext } from '@/contexts'
+import { useAuth } from '@/hooks'
 
 /**
  * Authentication Provider Component

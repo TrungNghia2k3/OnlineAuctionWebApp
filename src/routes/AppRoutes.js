@@ -1,5 +1,5 @@
-import { routeDefinitions } from '../config/routes'
-import { RouteGuard } from '../components/RouteGuard'
+import { routeDefinitions } from '@/config/routes'
+import { RouteGuard } from '@/components/RouteGuard'
 
 /**
  * App Routes Configuration

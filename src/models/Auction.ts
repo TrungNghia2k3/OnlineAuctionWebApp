@@ -2,7 +2,7 @@
  * Auction and Bid-related interfaces and types
  */
 
-import { BaseEntity } from '../types/common'
+import { BaseEntity } from '@/types'
 import { IUser } from './User'
 import { ICategory } from './Category'
 

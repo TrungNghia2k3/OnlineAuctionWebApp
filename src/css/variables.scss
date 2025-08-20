@@ -48,11 +48,13 @@ $alert-icon-height: 30px;
   --attention: #{$info};
   --wait: #fff8dd;
   --error: #{$danger};
+  --color-main: #0033FF;
+  --color-main-hover: #2953FF;
 
   /*
   * Fonts
   */
   --base-font-family: #{$font-family-base};
   --headers-font-family: #{$font-family-serif};
-  --base-font-lineheight: #{$line-height-base};
+  --base-font-line-height: #{$line-height-base};
 }

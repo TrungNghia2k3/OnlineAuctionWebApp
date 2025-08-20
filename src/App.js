@@ -1,10 +1,13 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import './App.css'
-import { AppProviders } from './providers'
-import AppRoutes from './routes/AppRoutes'
+import {Suspense} from 'react';
+import {Route, Routes} from 'react-router-dom';
+import './App.css';
+import {AppProviders} from './providers';
+import AppRoutes from './routes/AppRoutes';
+import './css/variables.scss';
+import './css/base.scss';
+
 
 /**
  * Main App Component
@@ -14,7 +17,7 @@ import AppRoutes from './routes/AppRoutes'
 const App = () => {
     return (
         <AppProviders>
-            <Suspense fallback={<div className="d-flex justify-content-center">Loading...</div>}>
+            <Suspense fallback={<div className="d-flex justify-content-center p-3">Loading...</div>}>
                 <Routes>
                     {AppRoutes.map((route, index) => (
                         <Route

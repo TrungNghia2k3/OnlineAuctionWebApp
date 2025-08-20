@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
-import { STORAGE_KEYS } from '../common/storage-names'
-import { USER_ROLES } from '../common/constant'
-import { IUser, User, UserRole, ILoginCredentials, IRegisterData } from '../models/User'
-import { ServiceFactory } from '../services/ServiceFactory'
+import { STORAGE_KEYS } from '@/common/storage-names'
+import { USER_ROLES } from '@/common/constant'
+import { IUser, User, UserRole, ILoginCredentials, IRegisterData } from '@/models'
+import { ServiceFactory } from '@/services/ServiceFactory'
 
 interface DecodedToken {
   sub: string

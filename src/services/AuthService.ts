@@ -1,5 +1,5 @@
 import { IAuthService } from './interfaces'
-import { BaseResponse } from '../types/common'
+import { BaseResponse } from '@/types'
 import { 
   IUser, 
   ILoginCredentials, 
@@ -7,7 +7,7 @@ import {
   IForgotPasswordRequest, 
   IAuthToken,
   User 
-} from '../models/User'
+} from '@/models'
 import AuthenticationApi from '../api/authentication'
 
 /**

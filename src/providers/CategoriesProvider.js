@@ -1,5 +1,5 @@
-import { CategoriesContext } from '../contexts/CategoriesContext'
-import { useCategories } from '../hooks/useCategories'
+import { CategoriesContext } from '@/contexts'
+import { useCategories } from '@/hooks'
 
 /**
  * Categories Provider Component

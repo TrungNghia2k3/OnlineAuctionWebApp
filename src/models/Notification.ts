@@ -2,7 +2,7 @@
  * Notification-related interfaces and types
  */
 
-import { BaseEntity } from '../types/common'
+import { BaseEntity } from '@/types'
 import { IUser } from './User'
 
 export enum NotificationType {

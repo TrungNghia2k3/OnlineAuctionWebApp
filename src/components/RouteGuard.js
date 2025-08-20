@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
-import { ROUTE_TYPES, USER_ROLES } from '../common/constant'
+import { useAuth } from '@/hooks'
+import { ROUTE_TYPES, USER_ROLES } from '@/common/constant'
 
 /**
  * RouteGuard Component

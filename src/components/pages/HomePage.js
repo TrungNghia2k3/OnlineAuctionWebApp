@@ -1,5 +1,5 @@
 import React from 'react'
-import PageLayout from '../templates/PageLayout'
+import {PageLayout} from '../templates'
 
 /**
  * Home Page Component

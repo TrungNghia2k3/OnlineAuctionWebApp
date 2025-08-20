@@ -1,5 +1,5 @@
-import { LoadingContext } from '../contexts/LoadingContext'
-import { useLoading } from '../hooks/useLoading'
+import { LoadingContext } from '@/contexts'
+import { useLoading } from '@/hooks'
 
 /**
  * Loading Provider Component

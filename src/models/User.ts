@@ -2,7 +2,7 @@
  * User-related interfaces and types
  */
 
-import { BaseEntity } from '../types/common'
+import { BaseEntity } from '@/types'
 
 export enum UserRole {
   GUEST = 0,

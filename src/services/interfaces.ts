@@ -7,31 +7,31 @@ import {
   BaseResponse, 
   PaginatedResponse, 
   QueryOptions 
-} from '../types/common'
+} from '../types'
 import { 
   IUser, 
   ILoginCredentials, 
   IRegisterData, 
   IForgotPasswordRequest, 
   IAuthToken 
-} from '../models/User'
+} from '../models'
 import { 
   ICategory, 
   ICategoryCreateRequest, 
   ICategoryUpdateRequest 
-} from '../models/Category'
+} from '../models'
 import { 
   IAuctionItem, 
   IBid, 
   IAuctionCreateRequest, 
   IBidRequest, 
   IAuctionSearch 
-} from '../models/Auction'
+} from '../models'
 import { 
   INotification, 
   INotificationCreateRequest, 
   INotificationPreferences 
-} from '../models/Notification'
+} from '../models'
 
 export interface IAuthService {
   login(credentials: ILoginCredentials): Promise<BaseResponse<IAuthToken>>

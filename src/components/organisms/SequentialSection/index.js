@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { LOADING_STATES } from '../../../hooks/useSequentialLoading'
+import { LOADING_STATES } from '@/hooks'
+import { useEffect, useRef, useState } from 'react'
 import './SequentialSection.scss'
 
 /**
  * Sequential Section Component
  * Wraps page sections and manages their loading state
  */
-const SequentialSection = ({ 
+const SequentialSection = ({
   section,
   children,
   canShow,
