@@ -2,6 +2,7 @@
 export * from './User'
 export * from './Category'
 export * from './Auction'
+export * from './Item'
 export * from './Notification'
 
 // Re-export common types

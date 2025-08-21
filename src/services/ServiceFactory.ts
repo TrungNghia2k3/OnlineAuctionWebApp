@@ -10,9 +10,12 @@ import {
   IBidService, 
   INotificationService, 
   IUserService, 
-  IFileService 
+  IFileService,
+  IWebSocketService 
 } from './interfaces'
 import { ApiAuthService } from './AuthService'
+import { getWebSocketService } from './WebSocketService'
+// import { MockAuthService } from './MockAuthService' // Commented out - using real API
 // Import other concrete implementations when they're created
 // import { ApiCategoryService } from './CategoryService'
 // import { ApiAuctionService } from './AuctionService'
@@ -63,8 +66,9 @@ export class ServiceFactory {
   private static registry = ServiceRegistry.getInstance()
 
   static initialize(): void {
-    // Register all services
-    this.registry.register('auth', new ApiAuthService())
+    // Register all services - using API services for real backend integration
+    this.registry.register('auth', new ApiAuthService()) // Use real API service
+    // this.registry.register('auth', new MockAuthService()) // Commented out mock service
     // this.registry.register('category', new ApiCategoryService())
     // this.registry.register('auction', new ApiAuctionService())
     // this.registry.register('bid', new ApiBidService())
@@ -117,6 +121,10 @@ export class ServiceFactory {
       throw new Error('FileService not implemented yet')
     }
     return this.registry.get<IFileService>('file')
+  }
+
+  static getWebSocketService(): IWebSocketService {
+    return getWebSocketService() as IWebSocketService
   }
 
   // For testing purposes - allows replacing services with mocks

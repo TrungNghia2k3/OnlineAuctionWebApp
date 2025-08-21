@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
-import {LoadingSpinner} from '@/components/atoms'
-import {SequentialSection} from '@/components/molecules'
-import { useSequentialLoading, LOADING_STATES } from '@/hooks'
-import {Header, Footer} from '@/components/organisms'
+import { LoadingSpinner } from '@/components/atoms'
+import { SequentialSection } from '@/components/molecules'
+import { Footer, Header } from '@/components/organisms'
+import { LOADING_STATES, useSequentialLoading } from '@/hooks'
+import { useEffect } from 'react'
 import './PageLayout.scss'
 
 /**

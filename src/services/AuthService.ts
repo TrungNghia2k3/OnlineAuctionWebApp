@@ -8,7 +8,7 @@ import {
   IAuthToken,
   User 
 } from '@/models'
-import AuthenticationApi from '../api/authentication'
+import authentication from '../api/authentication'
 
 /**
  * Concrete implementation of IAuthService
@@ -17,11 +17,31 @@ import AuthenticationApi from '../api/authentication'
 export class ApiAuthService implements IAuthService {
   async login(credentials: ILoginCredentials): Promise<BaseResponse<IAuthToken>> {
     try {
-      const response = await AuthenticationApi.login(credentials)
-      return {
-        success: true,
-        data: response,
-        message: 'Login successful'
+      const response = await authentication.authenticate(credentials.username, credentials.password)
+
+      console.log('API response:', response)
+
+      // Handle the new API response format
+      if (response && response.code === 1000 && response.result) {
+        const authToken: IAuthToken = {
+          accessToken: response.result.token,
+          tokenType: 'Bearer',
+          expiresIn: 3600, // Default to 1 hour, could be extracted from JWT
+          expiresAt: new Date(Date.now() + 3600 * 1000),
+          scope: ['USER'] // Default scope, could be extracted from JWT
+        }
+        
+        return {
+          success: true,
+          data: authToken,
+          message: 'Login successful'
+        }
+      } else {
+        return {
+          success: false,
+          error: 'Invalid credentials',
+          data: undefined
+        }
       }
     } catch (error: any) {
       return {
@@ -33,24 +53,17 @@ export class ApiAuthService implements IAuthService {
   }
 
   async logout(): Promise<BaseResponse<void>> {
-    try {
-      // If there's a logout API endpoint
-      // await AuthenticationApi.logout()
-      return {
-        success: true,
-        message: 'Logout successful'
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message || 'Logout failed'
-      }
+    // If there's a logout API endpoint
+    // await authentication.logout()
+    return {
+      success: true,
+      message: 'Logout successful'
     }
   }
 
   async register(userData: IRegisterData): Promise<BaseResponse<IUser>> {
     try {
-      const response = await AuthenticationApi.register(userData)
+      const response = await authentication.register(userData.username, userData.password)
       const user = User.fromApiResponse(response)
       return {
         success: true,
@@ -68,7 +81,7 @@ export class ApiAuthService implements IAuthService {
 
   async forgotPassword(request: IForgotPasswordRequest): Promise<BaseResponse<void>> {
     try {
-      const response = await AuthenticationApi.forgotPassword(request.email)
+      const response = await authentication.forgotPassword(request.email)
       return {
         success: true,
         data: response,
@@ -85,7 +98,7 @@ export class ApiAuthService implements IAuthService {
 
   async resetPassword(token: string, newPassword: string): Promise<BaseResponse<void>> {
     try {
-      const response = await AuthenticationApi.resetPassword({ token, newPassword, confirmPassword: newPassword })
+      const response = await authentication.resetPassword(token, newPassword)
       return {
         success: true,
         data: response,
@@ -102,7 +115,7 @@ export class ApiAuthService implements IAuthService {
 
   async refreshToken(token: string): Promise<BaseResponse<IAuthToken>> {
     try {
-      const response = await AuthenticationApi.refreshToken(token)
+      const response = await authentication.refreshToken(token)
       return {
         success: true,
         data: response,
@@ -119,7 +132,7 @@ export class ApiAuthService implements IAuthService {
 
   async validateToken(token: string): Promise<BaseResponse<IUser>> {
     try {
-      const response = await AuthenticationApi.validateToken(token)
+      const response = await authentication.validateToken(token)
       const user = User.fromApiResponse(response)
       return {
         success: true,
@@ -137,11 +150,7 @@ export class ApiAuthService implements IAuthService {
 
   async changePassword(userId: string | number, currentPassword: string, newPassword: string): Promise<BaseResponse<void>> {
     try {
-      const response = await AuthenticationApi.changePassword({
-        currentPassword,
-        newPassword,
-        confirmPassword: newPassword
-      })
+      const response = await authentication.changePassword('', currentPassword, newPassword)
       return {
         success: true,
         data: response,

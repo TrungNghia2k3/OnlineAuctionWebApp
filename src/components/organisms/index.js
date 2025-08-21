@@ -1,5 +1,8 @@
 // Organisms exports - Smart components that connect business logic to UI
 
+// Category Navigation
+export {default as CategoryNavigation} from './CategoryNavigation'
+
 // Header
 export {default as Header} from './Header'
 export {default as SmartCategorySelector} from './Header/SmartCategorySelector'

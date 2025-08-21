@@ -1,8 +1,8 @@
-import constant from '../common/constant'
+import {API_URL} from '@/common'
 
 const user = {
   register: async (data) => {
-    const response = await fetch(`${constant.apiDomain}/user/register`, {
+    const response = await fetch(`${API_URL}/user/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ const user = {
   },
 
   authentication: async (userName, passWord) => {
-    const response = await fetch(`${constant.apiDomain}/user/authenticate`, {
+    const response = await fetch(`${API_URL}/user/authenticate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const user = {
   },
 
   GetAllUser: async (token) => {
-    const response = await fetch(`${constant.apiDomain}/user`, {
+    const response = await fetch(`${API_URL}/user`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const user = {
   },
 
   getById: async (id, token) => {
-    const response = await fetch(`${constant.apiDomain}/user/${id}`, {
+    const response = await fetch(`${API_URL}/user/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const user = {
   },
 
   update: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/user/update`, {
+    const response = await fetch(`${API_URL}/user/update`, {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: {
@@ -88,7 +88,7 @@ const user = {
   },
 
   forgotPassword: async (email) => {
-    const response = await fetch(`${constant.apiDomain}/user/forgotpassword/${email}`, {
+    const response = await fetch(`${API_URL}/user/forgotpassword/${email}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

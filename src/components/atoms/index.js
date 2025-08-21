@@ -1,9 +1,8 @@
 // Atoms exports - Pure UI components with NO business logic
 export {default as Badge} from './Badge'
+export {default as Breadcrumb} from './Breadcrumb'
 export {default as Button} from './Button'
-export {default as CategoriesDropdown} from './CategoriesDropdown'
 export {default as Dropdown} from './Dropdown'
-export {default as DropdownItem} from './DropdownItem'
 export {default as Icon} from './Icon'
 export {default as LoadingSpinner} from './LoadingSpinner'
 export {default as Logo} from './Logo'

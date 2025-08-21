@@ -1,12 +1,11 @@
-import constant from '../common/constant'
+import { API_URL } from '@/common'
 
 const item = {
-  getAllItem: async (token) => {
-    const response = await fetch(`${constant.apiDomain}/items`, {
+  getAllItem: async () => {
+    const response = await fetch(`${API_URL}/items`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
     })
 
@@ -19,7 +18,7 @@ const item = {
   },
 
   getAllItemPublic: async () => {
-    const response = await fetch(`${constant.apiDomain}/items`, {
+    const response = await fetch(`${API_URL}/items`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +34,7 @@ const item = {
   },
 
   getById: async (id) => {
-    const response = await fetch(`${constant.apiDomain}/items/${id}`, {
+    const response = await fetch(`${API_URL}/items/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -51,7 +50,7 @@ const item = {
   },
 
   create: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/items`, {
+    const response = await fetch(`${API_URL}/items`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -69,7 +68,7 @@ const item = {
   },
 
   update: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/items/update`, {
+    const response = await fetch(`${API_URL}/items/update`, {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: {
@@ -87,7 +86,7 @@ const item = {
   },
 
   searchItem: async (data) => {
-    const response = await fetch(`${constant.apiDomain}/items/search?keyword=${data}`, {
+    const response = await fetch(`${API_URL}/items/search?keyword=${data}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -103,7 +102,7 @@ const item = {
   },
 
   getItemByUserId: async () => {
-    const response = await fetch(`${constant.apiDomain}/items/myitems`, {
+    const response = await fetch(`${API_URL}/items/myitems`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -119,7 +118,7 @@ const item = {
   },
 
   getStatisticsItem: async (data) => {
-    const response = await fetch(`${constant.apiDomain}/items/report`, {
+    const response = await fetch(`${API_URL}/items/report`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {

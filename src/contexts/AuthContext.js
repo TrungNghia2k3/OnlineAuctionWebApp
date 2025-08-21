@@ -13,7 +13,10 @@ export const AuthContext = createContext({
   isAuthenticated: () => false,
   hasRole: () => false,
   isAdmin: () => false,
-  isUser: () => false
+  isUser: () => false,
+  getDisplayName: () => null, // New method to get user display name
+  getUsername: () => null,    // New method to get username
+  getUserRole: () => null     // New method to get user role
 })
 
 // Custom hook to use auth context with error handling

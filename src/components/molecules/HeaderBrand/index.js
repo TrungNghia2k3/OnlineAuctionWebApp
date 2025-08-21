@@ -1,5 +1,5 @@
-import Logo from '../../atoms/Logo'
-import {CategoriesDropdown} from '../../atoms'
+import { Logo } from '../../atoms'
+import { CategoriesDropdown } from '../../molecules'
 
 /**
  * HeaderBrand Molecule Component
@@ -15,10 +15,10 @@ const HeaderBrand = ({ className = '' }) => {
     <div className={`d-flex align-items-center ${className}`}>
       {/* Logo */}
       <Logo className="me-3" />
-      
+
       {/* Categories Dropdown - Hidden on mobile */}
       <div className="d-none d-lg-block">
-        <CategoriesDropdown 
+        <CategoriesDropdown
           onCategorySelect={handleCategorySelect}
           variant="link"
         />

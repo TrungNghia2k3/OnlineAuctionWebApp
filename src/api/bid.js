@@ -1,13 +1,14 @@
-import constant from '../common/constant'
+import { API_URL } from '@/common'
+import AuthUtils from '@/utils/AuthUtils'
 
 const bid = {
-  create: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/bids`, {
+  create: async (data) => {
+    const response = await fetch(`${API_URL}/bids`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        ...AuthUtils.getAuthHeader()
       },
     })
 
@@ -19,7 +20,7 @@ const bid = {
     }
   },
   GetAllBid: async (itemId) => {
-    const response = await fetch(`${constant.apiDomain}/bids/${itemId}`, {
+    const response = await fetch(`${API_URL}/bids/${itemId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

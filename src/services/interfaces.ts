@@ -103,3 +103,14 @@ export interface IFileService {
   deleteFile(url: string): Promise<BaseResponse<void>>
   getFileInfo(url: string): Promise<BaseResponse<any>>
 }
+
+export interface IWebSocketService {
+  connect(): Promise<void>
+  disconnect(): void
+  subscribeToBidUpdates(itemId: string | number, callback: (bidUpdate: any) => void): () => void
+  subscribeToBidConfirmations(callback: (confirmation: any) => void): () => void
+  placeBid(itemId: string | number, bidAmount: number): void
+  onConnectionStatus(callback: (connected: boolean) => void): void
+  onError(callback: (error: string) => void): void
+  getConnectionStatus(): boolean
+}

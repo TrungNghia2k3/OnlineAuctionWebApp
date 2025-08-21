@@ -13,5 +13,3 @@ export const STORAGE_KEYS = {
   THEME: 'theme',
   LANGUAGE: 'language'
 }
-
-export default STORAGE_KEYS

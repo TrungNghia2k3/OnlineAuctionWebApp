@@ -1,4 +1,6 @@
 // Molecules exports - UI composition components with NO business logic
+export {default as AuctionCard} from './AuctionCard'
+export {default as SubCategoryCard} from './SubCategoryCard'
 export {default as CategorySelector} from './CategorySelector'
 export {default as HeaderActions} from './HeaderActions'
 export {default as HeaderBrand} from './HeaderBrand'
@@ -7,3 +9,6 @@ export {default as IconButton} from './IconButton'
 export {default as MobileMenu} from './MobileMenu'
 export {default as SequentialSection} from '../organisms/SequentialSection'
 export {default as UserMenu} from './UserMenu'
+export {default as DropdownItem} from './DropdownItem'
+export {default as CategoryItem} from './CategoryItem'
+export {default as CategoriesDropdown} from './CategoriesDropdown'

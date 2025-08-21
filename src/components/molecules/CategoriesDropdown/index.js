@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useCategories } from '@/hooks'
 
 /**
- * CategoriesDropdown Atom Component
+ * CategoriesDropdown Molecule Component
  * Single Responsibility: Display categories dropdown
  */
 const CategoriesDropdown = ({ 

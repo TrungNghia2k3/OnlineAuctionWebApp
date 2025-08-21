@@ -1,0 +1,298 @@
+.bid-detail-page {
+  padding: 2rem 0;
+}
+
+// Loading and Error States
+.bid-detail-loading,
+.bid-detail-error,
+.bid-detail-not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  
+  .alert {
+    max-width: 500px;
+    text-align: center;
+  }
+}
+
+// Image Section
+.bid-detail__image-section {
+  .bid-detail__main-image {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    
+    img {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: cover;
+    }
+  }
+
+  .bid-detail__image-gallery {
+    .cursor-pointer {
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+    }
+  }
+  
+  .bid-detail__image-placeholder {
+    aspect-ratio: 4/3;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    border-radius: 12px;
+    
+    i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    span {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// Item Info Section
+.bid-detail__info {
+  padding-left: 2rem;
+  
+  @media (max-width: 768px) {
+    padding-left: 0;
+    margin-top: 2rem;
+  }
+}
+
+// Header Section
+.bid-detail__header {
+  margin-bottom: 2rem;
+  
+  .bid-detail__title {
+    font-family: freightBig, serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+  
+  .bid-detail__category {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+  }
+}
+
+// Bid Section
+.bid-detail__bid-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  
+  .bid-detail__current-bid {
+    margin-bottom: 1.5rem;
+    
+    .bid-detail__bid-label {
+      display: block;
+      font-size: 0.9rem;
+      color: #6c757d;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .bid-detail__bid-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  }
+  
+  .bid-detail__meta-info {
+    display: flex;
+    gap: 2rem;
+    
+    .bid-detail__time-left,
+    .bid-detail__bid-count {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6c757d;
+      font-weight: 500;
+      
+      i {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// Bidding Interface
+.bid-detail__bidding {
+  margin-bottom: 3rem;
+  
+  .bid-detail__bid-form {
+    .input-group {
+      .form-control {
+        border: 2px solid #e9ecef;
+        font-size: 1.1rem;
+        font-weight: 600;
+        
+        &:focus {
+          border-color: var(--color-main);
+          box-shadow: 0 0 0 0.2rem rgba(var(--color-main-rgb), 0.25);
+        }
+      }
+      
+      .btn-primary {
+        background: var(--color-main);
+        border-color: var(--color-main);
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        
+        &:hover {
+          background: var(--color-main-dark);
+          border-color: var(--color-main-dark);
+        }
+      }
+      
+      .input-group-text {
+        background: #e9ecef;
+        border: 2px solid #e9ecef;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Details Section
+.bid-detail__details {
+  margin-bottom: 3rem;
+  
+  h3 {
+    font-family: freightBig, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .bid-detail__details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      
+      strong {
+        color: #495057;
+        font-weight: 600;
+      }
+      
+      span {
+        color: #333;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Description Section
+.bid-detail__description {
+  h3 {
+    font-family: freightBig, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #495057;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 0;
+  }
+}
+
+// Responsive Design
+@media (max-width: 992px) {
+  .bid-detail__info {
+    padding-left: 1rem;
+  }
+  
+  .bid-detail__bid-section {
+    padding: 1.5rem;
+  }
+  
+  .bid-detail__meta-info {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .bid-detail-page {
+    padding: 1rem 0;
+  }
+  
+  .bid-detail__info {
+    padding-left: 0;
+  }
+  
+  .bid-detail__bid-section {
+    padding: 1rem;
+    
+    .bid-detail__current-bid {
+      .bid-detail__bid-amount {
+        font-size: 2rem;
+      }
+    }
+    
+    .bid-detail__meta-info {
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+  }
+  
+  .bid-detail__bidding {
+    .bid-detail__bid-form {
+      .input-group {
+        .btn-primary {
+          padding: 0.75rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}

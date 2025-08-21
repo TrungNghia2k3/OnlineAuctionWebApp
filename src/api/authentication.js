@@ -1,8 +1,8 @@
-import constant from '../common/constant'
+import {API_URL} from '@/common'
 
 const authentication = {
   authenticate: async (username, password) => {
-    const response = await fetch(`${constant.apiDomain}/auth/token`, {
+    const response = await fetch(`${API_URL}/auth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ const authentication = {
   },
 
   login: async (username, password) => {
-    const response = await fetch(`${constant.apiDomain}/auth/login`, {
+    const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const authentication = {
   },
 
   register: async (username, password) => {
-    const response = await fetch(`${constant.apiDomain}/auth/register`, {
+    const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const authentication = {
   },
 
   forgotPassword: async (email) => {
-    const response = await fetch(`${constant.apiDomain}/auth/forgot-password`, {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const authentication = {
   },
 
   resetPassword: async (token, newPassword) => {
-    const response = await fetch(`${constant.apiDomain}/auth/reset-password`, {
+    const response = await fetch(`${API_URL}/auth/reset-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ const authentication = {
   },
 
   refreshToken: async (token) => {
-    const response = await fetch(`${constant.apiDomain}/auth/refresh-token`, {
+    const response = await fetch(`${API_URL}/auth/refresh-token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ const authentication = {
   },
   
   validateToken: async (token) => {
-    const response = await fetch(`${constant.apiDomain}/auth/validate-token`, {
+    const response = await fetch(`${API_URL}/auth/validate-token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const authentication = {
   },
 
   changePassword: async (token, oldPassword, newPassword) => {
-    const response = await fetch(`${constant.apiDomain}/auth/change-password`, {
+    const response = await fetch(`${API_URL}/auth/change-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

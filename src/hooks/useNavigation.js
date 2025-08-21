@@ -30,11 +30,16 @@ export const useNavigation = () => {
     navigate('/favorites')
   }, [navigate])
 
+  const navigateToBidDetail = useCallback((itemId) => {
+    navigate(`/bid-detail/${itemId}`)
+  }, [navigate])
+
   return {
     navigateTo,
     navigateToCategory,
     navigateToSearch,
     navigateToProfile,
-    navigateToFavorites
+    navigateToFavorites,
+    navigateToBidDetail
   }
 }

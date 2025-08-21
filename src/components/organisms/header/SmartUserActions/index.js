@@ -12,7 +12,7 @@ import './SmartUserActions.scss'
  */
 const SmartUserActions = ({ className = '' }) => {
   // Business logic hooks
-  const { isAuthenticated, currentUser, logout } = useAuth()
+  const { isAuthenticated, currentUser, logout, getDisplayName } = useAuth()
   const { isOpen, toggle, handleItemClick } = useDropdown()
   const { navigateTo } = useNavigation()
 

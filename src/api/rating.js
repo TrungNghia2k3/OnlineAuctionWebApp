@@ -1,8 +1,8 @@
-import constant from '../common/constant'
+import {API_URL} from '@/common/'
 
 const rating = {
   update: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/rating/update`, {
+    const response = await fetch(`${API_URL}/rating/update`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -20,7 +20,7 @@ const rating = {
   },
 
   getAllRating: async (token) => {
-    const response = await fetch(`${constant.apiDomain}/Rating`, {
+    const response = await fetch(`${API_URL}/Rating`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

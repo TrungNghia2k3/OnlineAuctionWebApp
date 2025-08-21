@@ -1,7 +1,6 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom'
+import { ROUTE_TYPES, USER_ROLES } from '@/common'
 import { useAuth } from '@/hooks'
-import { ROUTE_TYPES, USER_ROLES } from '@/common/constant'
+import { Navigate } from 'react-router-dom'
 
 /**
  * RouteGuard Component
@@ -9,7 +8,7 @@ import { ROUTE_TYPES, USER_ROLES } from '@/common/constant'
  * Simplified version without atomic design dependencies
  */
 export const RouteGuard = ({ route, children }) => {
-  const { user, isAuthenticated, isLoading } = useAuth()
+  const { currentUser, isAuthenticated, isLoading } = useAuth()
 
   // Show loading while authentication is being checked
   if (isLoading) {
@@ -23,18 +22,18 @@ export const RouteGuard = ({ route, children }) => {
   }
 
   // Check if route requires authentication
-  if (route.requiresAuth && !isAuthenticated) {
+  if (route.requiresAuth && !isAuthenticated()) {
     return <Navigate to="/login" replace />
   }
 
   // Check if route is for guests only (like login/register)
-  if (route.meta?.hideForAuthenticated && isAuthenticated) {
+  if (route.meta?.hideForAuthenticated && isAuthenticated()) {
     return <Navigate to="/" replace />
   }
 
   // Check user role permissions
   if (route.type === ROUTE_TYPES.ADMIN_ONLY) {
-    if (!isAuthenticated || user?.role !== USER_ROLES.ADMIN) {
+    if (!isAuthenticated() || currentUser?.role !== USER_ROLES.ADMIN) {
       return (
         <div className="container mt-4">
           <div className="alert alert-danger" role="alert">
@@ -52,7 +51,7 @@ export const RouteGuard = ({ route, children }) => {
 
   // Check if user has required roles
   if (route.roles && route.roles.length > 0) {
-    const userRole = isAuthenticated ? user?.role : USER_ROLES.GUEST
+    const userRole = isAuthenticated() ? currentUser?.role : USER_ROLES.GUEST
     if (!route.roles.includes(userRole)) {
       return (
         <div className="container mt-4">

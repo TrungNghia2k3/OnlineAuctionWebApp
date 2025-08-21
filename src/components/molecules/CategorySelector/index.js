@@ -1,4 +1,5 @@
-import { Dropdown, DropdownItem } from '../../atoms'
+import { Dropdown } from '@/components/atoms'
+import { DropdownItem } from '@/components/molecules'
 
 /**
  * CategorySelector Molecule Component

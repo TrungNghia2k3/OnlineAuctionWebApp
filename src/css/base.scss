@@ -3,6 +3,9 @@
 // Import Bootstrap
 @import 'bootstrap';
 
+// Import component-specific styles
+@import 'realtime-bidding';
+
 html,
 body {
   color: var(--color-type-body);

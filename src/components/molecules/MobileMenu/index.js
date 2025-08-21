@@ -1,14 +1,15 @@
-import {useState} from 'react'
-import {useAuth} from '@/hooks'
-import {CategoriesDropdown, NavButton} from '../../atoms'
+import { useState } from 'react'
+import { useAuth } from '@/hooks'
+import { NavButton } from '@/components/atoms'
+import { CategoriesDropdown } from '@/components/molecules'
 
 /**
  * MobileMenu Molecule Component
  * Single Responsibility: Handle mobile navigation menu
  */
-const MobileMenu = ({className = ''}) => {
+const MobileMenu = ({ className = '' }) => {
     const [isOpen, setIsOpen] = useState(false)
-    const {isAuthenticated, currentUser, logout} = useAuth()
+    const { isAuthenticated, currentUser, logout } = useAuth()
 
     const toggleMenu = () => {
         setIsOpen(!isOpen)
@@ -41,7 +42,7 @@ const MobileMenu = ({className = ''}) => {
             {isOpen && (
                 <div
                     className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-lg-none"
-                    style={{zIndex: 1040}}
+                    style={{ zIndex: 1040 }}
                     onClick={closeMenu}
                 />
             )}
@@ -73,10 +74,10 @@ const MobileMenu = ({className = ''}) => {
                         {/* Categories */}
                         <div>
                             <h6 className="text-muted mb-2">Browse</h6>
-                            <CategoriesDropdown variant="link"/>
+                            <CategoriesDropdown variant="link" />
                         </div>
 
-                        <hr/>
+                        <hr />
 
                         {/* Main Navigation */}
                         <div>
@@ -94,7 +95,7 @@ const MobileMenu = ({className = ''}) => {
                             </div>
                         </div>
 
-                        <hr/>
+                        <hr />
 
                         {/* User Actions */}
                         {isAuthenticated() ? (
@@ -140,7 +141,7 @@ const MobileMenu = ({className = ''}) => {
                             </div>
                         )}
 
-                        <hr/>
+                        <hr />
 
                         {/* Help */}
                         <div>

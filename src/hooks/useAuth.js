@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
-import { STORAGE_KEYS } from '../common/storage-names'
-import { USER_ROLES } from '../common/constant'
+import { USER_ROLES, STORAGE_KEYS } from '@/common'
 
 /**
  * Custom hook for authentication management
@@ -46,25 +45,79 @@ export const useAuth = () => {
     }
   }, [getRoleNumber])
 
-  const login = useCallback(async (tokenOrUserData) => {
-    if (!tokenOrUserData) {
-      setCurrentUser(null)
-      return
-    }
+  const login = useCallback(async (credentials) => {
+    console.log('🚀 Login function called with credentials:', {
+      username: credentials.username,
+      password: credentials.password ? '***' : 'NO PASSWORD',
+      hasRememberMe: !!credentials.rememberMe
+    })
     
-    let token
-    if (typeof tokenOrUserData === 'string') {
-      token = tokenOrUserData
-    } else if (tokenOrUserData.token) {
-      token = tokenOrUserData.token
-    } else {
-      return
-    }
+    setIsLoading(true)
+    
+    try {
+      console.log('📡 Making API call to authenticate...')
+      
+      // Call the authentication API directly
+      const response = await fetch('http://localhost:8080/api/v1/auth/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          username: credentials.username, 
+          password: credentials.password 
+        }),
+      })
 
-    const userData = getUserFromToken(token)
-    if (userData) {
-      setCurrentUser(userData)
-      sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(token))
+      console.log('📥 API Response status:', response.status, response.statusText)
+
+      if (!response.ok) {
+        console.error('❌ API call failed with status:', response.status)
+        throw new Error('Authentication failed')
+      }
+
+      const data = await response.json()
+      console.log('📦 API Response data:', data)
+
+      // Check if the response has the expected structure
+      if (data && data.code === 1000 && data.result && data.result.token) {
+        const token = data.result.token
+        console.log('🔑 Token extracted successfully:', token ? 'YES' : 'NO')
+        console.log('🔑 Token length:', token ? token.length : 0)
+
+        // Decode the token to get user data
+        console.log('🔍 Decoding JWT token...')
+        const userData = getUserFromToken(token)
+        console.log('👤 User data from token:', userData)
+
+        if (userData) {
+          console.log('✅ Setting current user:', userData.username)
+          setCurrentUser(userData)
+          
+          // Store token in localStorage
+          console.log('💾 Storing token in localStorage...')
+          localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(token))
+          
+          // Also store in sessionStorage
+          console.log('💾 Storing token in sessionStorage...')
+          sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(token))
+
+          console.log('🎉 Login successful!')
+          return { success: true }
+        } else {
+          console.error('❌ Failed to decode user data from token')
+          return { success: false, error: 'Failed to decode user data' }
+        }
+      } else {
+        console.error('❌ Invalid API response structure:', data)
+        return { success: false, error: 'Invalid response from server' }
+      }
+    } catch (error) {
+      console.error('💥 Login error:', error)
+      return { success: false, error: error.message || 'An unexpected error occurred' }
+    } finally {
+      console.log('🏁 Setting loading to false')
+      setIsLoading(false)
     }
   }, [getUserFromToken])
 
@@ -134,6 +187,21 @@ export const useAuth = () => {
     return hasRole(USER_ROLES.USER)
   }, [hasRole])
 
+  const getDisplayName = useCallback(() => {
+    if (!currentUser) return null
+    return currentUser.username || null
+  }, [currentUser])
+
+  const getUsername = useCallback(() => {
+    if (!currentUser) return null
+    return currentUser.username || null
+  }, [currentUser])
+
+  const getUserRole = useCallback(() => {
+    if (!currentUser) return null
+    return currentUser.roleString || null
+  }, [currentUser])
+
   useEffect(() => {
     checkAuthStatus()
   }, [checkAuthStatus])
@@ -147,6 +215,9 @@ export const useAuth = () => {
     isAuthenticated,
     hasRole,
     isAdmin,
-    isUser
+    isUser,
+    getDisplayName,
+    getUsername,
+    getUserRole
   }
 }

@@ -1,8 +1,8 @@
-import constant from '../common/constant'
+import {API_URL} from '@/common'
 
 const category = {
   getAllCategory: async () => {
-    const response = await fetch(`${constant.apiDomain}/categories`, {
+    const response = await fetch(`${API_URL}/categories`, {
       method: 'GET'
     })
 
@@ -15,7 +15,7 @@ const category = {
   },
 
   getAllCategoryActive: async (token) => {
-    const response = await fetch(`${constant.apiDomain}/categories/active`, {
+    const response = await fetch(`${API_URL}/categories/active`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ const category = {
   },
 
   getAllItemByCategoryId: async () => {
-    const response = await fetch(`${constant.apiDomain}/categories`, {
+    const response = await fetch(`${API_URL}/categories`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ const category = {
     }
   },
   update: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/categories/update`, {
+    const response = await fetch(`${API_URL}/categories/update`, {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: {
@@ -64,7 +64,7 @@ const category = {
   },
 
   create: async (data, token) => {
-    const response = await fetch(`${constant.apiDomain}/categories/create`, {
+    const response = await fetch(`${API_URL}/categories/create`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {

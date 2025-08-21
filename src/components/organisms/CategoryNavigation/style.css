@@ -1,0 +1,172 @@
+.category-navigation {
+    width: 100%;
+}
+
+.category-navigation__breadcrumb {
+    margin: 16px 0;
+}
+
+.category-navigation__container {
+    position: relative;
+    /* border-bottom: 1px solid #e9ecef;
+    background: #fff; */
+    padding: 0 60px;
+    /* Add padding for navigation buttons */
+}
+
+.category-swiper {
+    overflow: hidden;
+}
+
+.category-slide {
+    width: auto !important;
+    flex-shrink: 0;
+}
+
+/* Custom navigation buttons - positioned outside the container */
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: none;
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: var(--color-main);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.swiper-button-prev-custom {
+    left: 8px;
+}
+
+.swiper-button-next-custom {
+    right: 8px;
+}
+
+.swiper-button-prev-custom:hover,
+.swiper-button-next-custom:hover {
+    color: var(--color-main);
+}
+
+/* When buttons are disabled */
+.swiper-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Hide default swiper navigation */
+.category-swiper .swiper-button-next,
+.category-swiper .swiper-button-prev {
+    display: none;
+}
+
+/* Category content section */
+.category-navigation__content {
+    padding: 16px 0;
+    background: #f8f9fa;
+    min-height: 400px;
+}
+
+.category-content__title {
+    font-family: freightBig, serif;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 32px;
+    font-size: 2.8rem;
+    line-height: 1;
+}
+
+.category-content__subcategories {
+    margin: 0 auto;
+}
+
+.category-content__auction-items {
+    margin: 0 auto;
+}
+
+.subcategory-item {
+    height: 100%;
+}
+
+.subcategory-item__image {
+    aspect-ratio: 16/9;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-size: cover;
+    background-position: center;
+}
+
+.subcategory-item__image:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.subcategory-item__name {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .category-navigation__container {
+        padding: 0 8px;
+    }
+
+    .category-content__title {
+        font-size: 2rem;
+        margin-bottom: 24px;
+    }
+
+    .category-navigation__content {
+        padding: 24px 8px;
+    }
+
+    .swiper-button-prev-custom,
+    .swiper-button-next-custom {
+        width: 36px;
+        height: 36px;
+    }
+
+    .swiper-button-prev-custom {
+        left: 4px;
+    }
+
+    .swiper-button-next-custom {
+        right: 4px;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Additional mobile styles if needed */
+}
+
+/* Hide default swiper navigation */
+.category-swiper .swiper-button-next,
+.category-swiper .swiper-button-prev {
+    display: none;
+}

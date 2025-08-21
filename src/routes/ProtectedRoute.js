@@ -3,6 +3,10 @@ import {useNavigate} from 'react-router-dom'
 import AppRoutes from './AppRoutes'
 import {AuthContext} from '@/contexts'
 
+/**
+ * Protected Route Component
+ * Handles access control for protected routes
+ */
 const ProtectedRoute = () => {
     const {currentUser} = useContext(AuthContext)
     let role = null

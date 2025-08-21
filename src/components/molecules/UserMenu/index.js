@@ -1,4 +1,5 @@
-import { Dropdown, DropdownItem, Icon } from '../../atoms'
+import { Dropdown, Icon } from '../../atoms'
+import { DropdownItem } from '../../molecules'
 
 /**
  * UserMenu Molecule Component
@@ -19,7 +20,7 @@ const UserMenu = ({
     <div className="d-flex align-items-center">
       <Icon name="person-circle" size="large" />
       <span className="d-none d-md-inline ms-2">
-        {user?.firstName || 'User'}
+        {user?.username || user?.firstName || 'User'}
       </span>
     </div>
   )
@@ -32,31 +33,31 @@ const UserMenu = ({
       placement="bottom-end"
       className={className}
     >
-      <DropdownItem 
-        icon="person" 
+      <DropdownItem
+        icon="person"
         onClick={onProfileClick}
       >
         My Profile
       </DropdownItem>
-      
-      <DropdownItem 
-        icon="hammer" 
+
+      <DropdownItem
+        icon="hammer"
         onClick={onBidsClick}
       >
         My Bids
       </DropdownItem>
-      
-      <DropdownItem 
-        icon="box" 
+
+      <DropdownItem
+        icon="box"
         onClick={onItemsClick}
       >
         My Items
       </DropdownItem>
-      
+
       <DropdownItem variant="divider" />
-      
-      <DropdownItem 
-        icon="box-arrow-right" 
+
+      <DropdownItem
+        icon="box-arrow-right"
         onClick={onLogout}
         variant="danger"
       >

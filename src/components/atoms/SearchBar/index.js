@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react'
+import { useSearchBar } from '@/hooks'
 
 /**
  * SearchBar Atom Component
- * Single Responsibility: Handle search input and submission
+ * Single Responsibility: Pure UI for search input and suggestions display
+ * Business logic moved to useSearchBar hook
  */
 const SearchBar = ({
   placeholder = "Search for brand, model, artist...",
@@ -10,107 +11,23 @@ const SearchBar = ({
   className = '',
   size = 'default'
 }) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [suggestions, setSuggestions] = useState([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(-1)
-  const searchRef = useRef(null)
-  const suggestionsRef = useRef(null)
-
-  // Mock suggestions - replace with actual business logic later
-  const generateSuggestions = (query) => {
-    if (!query.trim()) return []
-    
-    const mockSuggestions = {
-      'a': ['art', 'art deco', 'art photography', 'antiques', 'asian art'],
-      'b': ['books', 'bronze', 'baseball cards', 'bikes', 'buttons'],
-      'c': ['coins', 'cars', 'comics', 'cameras', 'collectibles'],
-      'd': ['diamonds', 'decorations', 'dolls', 'documents', 'drawings'],
-      'e': ['electronics', 'ephemera', 'emeralds', 'enamel', 'engravings']
-    }
-    
-    const firstChar = query.toLowerCase().charAt(0)
-    const baseSuggestions = mockSuggestions[firstChar] || []
-    
-    return baseSuggestions.filter(item => 
-      item.toLowerCase().includes(query.toLowerCase())
-    ).slice(0, 5)
-  }
-
-  const handleInputChange = (e) => {
-    const value = e.target.value
-    setSearchQuery(value)
-    
-    if (value.trim()) {
-      const newSuggestions = generateSuggestions(value)
-      setSuggestions(newSuggestions)
-      setShowSuggestions(newSuggestions.length > 0)
-      setSelectedIndex(-1)
-    } else {
-      setSuggestions([])
-      setShowSuggestions(false)
-      setSelectedIndex(-1)
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (onSearch && searchQuery.trim()) {
-      onSearch(searchQuery.trim())
-      setShowSuggestions(false)
-    }
-  }
-
-  const handleSuggestionClick = (suggestion) => {
-    setSearchQuery(suggestion)
-    setShowSuggestions(false)
-    if (onSearch) {
-      onSearch(suggestion)
-    }
-  }
-
-  const handleKeyDown = (e) => {
-    if (!showSuggestions) return
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault()
-        setSelectedIndex(prev => 
-          prev < suggestions.length - 1 ? prev + 1 : prev
-        )
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1)
-        break
-      case 'Enter':
-        if (selectedIndex >= 0) {
-          e.preventDefault()
-          handleSuggestionClick(suggestions[selectedIndex])
-        }
-        break
-      case 'Escape':
-        setShowSuggestions(false)
-        setSelectedIndex(-1)
-        break
-      default:
-        // No action needed for other keys
-        break
-    }
-  }
-
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSuggestions(false)
-        setSelectedIndex(-1)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  // Business logic from hook
+  const {
+    searchQuery,
+    suggestions,
+    showSuggestions,
+    selectedIndex,
+    isShowingRecentSearches,
+    searchRef,
+    suggestionsRef,
+    handleInputChange,
+    handleInputFocus,
+    handleSubmit,
+    handleSuggestionClick,
+    handleKeyDown,
+    setSelectedIndex,
+    clearSearchHistory
+  } = useSearchBar(onSearch)
 
   const sizeClasses = {
     small: 'form-control-sm',
@@ -141,6 +58,7 @@ const SearchBar = ({
             placeholder={placeholder}
             value={searchQuery}
             onChange={handleInputChange}
+            onFocus={handleInputFocus}
             onKeyDown={handleKeyDown}
             aria-label="Search"
             id="search-input"
@@ -168,17 +86,37 @@ const SearchBar = ({
           }}
           ref={suggestionsRef}
         >
+          {/* Recent Searches Header */}
+          {isShowingRecentSearches && (
+            <div className="d-flex justify-content-between align-items-center px-3 py-2 border-bottom bg-light rounded-top-3">
+              <span className="text-muted fw-bold small text-uppercase">
+                Recent Searches
+              </span>
+              <button
+                className="btn btn-link btn-sm text-muted p-0"
+                onClick={clearSearchHistory}
+                style={{ 
+                  fontSize: '12px',
+                  textDecoration: 'none'
+                }}
+              >
+                Clear
+              </button>
+            </div>
+          )}
+          
+          {/* Suggestions List */}
           {suggestions.map((suggestion, index) => (
             <div
               key={suggestion}
               className={`px-3 py-2 cursor-pointer ${
                 index === selectedIndex ? 'bg-light' : 'bg-white'
-              } ${index === 0 ? 'rounded-top-3' : ''} ${index === suggestions.length - 1 ? 'rounded-bottom-3' : ''}`}
+              } ${index === 0 && !isShowingRecentSearches ? 'rounded-top-3' : ''} ${index === suggestions.length - 1 ? 'rounded-bottom-3' : ''}`}
               onClick={() => handleSuggestionClick(suggestion)}
               onMouseEnter={() => setSelectedIndex(index)}
               style={{ cursor: 'pointer' }}
             >
-              <i className="bi bi-search text-muted me-2"></i>
+              <i className={`bi ${isShowingRecentSearches ? 'bi-clock-history' : 'bi-search'} text-muted me-2`}></i>
               {suggestion}
             </div>
           ))}

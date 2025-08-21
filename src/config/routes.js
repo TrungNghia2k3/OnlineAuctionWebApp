@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { USER_ROLES, ROUTE_TYPES } from '@/common/constant'
+import { USER_ROLES, ROUTE_TYPES } from '@/common'
 
 /**
  * Route Configuration System
