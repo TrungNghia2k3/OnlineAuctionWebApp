@@ -1,6 +1,7 @@
 // Export all hooks for easy importing
 export { useAuth } from './useAuth'
 export { useBidding } from './useBidding'
+export { useBidApiIntegration } from './useBidApiIntegration'
 export { useCategories } from './useCategories'
 export { useCategoryNavigation } from './useCategoryNavigation'
 export { useDropdown } from './useDropdown'

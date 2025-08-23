@@ -4,29 +4,10 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { getWebSocketService, BidUpdate, BidConfirmation } from '@/services/WebSocketService'
+import { getWebSocketService } from '@/services/WebSocketService'
+import { BidUpdate, BidConfirmation } from '@/services/interfaces/WebSocketInterfaces'
+import { UseBiddingOptions, BiddingState, BidSubmission } from './interfaces/BiddingInterfaces'
 import { useAuth } from './useAuth'
-
-interface UseBiddingOptions {
-  itemId: string | number
-  autoConnect?: boolean
-}
-
-interface BiddingState {
-  currentPrice: number
-  totalBids: number
-  lastBid: BidUpdate | null
-  bidHistory: BidUpdate[]
-  isConnected: boolean
-  isLoading: boolean
-  error: string | null
-}
-
-interface BidSubmission {
-  isSubmitting: boolean
-  success: boolean
-  error: string | null
-}
 
 /**
  * Custom hook for real-time bidding on auction items
@@ -63,7 +44,7 @@ export const useBidding = ({ itemId, autoConnect = true }: UseBiddingOptions) =>
     setBiddingState(prev => ({
       ...prev,
       currentPrice: bidUpdate.bidAmount,
-      totalBids: bidUpdate.totalBids,
+      totalBids: bidUpdate.totalBids || prev.totalBids + 1, // Use provided value or increment
       lastBid: bidUpdate,
       bidHistory: [bidUpdate, ...prev.bidHistory.slice(0, 19)], // Keep last 20 bids
       error: null
@@ -197,8 +178,20 @@ export const useBidding = ({ itemId, autoConnect = true }: UseBiddingOptions) =>
         error: null
       })
 
-      // Send bid through WebSocket
-      webSocketService.current.placeBid(itemId, amount)
+      // Send bid through WebSocket (with REST API fallback)
+      // Extract userId from JWT token - this is the correct buyerId for the backend
+      const buyerId = (currentUser as any)?.userId || (currentUser as any)?.id || (currentUser as any)?.username
+      console.log('Placing bid with buyerId:', buyerId, 'from currentUser:', currentUser)
+      const success = await webSocketService.current.placeBid(itemId, amount, buyerId)
+      
+      if (!success) {
+        setBidSubmission({
+          isSubmitting: false,
+          success: false,
+          error: 'Failed to place bid'
+        })
+        return false
+      }
 
       // The result will be handled by handleBidConfirmation
       return true

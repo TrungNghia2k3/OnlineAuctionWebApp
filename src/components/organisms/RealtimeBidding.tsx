@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react'
 import { useBidding } from '@/hooks/useBidding'
+import { useBidApiIntegration } from '@/hooks/useBidApiIntegration'
 import BidForm from '@/components/molecules/BidForm'
 import BidHistory from '@/components/molecules/BidHistory'
 import ConnectionStatus from '@/components/atoms/ConnectionStatus'
@@ -51,10 +52,21 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
     isAuthenticated
   } = useBidding({ itemId, autoConnect: true })
 
+  // Load initial bid history from existing API
+  const {
+    initialBids,
+    isLoading: bidsLoading,
+    error: bidsError,
+    refreshBids
+  } = useBidApiIntegration(itemId)
+
   // Update initial price when prop changes
   useEffect(() => {
     updateCurrentPrice(initialPrice, initialTotalBids)
   }, [initialPrice, initialTotalBids, updateCurrentPrice])
+
+  // Merge initial bids with real-time bid history
+  const allBids = bidHistory.length > 0 ? bidHistory : initialBids
 
   const effectiveCurrentPrice = currentPrice || initialPrice
   const effectiveTotalBids = totalBids || initialTotalBids
@@ -106,10 +118,10 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
                   <span className="display-6 fw-bold text-success">
                     €{effectiveCurrentPrice.toLocaleString()}
                   </span>
-                  {bidHistory.length > 0 && bidHistory[0].timestamp && (
+                  {allBids.length > 0 && allBids[0].timestamp && (
                     <small className="text-muted d-block">
                       <i className="bi bi-clock me-1"></i>
-                      Last updated: {new Date(bidHistory[0].timestamp).toLocaleTimeString()}
+                      Last updated: {new Date(allBids[0].timestamp).toLocaleTimeString()}
                     </small>
                   )}
                 </div>
@@ -120,9 +132,9 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
                     <i className="bi bi-people me-1"></i>
                     <strong>{effectiveTotalBids}</strong> bid{effectiveTotalBids !== 1 ? 's' : ''}
                   </div>
-                  {bidHistory.length > 0 && (
+                  {allBids.length > 0 && allBids[0].bidder && (
                     <div className="text-muted small">
-                      Leading: <strong>{bidHistory[0].bidder.username}</strong>
+                      Leading: <strong>{allBids[0].bidder.username}</strong>
                     </div>
                   )}
                 </div>
@@ -173,9 +185,9 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
           <div className="card">
             <div className="card-body">
               <BidHistory
-                bidHistory={bidHistory}
+                bidHistory={allBids}
                 currentUserId={currentUserId}
-                isLoading={isLoading && bidHistory.length === 0}
+                isLoading={(isLoading && bidHistory.length === 0) || bidsLoading}
                 maxItems={10}
               />
             </div>
@@ -195,7 +207,7 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
                 isLoading,
                 currentPrice: effectiveCurrentPrice,
                 totalBids: effectiveTotalBids,
-                bidHistoryCount: bidHistory.length,
+                bidHistoryCount: allBids.length,
                 canBid: canPlaceBid,
                 isAuthenticated,
                 isAuctionActive

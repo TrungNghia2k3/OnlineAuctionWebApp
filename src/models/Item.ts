@@ -143,7 +143,7 @@ export class Item implements IItem {
       id: data.id,
       title: data.title || data.name,
       image: data.image || data.imageUrl,
-      currentBid: data.currentBid || data.current_bid || data.startingPrice,
+      currentBid: data.currentBidPrice,
       timeLeft: data.timeLeft || data.time_left,
       category: data.category || data.categoryObject?.name,
       bidCount: data.bidCount || data.bid_count || 0,

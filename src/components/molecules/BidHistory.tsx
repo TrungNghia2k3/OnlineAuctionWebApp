@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import { BidUpdate } from '@/services/WebSocketService'
+import { BidUpdate } from '@/services/interfaces/WebSocketInterfaces'
 
 interface BidHistoryProps {
   bidHistory: BidUpdate[]
@@ -29,7 +29,11 @@ const BidHistory: React.FC<BidHistoryProps> = ({
   /**
    * Format timestamp for display
    */
-  const formatTimestamp = (timestamp: Date): string => {
+  const formatTimestamp = (timestamp?: Date): string => {
+    if (!timestamp) {
+      return 'Just now'
+    }
+    
     const now = new Date()
     const diff = now.getTime() - timestamp.getTime()
     const minutes = Math.floor(diff / 60000)
@@ -50,8 +54,11 @@ const BidHistory: React.FC<BidHistoryProps> = ({
   /**
    * Check if bid is from current user
    */
-  const isCurrentUserBid = (bidder: { id: string | number }): boolean => {
-    return currentUserId !== undefined && bidder.id.toString() === currentUserId.toString()
+  const isCurrentUserBid = (bidder: { id: string | number } | undefined): boolean => {
+    if (!bidder || currentUserId === undefined) {
+      return false
+    }
+    return bidder.id.toString() === currentUserId.toString()
   }
 
   if (isLoading) {
@@ -108,7 +115,7 @@ const BidHistory: React.FC<BidHistoryProps> = ({
         <div className="list-group list-group-flush">
           {displayedBids.map((bid, index) => (
             <div
-              key={`${bid.bidder.id}-${bid.timestamp.getTime()}`}
+              key={`${bid.bidder?.id || bid.buyerId || 'unknown'}-${bid.timestamp?.getTime() || index}`}
               className={`list-group-item d-flex justify-content-between align-items-start 
                 ${isCurrentUserBid(bid.bidder) ? 'bg-light border-primary' : ''}
                 ${index === 0 ? 'border-success' : ''}
@@ -117,7 +124,7 @@ const BidHistory: React.FC<BidHistoryProps> = ({
               <div className="bid-history__bid-info">
                 <div className="bid-history__bidder">
                   <span className={`fw-bold ${isCurrentUserBid(bid.bidder) ? 'text-primary' : ''}`}>
-                    {isCurrentUserBid(bid.bidder) ? 'You' : bid.bidder.username}
+                    {isCurrentUserBid(bid.bidder) ? 'You' : (bid.bidder?.username || 'Anonymous')}
                   </span>
                   {index === 0 && (
                     <span className="badge bg-success ms-2">
@@ -168,7 +175,7 @@ const BidHistory: React.FC<BidHistoryProps> = ({
           <div className="col-4">
             <small className="text-muted d-block">Bidders</small>
             <strong>
-              {new Set(bidHistory.map(bid => bid.bidder.id)).size}
+              {new Set(bidHistory.map(bid => bid.bidder?.id).filter(id => id !== undefined)).size}
             </strong>
           </div>
         </div>

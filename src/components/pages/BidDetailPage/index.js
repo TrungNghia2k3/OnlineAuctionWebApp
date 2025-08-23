@@ -1,8 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useItem } from '@/hooks';
+import { useItem, useAuth } from '@/hooks';
 import { PageLayout } from '@/components/templates';
 import { LoadingSpinner } from '@/components/atoms';
+import RealtimeBidding from '@/components/organisms/RealtimeBidding';
 import './BidDetailPage.scss';
 
 /**
@@ -12,6 +13,7 @@ import './BidDetailPage.scss';
 const BidDetailPage = () => {
   const { id } = useParams();
   const { item, loading, error } = useItem(id);
+  const { currentUser } = useAuth();
 
   // Debug logging
   console.log('BidDetailPage - ID:', id);
@@ -160,26 +162,18 @@ const BidDetailPage = () => {
                 </div>
               </div>
 
-              {/* Bidding Interface */}
-              <div className="bid-detail__bidding">
-                <div className="bid-detail__bid-form">
-                  <div className="input-group mb-3">
-                    <span className="input-group-text">€</span>
-                    <input 
-                      type="number" 
-                      className="form-control" 
-                      placeholder="Enter your bid"
-                      min={item.currentBid + (item.minIncreasePrice || 1)}
-                    />
-                    <button className="btn btn-primary" type="button">
-                      Place Bid
-                    </button>
-                  </div>
-                  <small className="text-muted">
-                    Minimum bid: €{(item.currentBid + (item.minIncreasePrice || 1)).toLocaleString()}
-                  </small>
-                </div>
-              </div>
+              {/* Real-time Bidding Interface */}
+              <RealtimeBidding
+                itemId={item.id}
+                initialPrice={item.currentBid || item.startingPrice || 0}
+                initialTotalBids={item.bidCount || 0}
+                minBidIncrement={item.minIncreasePrice || 1}
+                isAuctionActive={item.status === 'ACTIVE'}
+                currentUserId={currentUser?.username}
+                showHistory={true}
+                showConnectionStatus={true}
+                className="mb-4"
+              />
 
               {/* Additional Item Details */}
               <div className="bid-detail__details">

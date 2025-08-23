@@ -1,4 +1,4 @@
-import { IAuthService } from './interfaces'
+import { IAuthService } from './interfaces/AuthServiceInterfaces'
 import { BaseResponse } from '@/types'
 import { 
   IUser, 

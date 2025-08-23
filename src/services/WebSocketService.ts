@@ -5,35 +5,19 @@
 
 import { Client, IStompSocket } from '@stomp/stompjs'
 import { AuthUtils } from '@/utils/AuthUtils'
-import { IBid } from '@/models/Auction'
+import BidService from './BidService'
+import { 
+  BidUpdate, 
+  BidConfirmation, 
+  BidUpdateCallback, 
+  BidConfirmationCallback, 
+  ConnectionStatusCallback, 
+  ErrorCallback 
+} from './interfaces/WebSocketInterfaces'
 
 // Import SockJS using require to avoid TypeScript module resolution issues
 // This is a common pattern with SockJS client library
 const SockJS = require('sockjs-client')
-
-export interface BidUpdate {
-  itemId: string | number
-  bidAmount: number
-  bidder: {
-    id: string | number
-    username: string
-  }
-  timestamp: Date
-  isWinning: boolean
-  totalBids: number
-}
-
-export interface BidConfirmation {
-  success: boolean
-  message: string
-  bid?: IBid
-  error?: string
-}
-
-export type BidUpdateCallback = (bidUpdate: BidUpdate) => void
-export type BidConfirmationCallback = (confirmation: BidConfirmation) => void
-export type ConnectionStatusCallback = (connected: boolean) => void
-export type ErrorCallback = (error: string) => void
 
 /**
  * WebSocket Service for real-time auction bidding
@@ -47,7 +31,7 @@ export class WebSocketService {
   private connectionStatusCallback: ConnectionStatusCallback | null = null
   private errorCallback: ErrorCallback | null = null
 
-  private readonly WS_ENDPOINT = 'http://localhost:8080/ws'
+  private readonly WS_ENDPOINT = 'http://localhost:8080/api/v1/ws'
   private readonly RECONNECT_DELAY = 3000
   private reconnectAttempts = 0
   private maxReconnectAttempts = 5
@@ -109,6 +93,12 @@ export class WebSocketService {
           resolve()
         }
 
+        this.client.onStompError = (frame) => {
+          console.error('STOMP Error:', frame)
+          this.handleError('WebSocket connection failed')
+          reject(new Error('WebSocket connection failed'))
+        }
+
         this.client.activate()
       } else {
         reject(new Error('WebSocket client not initialized'))
@@ -145,22 +135,86 @@ export class WebSocketService {
 
     // Subscribe to topic if not already subscribed
     if (!this.subscriptions.has(topic) && this.client && this.isConnected) {
+      // First, send subscription message to backend
+      try {
+        this.client.publish({
+          destination: `/app/bid/subscribe/${itemId}`,
+          body: JSON.stringify({ itemId })
+        })
+        console.log(`Sent subscription request for item ${itemId}`)
+      } catch (error) {
+        console.error('Error sending subscription request:', error)
+      }
+
+      // Subscribe to bid updates topic
       const subscription = this.client.subscribe(topic, (message) => {
         try {
-          const bidUpdate: BidUpdate = JSON.parse(message.body)
-          // Format timestamp
-          bidUpdate.timestamp = new Date(bidUpdate.timestamp)
+          console.log('Raw WebSocket message received:', message.body)
+          
+          // Try to parse as JSON first
+          let bidUpdate: BidUpdate
+          try {
+            const rawData = JSON.parse(message.body)
+            
+            // Handle the simplified BidUpdateResponse from Java backend
+            bidUpdate = {
+              itemId: rawData.itemId,
+              bidAmount: rawData.bidAmount,
+              buyerId: rawData.buyerId,
+              timestamp: new Date(), // Use current time since backend doesn't provide it
+              bidder: {
+                id: rawData.buyerId,
+                username: `User ${rawData.buyerId.slice(0, 8)}` // Generate display name from buyerId
+              },
+              isWinning: true, // Assume newest bid is winning for now
+              totalBids: 1 // We don't have this info from the simple response
+            }
+            
+          } catch (jsonError) {
+            // If JSON parsing fails, it might be a plain string response
+            console.log('Received plain string response:', message.body)
+            
+            // Create a mock BidUpdate object for plain string responses
+            bidUpdate = {
+              itemId: itemId,
+              bidAmount: 0, // We don't have the actual amount from plain string
+              buyerId: 'unknown',
+              bidder: {
+                id: 'unknown',
+                username: 'System'
+              },
+              timestamp: new Date(),
+              isWinning: false,
+              totalBids: 0
+            }
+            
+            console.log('Created mock bid update for plain string response:', bidUpdate)
+          }
           
           // Notify all callbacks for this topic
           const callbacks = this.bidUpdateCallbacks.get(topic) || []
           callbacks.forEach(cb => cb(bidUpdate))
         } catch (error) {
-          console.error('Error parsing bid update:', error)
-          this.handleError('Failed to parse bid update')
+          console.error('Error handling bid update:', error)
+          this.handleError('Failed to process bid update')
         }
       })
       
       this.subscriptions.set(topic, subscription)
+
+      // Also subscribe to user-specific confirmation queue
+      const confirmationTopic = '/user/queue/bid/confirmation'
+      if (!this.subscriptions.has(confirmationTopic)) {
+        const confirmationSubscription = this.client.subscribe(confirmationTopic, (message) => {
+          try {
+            console.log('Received bid confirmation:', message.body)
+            // Handle confirmation message from your Java controller
+          } catch (error) {
+            console.error('Error handling bid confirmation:', error)
+          }
+        })
+        this.subscriptions.set(confirmationTopic, confirmationSubscription)
+      }
     }
 
     // Return unsubscribe function
@@ -221,26 +275,56 @@ export class WebSocketService {
 
   /**
    * Place a bid on an item
+   * Falls back to REST API if WebSocket is not connected
    */
-  public placeBid(itemId: string | number, bidAmount: number): void {
-    if (!this.client || !this.isConnected) {
-      this.handleError('WebSocket not connected')
-      return
+  public async placeBid(itemId: string | number, bidAmount: number, buyerId?: string | number): Promise<boolean> {
+    // Try WebSocket first if connected
+    if (this.client && this.isConnected) {
+      try {
+        const bidData = {
+          bidAmount: bidAmount,
+          itemId: itemId,
+          buyerId: buyerId
+        }
+
+        console.log(`Placing bid via WebSocket for item ${itemId}: €${bidAmount}`)
+        this.client.publish({
+          destination: `/app/items/${itemId}/bids`,
+          body: JSON.stringify(bidData)
+        })
+        return true
+      } catch (error) {
+        console.error('Error placing bid via WebSocket:', error)
+        // Fall through to REST API fallback
+      }
     }
 
-    const bidData = {
-      itemId: itemId,
-      bidAmount: bidAmount
-    }
-
+    // Fallback to REST API
     try {
-      this.client.publish({
-        destination: `/app/items/${itemId}/bids`,
-        body: JSON.stringify(bidData)
-      })
+      const result = await BidService.placeBid(itemId, bidAmount, buyerId)
+      if (result.success) {
+        // Simulate bid confirmation callback for consistency
+        if (this.bidConfirmationCallback) {
+          this.bidConfirmationCallback({
+            success: true,
+            message: result.message || 'Bid placed successfully',
+            bid: result.data
+          })
+        }
+        return true
+      } else {
+        if (this.bidConfirmationCallback) {
+          this.bidConfirmationCallback({
+            success: false,
+            message: result.error || 'Failed to place bid'
+          })
+        }
+        return false
+      }
     } catch (error) {
-      console.error('Error placing bid:', error)
+      console.error('Error placing bid via REST API:', error)
       this.handleError('Failed to place bid')
+      return false
     }
   }
 
@@ -320,8 +404,21 @@ export class WebSocketService {
       if (!this.subscriptions.has(topic)) {
         const subscription = this.client!.subscribe(topic, (message) => {
           try {
-            const bidUpdate: BidUpdate = JSON.parse(message.body)
-            bidUpdate.timestamp = new Date(bidUpdate.timestamp)
+            const rawData = JSON.parse(message.body)
+            
+            // Handle the simplified BidUpdateResponse from Java backend
+            const bidUpdate: BidUpdate = {
+              itemId: rawData.itemId,
+              bidAmount: rawData.bidAmount,
+              buyerId: rawData.buyerId,
+              timestamp: new Date(), // Use current time
+              bidder: {
+                id: rawData.buyerId,
+                username: `User ${rawData.buyerId.slice(0, 8)}`
+              },
+              isWinning: true,
+              totalBids: 1
+            }
             
             callbacks.forEach(cb => cb(bidUpdate))
           } catch (error) {

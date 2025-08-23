@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import CategoriesApi from '../api/categories'
+import category from '../api/category'
 
 /**
  * Custom hook for category management
@@ -14,8 +14,8 @@ export const useCategories = () => {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await CategoriesApi.getAll()
-      setCategories(response || [])
+      const response = await category.getAll()
+      setCategories(response.result || [])
     } catch (error) {
       console.error('Error fetching categories:', error)
       setError(error.message || 'Failed to fetch categories')

@@ -19,11 +19,12 @@ const bid = {
       throw new Error('Failed to create item')
     }
   },
-  GetAllBid: async (itemId) => {
-    const response = await fetch(`${API_URL}/bids/${itemId}`, {
+  getItemBids: async (itemId) => {
+    const response = await fetch(`${API_URL}/bids/item/${itemId}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...AuthUtils.getAuthHeader()
       },
     })
 

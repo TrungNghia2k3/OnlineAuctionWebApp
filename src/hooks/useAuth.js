@@ -31,6 +31,7 @@ export const useAuth = () => {
       const roleString = decoded.scope
       return {
         username: decoded.sub,
+        userId: decoded.userId, // Extract userId from JWT token
         role: getRoleNumber(roleString),
         roleString: roleString,
         issuer: decoded.iss,

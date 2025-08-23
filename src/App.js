@@ -8,6 +8,13 @@ import AppRoutes from './routes/AppRoutes';
 import './css/variables.scss';
 import './css/base.scss';
 
+// Import WebSocket test utility for development
+if (process.env.NODE_ENV === 'development') {
+    import('./utils/WebSocketTest').then(() => {
+        console.log('🧪 WebSocket testing utilities loaded. Use window.testWebSocket in console.')
+    })
+}
+
 
 /**
  * Main App Component
