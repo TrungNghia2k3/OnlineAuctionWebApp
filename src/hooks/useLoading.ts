@@ -1,11 +1,18 @@
 import { useCallback, useState } from 'react'
 
+interface UseLoadingReturn {
+  isLoading: boolean
+  showLoading: () => void
+  hideLoading: () => void
+  withLoading: <T>(asyncOperation: () => Promise<T>) => Promise<T>
+}
+
 /**
  * Custom hook for loading state management
  * Follows SRP by handling only loading state logic
  */
-export const useLoading = () => {
-  const [isLoading, setIsLoading] = useState(false)
+export const useLoading = (): UseLoadingReturn => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const showLoading = useCallback(() => {
     setIsLoading(true)
@@ -15,7 +22,7 @@ export const useLoading = () => {
     setIsLoading(false)
   }, [])
 
-  const withLoading = useCallback(async (asyncOperation) => {
+  const withLoading = useCallback(async <T>(asyncOperation: () => Promise<T>): Promise<T> => {
     showLoading()
     try {
       const result = await asyncOperation()

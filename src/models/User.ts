@@ -1,8 +1,8 @@
 /**
- * User-related interfaces and types
+ * User and User-related interfaces and types
  */
 
-import { BaseEntity } from '@/types'
+import { BaseEntity } from '../types/common'
 
 export enum UserRole {
   GUEST = 0,
@@ -11,10 +11,10 @@ export enum UserRole {
 }
 
 export enum UserStatus {
-  INACTIVE = 'INACTIVE',
-  ACTIVE = 'ACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  BANNED = 'BANNED'
+    INACTIVE = 'INACTIVE',
+    ACTIVE = 'ACTIVE',
+    SUSPENDED = 'SUSPENDED',
+    BANNED = 'BANNED'
 }
 
 export interface IUser extends BaseEntity {
@@ -36,34 +36,14 @@ export interface IUser extends BaseEntity {
   profileCompleteness: number
 }
 
-export interface IUserProfile {
+export interface IUserProfile extends BaseEntity {
+  user: IUser
   bio?: string
+  location?: string
   website?: string
-  socialLinks?: {
-    facebook?: string
-    twitter?: string
-    instagram?: string
-    linkedin?: string
-  }
-  preferences?: {
-    language: string
-    currency: string
-    timezone: string
-    notifications: {
-      email: boolean
-      sms: boolean
-      push: boolean
-    }
-  }
-}
-
-export interface IAuthToken {
-  accessToken: string
-  refreshToken?: string
-  tokenType: string
-  expiresIn: number
-  expiresAt: Date
-  scope: string[]
+  socialMedia?: Record<string, string>
+  preferences?: Record<string, any>
+  lastActive?: Date
 }
 
 export interface ILoginCredentials {
@@ -79,7 +59,6 @@ export interface IRegisterData {
   confirmPassword: string
   firstName?: string
   lastName?: string
-  phone?: string
   agreeToTerms: boolean
 }
 
@@ -87,16 +66,14 @@ export interface IForgotPasswordRequest {
   email: string
 }
 
-export interface IResetPasswordRequest {
-  token: string
-  newPassword: string
-  confirmPassword: string
-}
-
-export interface IChangePasswordRequest {
-  currentPassword: string
-  newPassword: string
-  confirmPassword: string
+export interface IAuthToken {
+  accessToken: string
+  tokenType: string
+  expiresIn: number
+  expiresAt: Date
+  scope: string[]
+  refreshToken?: string
+  user?: IUser
 }
 
 /**
@@ -145,20 +122,9 @@ export class User implements IUser {
 
   get fullName(): string {
     if (this.firstName && this.lastName) {
-      return `${this.firstName} ${this.lastName}`.trim()
+      return `${this.firstName} ${this.lastName}`
     }
     return this.firstName || this.lastName || this.username
-  }
-
-  get displayName(): string {
-    return this.fullName || this.username
-  }
-
-  get initials(): string {
-    if (this.firstName && this.lastName) {
-      return `${this.firstName[0]}${this.lastName[0]}`.toUpperCase()
-    }
-    return this.username.slice(0, 2).toUpperCase()
   }
 
   isAdmin(): boolean {
@@ -166,65 +132,42 @@ export class User implements IUser {
   }
 
   isUser(): boolean {
-    return this.role === UserRole.USER
-  }
-
-  isGuest(): boolean {
-    return this.role === UserRole.GUEST
+    return this.role >= UserRole.USER
   }
 
   isActive(): boolean {
     return this.status === UserStatus.ACTIVE
   }
 
-  isSuspended(): boolean {
-    return this.status === UserStatus.SUSPENDED
+  canBid(): boolean {
+    return this.isUser() && this.isActive() && this.emailVerified
   }
 
-  isBanned(): boolean {
-    return this.status === UserStatus.BANNED
+  canSell(): boolean {
+    return this.canBid() && this.profileCompleteness >= 70
   }
 
-  canAccess(requiredRole: UserRole): boolean {
-    return this.role >= requiredRole && this.isActive()
+  updateProfile(updates: Partial<IUser>): void {
+    Object.assign(this, updates)
+    this.updatedAt = new Date()
+    this.updateProfileCompleteness()
   }
 
-  getAge(): number | null {
-    if (!this.dateOfBirth) return null
-    const today = new Date()
-    const birthDate = new Date(this.dateOfBirth)
-    let age = today.getFullYear() - birthDate.getFullYear()
-    const monthDiff = today.getMonth() - birthDate.getMonth()
+  private updateProfileCompleteness(): void {
+    let completeness = 0
+    const fields = [
+      'username', 'email', 'firstName', 'lastName', 
+      'phone', 'address', 'avatar'
+    ]
     
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--
-    }
+    fields.forEach(field => {
+      if (this[field as keyof this]) completeness += 10
+    })
     
-    return age
-  }
-
-  toJSON(): IUser {
-    return {
-      id: this.id,
-      username: this.username,
-      email: this.email,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      fullName: this.fullName,
-      avatar: this.avatar,
-      phone: this.phone,
-      address: this.address,
-      dateOfBirth: this.dateOfBirth,
-      role: this.role,
-      roleString: this.roleString,
-      status: this.status,
-      emailVerified: this.emailVerified,
-      phoneVerified: this.phoneVerified,
-      lastLoginAt: this.lastLoginAt,
-      profileCompleteness: this.profileCompleteness,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
-    }
+    if (this.emailVerified) completeness += 15
+    if (this.phoneVerified) completeness += 15
+    
+    this.profileCompleteness = Math.min(completeness, 100)
   }
 
   static fromApiResponse(data: any): User {
@@ -235,12 +178,12 @@ export class User implements IUser {
       firstName: data.firstName || data.first_name,
       lastName: data.lastName || data.last_name,
       avatar: data.avatar || data.profilePicture,
-      phone: data.phone || data.phoneNumber,
+      phone: data.phone,
       address: data.address,
       dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
-      role: data.role || UserRole.GUEST,
-      roleString: data.roleString || data.role_string || '',
-      status: data.status || UserStatus.INACTIVE,
+      role: data.role,
+      roleString: data.roleString || data.role_string,
+      status: data.status,
       emailVerified: data.emailVerified || data.email_verified || false,
       phoneVerified: data.phoneVerified || data.phone_verified || false,
       lastLoginAt: data.lastLoginAt ? new Date(data.lastLoginAt) : undefined,
@@ -248,5 +191,36 @@ export class User implements IUser {
       createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
       updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date()
     })
+  }
+
+  toApiFormat(): Record<string, any> {
+    return {
+      id: this.id,
+      username: this.username,
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      avatar: this.avatar,
+      phone: this.phone,
+      address: this.address,
+      dateOfBirth: this.dateOfBirth?.toISOString(),
+      role: this.role,
+      roleString: this.roleString,
+      status: this.status,
+      emailVerified: this.emailVerified,
+      phoneVerified: this.phoneVerified,
+      lastLoginAt: this.lastLoginAt?.toISOString(),
+      profileCompleteness: this.profileCompleteness,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString()
+    }
+  }
+
+  toJSON(): Record<string, any> {
+    return this.toApiFormat()
+  }
+
+  clone(): User {
+    return new User(this)
   }
 }

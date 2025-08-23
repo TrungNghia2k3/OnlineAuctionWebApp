@@ -1,23 +1,33 @@
 import { useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavigateOptions } from 'react-router-dom'
+import { ICategory } from '@/models'
+
+interface UseNavigationReturn {
+  navigateTo: (path: string, options?: NavigateOptions) => void
+  navigateToCategory: (category: ICategory) => void
+  navigateToSearch: (query: string) => void
+  navigateToProfile: () => void
+  navigateToFavorites: () => void
+  navigateToBidDetail: (itemId: string | number) => void
+}
 
 /**
  * useNavigation Hook
  * Single Responsibility: Handle navigation logic
  * Separated from UI components
  */
-export const useNavigation = () => {
+export const useNavigation = (): UseNavigationReturn => {
   const navigate = useNavigate()
 
-  const navigateTo = useCallback((path, options = {}) => {
+  const navigateTo = useCallback((path: string, options: NavigateOptions = {}) => {
     navigate(path, options)
   }, [navigate])
 
-  const navigateToCategory = useCallback((category) => {
+  const navigateToCategory = useCallback((category: ICategory) => {
     navigate(`/category/${category.slug}`)
   }, [navigate])
 
-  const navigateToSearch = useCallback((query) => {
+  const navigateToSearch = useCallback((query: string) => {
     const searchParams = new URLSearchParams({ q: query })
     navigate(`/search?${searchParams.toString()}`)
   }, [navigate])
@@ -30,7 +40,7 @@ export const useNavigation = () => {
     navigate('/favorites')
   }, [navigate])
 
-  const navigateToBidDetail = useCallback((itemId) => {
+  const navigateToBidDetail = useCallback((itemId: string | number) => {
     navigate(`/bid-detail/${itemId}`)
   }, [navigate])
 

@@ -2,16 +2,24 @@ import { useState, useEffect, useCallback } from 'react';
 import { Item } from '@/models';
 import itemApi from '@/api/item';
 
+interface UseItemReturn {
+  item: Item | null
+  loading: boolean
+  error: string | null
+  fetchItem: (id: string | number) => Promise<void>
+  refreshItem: () => void
+}
+
 /**
  * useItem Hook
  * Manages item data fetching from API
  */
-export const useItem = (itemId) => {
-    const [item, setItem] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+export const useItem = (itemId: string | number): UseItemReturn => {
+    const [item, setItem] = useState<Item | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const fetchItem = useCallback(async (id) => {
+    const fetchItem = useCallback(async (id: string | number): Promise<void> => {
         if (!id) return;
 
         setLoading(true);
@@ -29,7 +37,8 @@ export const useItem = (itemId) => {
             }
         } catch (err) {
             console.error('Error fetching item:', err);
-            setError(err.message || 'Failed to fetch item details');
+            const errorMessage = err instanceof Error ? err.message : 'Failed to fetch item details';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -49,6 +58,7 @@ export const useItem = (itemId) => {
         item,
         loading,
         error,
+        fetchItem,
         refreshItem
     };
 };

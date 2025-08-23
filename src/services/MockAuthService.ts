@@ -3,7 +3,7 @@
  * Simulates API responses without making actual HTTP requests
  */
 
-import { IAuthService } from './interfaces/AuthServiceInterfaces'
+import { IAuthService } from './interfaces'
 import { BaseResponse } from '@/types'
 import { 
   IUser, 

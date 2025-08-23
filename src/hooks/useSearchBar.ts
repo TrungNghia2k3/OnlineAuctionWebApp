@@ -1,24 +1,43 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 
+interface UseSearchBarReturn {
+  searchQuery: string
+  suggestions: string[]
+  showSuggestions: boolean
+  selectedIndex: number
+  searchRef: React.RefObject<HTMLDivElement>
+  suggestionsRef: React.RefObject<HTMLUListElement>
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleInputFocus: () => void
+  handleSubmit: (e: React.FormEvent) => void
+  handleSuggestionClick: (suggestion: string) => void
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  closeSuggestions: () => void
+  setSelectedIndex: React.Dispatch<React.SetStateAction<number>>
+  clearSearchHistory: () => void
+  getSearchHistory: () => string[]
+  isShowingRecentSearches: boolean
+}
+
 /**
  * useSearchBar Hook
  * Single Responsibility: Handle search business logic
  * Separated from UI components
  */
-export const useSearchBar = (onSearch) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [suggestions, setSuggestions] = useState([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(-1)
-  const searchRef = useRef(null)
-  const suggestionsRef = useRef(null)
+export const useSearchBar = (onSearch: (query: string) => void): UseSearchBarReturn => {
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false)
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1)
+  const searchRef = useRef<HTMLDivElement>(null)
+  const suggestionsRef = useRef<HTMLUListElement>(null)
 
   // LocalStorage key for search history
   const SEARCH_HISTORY_KEY = 'searchHistory'
   const MAX_HISTORY_ITEMS = 10
 
   // Get search history from localStorage
-  const getSearchHistory = useCallback(() => {
+  const getSearchHistory = useCallback((): string[] => {
     try {
       const history = localStorage.getItem(SEARCH_HISTORY_KEY)
       return history ? JSON.parse(history) : []
@@ -29,12 +48,12 @@ export const useSearchBar = (onSearch) => {
   }, [])
 
   // Save search to localStorage
-  const saveToSearchHistory = useCallback((searchTerm) => {
+  const saveToSearchHistory = useCallback((searchTerm: string) => {
     try {
       const history = getSearchHistory()
       
       // Remove if already exists to avoid duplicates
-      const filteredHistory = history.filter(item => item.toLowerCase() !== searchTerm.toLowerCase())
+      const filteredHistory = history.filter((item: string) => item.toLowerCase() !== searchTerm.toLowerCase())
       
       // Add to beginning and limit to MAX_HISTORY_ITEMS
       const newHistory = [searchTerm, ...filteredHistory].slice(0, MAX_HISTORY_ITEMS)
@@ -46,7 +65,7 @@ export const useSearchBar = (onSearch) => {
   }, [getSearchHistory])
 
   // Mock suggestions - replace with actual business logic later
-  const generateSuggestions = useCallback((query) => {
+  const generateSuggestions = useCallback((query: string): string[] => {
     const searchHistory = getSearchHistory()
     
     // If no query, show recent searches
@@ -54,7 +73,7 @@ export const useSearchBar = (onSearch) => {
       return searchHistory.slice(0, 5)
     }
     
-    const mockSuggestions = {
+    const mockSuggestions: Record<string, string[]> = {
       'a': ['art', 'art deco', 'art photography', 'antiques', 'asian art'],
       'b': ['books', 'bronze', 'baseball cards', 'bikes', 'buttons'],
       'c': ['coins', 'cars', 'comics', 'cameras', 'collectibles'],
@@ -66,16 +85,16 @@ export const useSearchBar = (onSearch) => {
     const baseSuggestions = mockSuggestions[firstChar] || []
     
     // Get search history for relevant suggestions
-    const historySuggestions = searchHistory.filter(item => 
+    const historySuggestions = searchHistory.filter((item: string) => 
       item.toLowerCase().includes(query.toLowerCase())
     )
     
     // Combine history and mock suggestions, prioritizing history
     const combinedSuggestions = [
       ...historySuggestions,
-      ...baseSuggestions.filter(item => 
+      ...baseSuggestions.filter((item: string) => 
         item.toLowerCase().includes(query.toLowerCase()) &&
-        !historySuggestions.some(historyItem => 
+        !historySuggestions.some((historyItem: string) => 
           historyItem.toLowerCase() === item.toLowerCase()
         )
       )
@@ -84,7 +103,7 @@ export const useSearchBar = (onSearch) => {
     return combinedSuggestions.slice(0, 5)
   }, [getSearchHistory])
 
-  const handleInputChange = useCallback((e) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearchQuery(value)
     
@@ -101,7 +120,7 @@ export const useSearchBar = (onSearch) => {
     setSelectedIndex(-1)
   }, [generateSuggestions, searchQuery])
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault()
     if (onSearch && searchQuery.trim()) {
       const trimmedQuery = searchQuery.trim()
@@ -117,7 +136,7 @@ export const useSearchBar = (onSearch) => {
     }
   }, [onSearch, searchQuery, saveToSearchHistory])
 
-  const handleSuggestionClick = useCallback((suggestion) => {
+  const handleSuggestionClick = useCallback((suggestion: string) => {
     setSearchQuery(suggestion)
     setShowSuggestions(false)
     
@@ -130,7 +149,7 @@ export const useSearchBar = (onSearch) => {
     }
   }, [onSearch, saveToSearchHistory])
 
-  const handleKeyDown = useCallback((e) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions) return
 
     switch (e.key) {
@@ -162,8 +181,8 @@ export const useSearchBar = (onSearch) => {
 
   // Close suggestions when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowSuggestions(false)
         setSelectedIndex(-1)
       }
@@ -190,6 +209,11 @@ export const useSearchBar = (onSearch) => {
   // Check if current suggestions are recent searches (empty query)
   const isShowingRecentSearches = !searchQuery.trim() && suggestions.length > 0
 
+  const closeSuggestions = useCallback(() => {
+    setShowSuggestions(false)
+    setSelectedIndex(-1)
+  }, [])
+
   return {
     // State
     searchQuery,
@@ -208,6 +232,7 @@ export const useSearchBar = (onSearch) => {
     handleSubmit,
     handleSuggestionClick,
     handleKeyDown,
+    closeSuggestions,
     
     // State setters
     setSelectedIndex,

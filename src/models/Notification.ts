@@ -1,25 +1,20 @@
 /**
- * Notification-related interfaces and types
+ * Notification and Notification-related interfaces and types
  */
 
-import { BaseEntity } from '@/types'
+import { BaseEntity } from '../types/common'
 import { IUser } from './User'
 
 export enum NotificationType {
-  BID_PLACED = 'BID_PLACED',
-  BID_OUTBID = 'BID_OUTBID',
-  AUCTION_WON = 'AUCTION_WON',
-  AUCTION_LOST = 'AUCTION_LOST',
-  AUCTION_ENDING_SOON = 'AUCTION_ENDING_SOON',
-  AUCTION_STARTED = 'AUCTION_STARTED',
-  AUCTION_CANCELLED = 'AUCTION_CANCELLED',
-  PAYMENT_REQUIRED = 'PAYMENT_REQUIRED',
-  PAYMENT_RECEIVED = 'PAYMENT_RECEIVED',
-  ITEM_SHIPPED = 'ITEM_SHIPPED',
-  ITEM_DELIVERED = 'ITEM_DELIVERED',
-  FEEDBACK_REQUEST = 'FEEDBACK_REQUEST',
-  SYSTEM_ANNOUNCEMENT = 'SYSTEM_ANNOUNCEMENT',
-  ACCOUNT_UPDATE = 'ACCOUNT_UPDATE'
+  SYSTEM = 'SYSTEM',
+  BID_UPDATE = 'BID_UPDATE',
+  AUCTION_END = 'AUCTION_END',
+  OUTBID = 'OUTBID',
+  WIN = 'WIN',
+  PAYMENT_REMINDER = 'PAYMENT_REMINDER',
+  SHIPPING_UPDATE = 'SHIPPING_UPDATE',
+  MESSAGE = 'MESSAGE',
+  PROMOTION = 'PROMOTION'
 }
 
 export enum NotificationPriority {
@@ -47,185 +42,67 @@ export interface INotification extends BaseEntity {
   readAt?: Date
   data?: Record<string, any>
   actionUrl?: string
-  actionText?: string
+  channel: NotificationChannel
+  scheduledAt?: Date
   expiresAt?: Date
-  channels: NotificationChannel[]
 }
 
-export interface INotificationPreferences {
+export interface INotificationPreferences extends BaseEntity {
   userId: string | number
   emailNotifications: boolean
   smsNotifications: boolean
   pushNotifications: boolean
-  preferences: {
-    [key in NotificationType]?: {
-      enabled: boolean
-      channels: NotificationChannel[]
-    }
-  }
-}
-
-export interface INotificationCreateRequest {
-  recipientId: string | number
-  type: NotificationType
-  title: string
-  message: string
-  priority?: NotificationPriority
-  data?: Record<string, any>
-  actionUrl?: string
-  actionText?: string
-  expiresAt?: Date
-  channels?: NotificationChannel[]
+  bidUpdates: boolean
+  auctionReminders: boolean
+  promotionalEmails: boolean
+  newsletterSubscription: boolean
+  channels: NotificationChannel[]
 }
 
 /**
- * Notification model class with methods
+ * Notification Class
+ * Represents a user notification with rich content and metadata
  */
 export class Notification implements INotification {
-  id: string | number
-  recipient: IUser
-  type: NotificationType
-  title: string
-  message: string
-  priority: NotificationPriority
-  isRead: boolean
-  isArchived: boolean
-  readAt?: Date
-  data?: Record<string, any>
-  actionUrl?: string
-  actionText?: string
-  expiresAt?: Date
-  channels: NotificationChannel[]
-  createdAt: Date
-  updatedAt: Date
+  public id: string | number
+  public recipient: IUser
+  public type: NotificationType
+  public title: string
+  public message: string
+  public priority: NotificationPriority
+  public isRead: boolean
+  public isArchived: boolean
+  public readAt?: Date
+  public data?: Record<string, any>
+  public actionUrl?: string
+  public channel: NotificationChannel
+  public scheduledAt?: Date
+  public expiresAt?: Date
+  public createdAt: Date
+  public updatedAt: Date
 
-  constructor(notificationData: Partial<INotification> & { recipient: IUser }) {
-    this.id = notificationData.id || ''
-    this.recipient = notificationData.recipient
-    this.type = notificationData.type || NotificationType.SYSTEM_ANNOUNCEMENT
-    this.title = notificationData.title || ''
-    this.message = notificationData.message || ''
-    this.priority = notificationData.priority || NotificationPriority.NORMAL
-    this.isRead = notificationData.isRead || false
-    this.isArchived = notificationData.isArchived || false
-    this.readAt = notificationData.readAt
-    this.data = notificationData.data
-    this.actionUrl = notificationData.actionUrl
-    this.actionText = notificationData.actionText
-    this.expiresAt = notificationData.expiresAt
-    this.channels = notificationData.channels || [NotificationChannel.IN_APP]
-    this.createdAt = notificationData.createdAt || new Date()
-    this.updatedAt = notificationData.updatedAt || new Date()
+  constructor(data: Partial<INotification>) {
+    this.id = data.id || ''
+    this.recipient = data.recipient as IUser
+    this.type = data.type || NotificationType.SYSTEM
+    this.title = data.title || ''
+    this.message = data.message || ''
+    this.priority = data.priority || NotificationPriority.NORMAL
+    this.isRead = data.isRead || false
+    this.isArchived = data.isArchived || false
+    this.readAt = data.readAt
+    this.data = data.data
+    this.actionUrl = data.actionUrl
+    this.channel = data.channel || NotificationChannel.IN_APP
+    this.scheduledAt = data.scheduledAt
+    this.expiresAt = data.expiresAt
+    this.createdAt = data.createdAt || new Date()
+    this.updatedAt = data.updatedAt || new Date()
   }
 
-  markAsRead(): void {
-    this.isRead = true
-    this.readAt = new Date()
-    this.updatedAt = new Date()
-  }
-
-  archive(): void {
-    this.isArchived = true
-    this.updatedAt = new Date()
-  }
-
-  unarchive(): void {
-    this.isArchived = false
-    this.updatedAt = new Date()
-  }
-
-  isExpired(): boolean {
-    return this.expiresAt ? new Date() > this.expiresAt : false
-  }
-
-  isHighPriority(): boolean {
-    return this.priority === NotificationPriority.HIGH || 
-           this.priority === NotificationPriority.URGENT
-  }
-
-  hasAction(): boolean {
-    return !!this.actionUrl && !!this.actionText
-  }
-
-  getDisplayTime(): string {
-    const now = new Date()
-    const created = this.createdAt
-    const diffInMs = now.getTime() - created.getTime()
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60))
-    const diffInHours = Math.floor(diffInMinutes / 60)
-    const diffInDays = Math.floor(diffInHours / 24)
-
-    if (diffInMinutes < 1) return 'Just now'
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`
-    if (diffInHours < 24) return `${diffInHours}h ago`
-    if (diffInDays < 7) return `${diffInDays}d ago`
-    
-    return created.toLocaleDateString()
-  }
-
-  getTypeIcon(): string {
-    const iconMap: Record<NotificationType, string> = {
-      [NotificationType.BID_PLACED]: 'bi-hammer',
-      [NotificationType.BID_OUTBID]: 'bi-exclamation-triangle',
-      [NotificationType.AUCTION_WON]: 'bi-trophy',
-      [NotificationType.AUCTION_LOST]: 'bi-x-circle',
-      [NotificationType.AUCTION_ENDING_SOON]: 'bi-clock',
-      [NotificationType.AUCTION_STARTED]: 'bi-play-circle',
-      [NotificationType.AUCTION_CANCELLED]: 'bi-x-octagon',
-      [NotificationType.PAYMENT_REQUIRED]: 'bi-credit-card',
-      [NotificationType.PAYMENT_RECEIVED]: 'bi-check-circle',
-      [NotificationType.ITEM_SHIPPED]: 'bi-truck',
-      [NotificationType.ITEM_DELIVERED]: 'bi-box-seam',
-      [NotificationType.FEEDBACK_REQUEST]: 'bi-star',
-      [NotificationType.SYSTEM_ANNOUNCEMENT]: 'bi-megaphone',
-      [NotificationType.ACCOUNT_UPDATE]: 'bi-person-gear'
-    }
-
-    return iconMap[this.type] || 'bi-bell'
-  }
-
-  getTypeColor(): string {
-    const colorMap: Record<NotificationType, string> = {
-      [NotificationType.BID_PLACED]: 'primary',
-      [NotificationType.BID_OUTBID]: 'warning',
-      [NotificationType.AUCTION_WON]: 'success',
-      [NotificationType.AUCTION_LOST]: 'danger',
-      [NotificationType.AUCTION_ENDING_SOON]: 'warning',
-      [NotificationType.AUCTION_STARTED]: 'info',
-      [NotificationType.AUCTION_CANCELLED]: 'danger',
-      [NotificationType.PAYMENT_REQUIRED]: 'warning',
-      [NotificationType.PAYMENT_RECEIVED]: 'success',
-      [NotificationType.ITEM_SHIPPED]: 'info',
-      [NotificationType.ITEM_DELIVERED]: 'success',
-      [NotificationType.FEEDBACK_REQUEST]: 'info',
-      [NotificationType.SYSTEM_ANNOUNCEMENT]: 'primary',
-      [NotificationType.ACCOUNT_UPDATE]: 'secondary'
-    }
-
-    return colorMap[this.type] || 'secondary'
-  }
-
-  toJSON(): INotification {
-    return {
-      id: this.id,
-      recipient: this.recipient,
-      type: this.type,
-      title: this.title,
-      message: this.message,
-      priority: this.priority,
-      isRead: this.isRead,
-      isArchived: this.isArchived,
-      readAt: this.readAt,
-      data: this.data,
-      actionUrl: this.actionUrl,
-      actionText: this.actionText,
-      expiresAt: this.expiresAt,
-      channels: this.channels,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
-    }
-  }
-
+  /**
+   * Factory method to create Notification from API response
+   */
   static fromApiResponse(data: any): Notification {
     return new Notification({
       id: data.id,
@@ -239,11 +116,143 @@ export class Notification implements INotification {
       readAt: data.readAt ? new Date(data.readAt) : undefined,
       data: data.data,
       actionUrl: data.actionUrl || data.action_url,
-      actionText: data.actionText || data.action_text,
+      channel: data.channel || NotificationChannel.IN_APP,
+      scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : undefined,
       expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined,
-      channels: data.channels || [NotificationChannel.IN_APP],
       createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
       updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date()
     })
+  }
+
+  /**
+   * Factory method to create multiple Notifications from API response array
+   */
+  static fromApiResponseArray(dataArray: any[]): Notification[] {
+    return dataArray.map(data => Notification.fromApiResponse(data))
+  }
+
+  /**
+   * Mark notification as read
+   */
+  markAsRead(): void {
+    if (!this.isRead) {
+      this.isRead = true
+      this.readAt = new Date()
+      this.updatedAt = new Date()
+    }
+  }
+
+  /**
+   * Mark notification as unread
+   */
+  markAsUnread(): void {
+    if (this.isRead) {
+      this.isRead = false
+      this.readAt = undefined
+      this.updatedAt = new Date()
+    }
+  }
+
+  /**
+   * Archive notification
+   */
+  archive(): void {
+    if (!this.isArchived) {
+      this.isArchived = true
+      this.updatedAt = new Date()
+    }
+  }
+
+  /**
+   * Unarchive notification
+   */
+  unarchive(): void {
+    if (this.isArchived) {
+      this.isArchived = false
+      this.updatedAt = new Date()
+    }
+  }
+
+  /**
+   * Check if notification is expired
+   */
+  isExpired(): boolean {
+    if (!this.expiresAt) return false
+    return new Date() > this.expiresAt
+  }
+
+  /**
+   * Check if notification is scheduled for future
+   */
+  isScheduled(): boolean {
+    if (!this.scheduledAt) return false
+    return new Date() < this.scheduledAt
+  }
+
+  /**
+   * Check if notification is high priority
+   */
+  isHighPriority(): boolean {
+    return this.priority === NotificationPriority.HIGH || this.priority === NotificationPriority.URGENT
+  }
+
+  /**
+   * Get formatted timestamp
+   */
+  getFormattedTimestamp(): string {
+    return this.createdAt.toLocaleString()
+  }
+
+  /**
+   * Get relative time (e.g., "2 hours ago")
+   */
+  getRelativeTime(): string {
+    const now = new Date()
+    const diff = now.getTime() - this.createdAt.getTime()
+    
+    const minutes = Math.floor(diff / (1000 * 60))
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    
+    if (days > 0) {
+      return `${days} day${days > 1 ? 's' : ''} ago`
+    } else if (hours > 0) {
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`
+    } else if (minutes > 0) {
+      return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
+    } else {
+      return 'Just now'
+    }
+  }
+
+  /**
+   * Convert to API format
+   */
+  toApiFormat(): Record<string, any> {
+    return {
+      id: this.id,
+      recipient_id: this.recipient.id,
+      type: this.type,
+      title: this.title,
+      message: this.message,
+      priority: this.priority,
+      is_read: this.isRead,
+      is_archived: this.isArchived,
+      read_at: this.readAt?.toISOString(),
+      data: this.data,
+      action_url: this.actionUrl,
+      channel: this.channel,
+      scheduled_at: this.scheduledAt?.toISOString(),
+      expires_at: this.expiresAt?.toISOString(),
+      created_at: this.createdAt.toISOString(),
+      updated_at: this.updatedAt.toISOString()
+    }
+  }
+
+  /**
+   * Clone the notification
+   */
+  clone(): Notification {
+    return new Notification(this)
   }
 }

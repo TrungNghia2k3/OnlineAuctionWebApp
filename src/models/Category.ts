@@ -1,8 +1,8 @@
 /**
- * Category-related interfaces and types
+ * Category and Category-related interfaces and types
  */
 
-import { BaseEntity } from '@/types'
+import { BaseEntity } from '../types/common'
 
 export enum CategoryStatus {
   ACTIVE = 'ACTIVE',
@@ -29,122 +29,177 @@ export interface ICategory extends BaseEntity {
 
 export interface ICategoryTree extends ICategory {
   children: ICategoryTree[]
-  parent?: ICategoryTree
 }
 
 export interface ICategoryBreadcrumb {
   id: string | number
   name: string
   slug: string
-  path: string
-}
-
-export interface ICategoryCreateRequest {
-  name: string
-  description?: string
-  parentId?: string | number
-  image?: string
-  icon?: string
-  color?: string
-  status?: CategoryStatus
-  sortOrder?: number
-  metadata?: Record<string, any>
-}
-
-export interface ICategoryUpdateRequest extends Partial<ICategoryCreateRequest> {
-  id: string | number
+  level: number
 }
 
 /**
- * Category model class with methods
+ * Category Class
+ * Represents a category with its hierarchy and metadata
  */
 export class Category implements ICategory {
-  id: string | number
-  name: string
-  description?: string
-  slug: string
-  parentId?: string | number
-  level: number
-  image?: string
-  icon?: string
-  color?: string
-  status: CategoryStatus
-  sortOrder: number
-  itemCount: number
-  isLeaf: boolean
-  path: string
-  metadata?: Record<string, any>
-  createdAt: Date
-  updatedAt: Date
+  public id: string | number
+  public name: string
+  public description?: string
+  public slug: string
+  public parentId?: string | number
+  public level: number
+  public image?: string
+  public icon?: string
+  public color?: string
+  public status: CategoryStatus
+  public sortOrder: number
+  public itemCount: number
+  public isLeaf: boolean
+  public path: string
+  public metadata?: Record<string, any>
+  public createdAt: Date
+  public updatedAt: Date
 
-  constructor(categoryData: Partial<ICategory>) {
-    this.id = categoryData.id || ''
-    this.name = categoryData.name || ''
-    this.description = categoryData.description
-    this.slug = categoryData.slug || this.generateSlug(categoryData.name || '')
-    this.parentId = categoryData.parentId
-    this.level = categoryData.level || 0
-    this.image = categoryData.image
-    this.icon = categoryData.icon
-    this.color = categoryData.color
-    this.status = categoryData.status || CategoryStatus.ACTIVE
-    this.sortOrder = categoryData.sortOrder || 0
-    this.itemCount = categoryData.itemCount || 0
-    this.isLeaf = categoryData.isLeaf || false
-    this.path = categoryData.path || ''
-    this.metadata = categoryData.metadata
-    this.createdAt = categoryData.createdAt || new Date()
-    this.updatedAt = categoryData.updatedAt || new Date()
+  constructor(data: Partial<ICategory> = {}) {
+    this.id = data.id || ''
+    this.name = data.name || ''
+    this.description = data.description
+    this.slug = data.slug || Category.generateSlug(data.name || '')
+    this.parentId = data.parentId
+    this.level = data.level || 0
+    this.image = data.image
+    this.icon = data.icon
+    this.color = data.color
+    this.status = data.status || CategoryStatus.ACTIVE
+    this.sortOrder = data.sortOrder || 0
+    this.itemCount = data.itemCount || 0
+    this.isLeaf = data.isLeaf || true
+    this.path = data.path || ''
+    this.metadata = data.metadata
+    this.createdAt = data.createdAt || new Date()
+    this.updatedAt = data.updatedAt || new Date()
   }
 
-  private generateSlug(name: string): string {
+  /**
+   * Generate URL-friendly slug from name
+   */
+  static generateSlug(name: string): string {
     return name
       .toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
       .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
   }
 
-  isActive(): boolean {
-    return this.status === CategoryStatus.ACTIVE
+  /**
+   * Factory method to create Category from API response
+   */
+  static fromApiResponse(data: any): Category {
+    return new Category({
+      id: data.id,
+      name: data.name,
+      description: data.description,
+      slug: data.slug,
+      parentId: data.parentId || data.parent_id,
+      level: data.level || 0,
+      image: data.image,
+      icon: data.icon,
+      color: data.color,
+      status: data.status || CategoryStatus.ACTIVE,
+      sortOrder: data.sortOrder || data.sort_order || 0,
+      itemCount: data.itemCount || data.item_count || 0,
+      isLeaf: data.isLeaf !== undefined ? data.isLeaf : data.is_leaf !== undefined ? data.is_leaf : true,
+      path: data.path || '',
+      metadata: data.metadata,
+      createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+      updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date()
+    })
   }
 
+  /**
+   * Factory method to create multiple Categories from API response array
+   */
+  static fromApiResponseArray(dataArray: any[]): Category[] {
+    return dataArray.map(data => Category.fromApiResponse(data))
+  }
+
+  /**
+   * Convert Category to API format
+   */
+  toApiFormat(): Record<string, any> {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      slug: this.slug,
+      parent_id: this.parentId,
+      level: this.level,
+      image: this.image,
+      icon: this.icon,
+      color: this.color,
+      status: this.status,
+      sort_order: this.sortOrder,
+      item_count: this.itemCount,
+      is_leaf: this.isLeaf,
+      path: this.path,
+      metadata: this.metadata,
+      created_at: this.createdAt.toISOString(),
+      updated_at: this.updatedAt.toISOString()
+    }
+  }
+
+  /**
+   * Check if this category is a root category
+   */
   isRoot(): boolean {
     return !this.parentId && this.level === 0
   }
 
-  hasParent(): boolean {
-    return !!this.parentId
+  /**
+   * Check if this category is active
+   */
+  isActive(): boolean {
+    return this.status === CategoryStatus.ACTIVE
   }
 
-  hasChildren(): boolean {
-    return !this.isLeaf
-  }
-
-  getDisplayName(): string {
-    return this.name
-  }
-
-  getImageUrl(): string {
-    return this.image || '/images/placeholder-category.jpg'
-  }
-
+  /**
+   * Get the breadcrumb path for this category
+   */
   getBreadcrumbs(): ICategoryBreadcrumb[] {
-    // This would typically be populated by the service layer
-    // For now, return basic breadcrumb
+    // This would need to be implemented with parent category data
     return [
       {
         id: this.id,
         name: this.name,
         slug: this.slug,
-        path: this.path
+        level: this.level
       }
     ]
   }
 
-  toJSON(): ICategory {
-    return {
+  /**
+   * Update the item count
+   */
+  updateItemCount(count: number): void {
+    this.itemCount = count
+    this.updatedAt = new Date()
+  }
+
+  /**
+   * Update category status
+   */
+  updateStatus(status: CategoryStatus): void {
+    this.status = status
+    this.updatedAt = new Date()
+  }
+
+  /**
+   * Clone the category
+   */
+  clone(): Category {
+    return new Category({
       id: this.id,
       name: this.name,
       description: this.description,
@@ -162,58 +217,6 @@ export class Category implements ICategory {
       metadata: this.metadata,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
-    }
-  }
-
-  static fromApiResponse(data: any): Category {
-    return new Category({
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      slug: data.slug,
-      parentId: data.parentId || data.parent_id,
-      level: data.level || 0,
-      image: data.image || data.imageUrl,
-      icon: data.icon,
-      color: data.color,
-      status: data.status || CategoryStatus.ACTIVE,
-      sortOrder: data.sortOrder || data.sort_order || 0,
-      itemCount: data.itemCount || data.item_count || 0,
-      isLeaf: data.isLeaf || data.is_leaf || false,
-      path: data.path || '',
-      metadata: data.metadata,
-      createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
-      updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date()
     })
-  }
-
-  static buildTree(categories: Category[]): ICategoryTree[] {
-    const categoryMap = new Map<string | number, ICategoryTree>()
-    const rootCategories: ICategoryTree[] = []
-
-    // Initialize all categories with children array
-    categories.forEach(category => {
-      categoryMap.set(category.id, {
-        ...category.toJSON(),
-        children: []
-      })
-    })
-
-    // Build the tree structure
-    categories.forEach(category => {
-      const categoryNode = categoryMap.get(category.id)!
-      
-      if (category.parentId) {
-        const parent = categoryMap.get(category.parentId)
-        if (parent) {
-          parent.children.push(categoryNode)
-          categoryNode.parent = parent
-        }
-      } else {
-        rootCategories.push(categoryNode)
-      }
-    })
-
-    return rootCategories
   }
 }

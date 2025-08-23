@@ -9,28 +9,44 @@ export const LOADING_STATES = {
   BODY: 'body', 
   FOOTER: 'footer',
   COMPLETE: 'complete'
+} as const
+
+type LoadingState = typeof LOADING_STATES[keyof typeof LOADING_STATES]
+
+interface UseSequentialLoadingReturn {
+  loadingState: LoadingState
+  markSectionLoaded: (section: LoadingState) => void
+  isSectionLoaded: (section: LoadingState) => boolean
+  canShowSection: (section: LoadingState) => boolean
+  resetLoading: () => void
+  isPageLoaded: boolean
+  isInitialLoading: boolean
 }
 
 /**
  * Custom hook for managing sequential page loading
  * Ensures components load in order: Header -> Body -> Footer
  */
-export const useSequentialLoading = () => {
-  const [loadingState, setLoadingState] = useState(LOADING_STATES.INITIAL)
-  const [completedStates, setCompletedStates] = useState(new Set())
+export const useSequentialLoading = (): UseSequentialLoadingReturn => {
+  const [loadingState, setLoadingState] = useState<LoadingState>(LOADING_STATES.INITIAL)
+  const [completedStates, setCompletedStates] = useState<Set<LoadingState>>(new Set())
 
   // Mark a section as loaded
-  const markSectionLoaded = useCallback((section) => {
-    setCompletedStates(prev => new Set([...prev, section]))
+  const markSectionLoaded = useCallback((section: LoadingState) => {
+    setCompletedStates(prev => {
+      const newSet = new Set(prev)
+      newSet.add(section)
+      return newSet
+    })
   }, [])
 
   // Check if a section is loaded
-  const isSectionLoaded = useCallback((section) => {
+  const isSectionLoaded = useCallback((section: LoadingState) => {
     return completedStates.has(section)
   }, [completedStates])
 
   // Check if we can show a section (previous sections are loaded)
-  const canShowSection = useCallback((section) => {
+  const canShowSection = useCallback((section: LoadingState) => {
     switch (section) {
       case LOADING_STATES.HEADER:
         return true // Header can always show first
@@ -63,7 +79,7 @@ export const useSequentialLoading = () => {
   // Reset loading state
   const resetLoading = useCallback(() => {
     setLoadingState(LOADING_STATES.INITIAL)
-    setCompletedStates(new Set())
+    setCompletedStates(new Set<LoadingState>())
   }, [])
 
   // Check if page is fully loaded

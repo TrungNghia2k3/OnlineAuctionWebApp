@@ -17,16 +17,20 @@ import './style.css';
 const CategoryNavigation = ({ onCategoryChange }) => {
     const {
         activeCategory,
-        allCategories,
-        breadcrumb,
-        setActiveCategory
+        handleCategorySelect,
+        getBreadcrumb,
+        getFilteredCategories
     } = useCategoryNavigation();
 
     const { navigateToBidDetail } = useNavigation();
 
+    // Get filtered categories
+    const allCategories = getFilteredCategories() || [];
+    const breadcrumb = getBreadcrumb() || [];
+
     const handleCategoryClick = (category) => {
         // Handle regular category selection
-        setActiveCategory(category);
+        handleCategorySelect(category);
 
         // Notify parent component about category change
         if (onCategoryChange) {

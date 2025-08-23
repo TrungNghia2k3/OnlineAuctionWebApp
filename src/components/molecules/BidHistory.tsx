@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import { BidUpdate } from '@/services/interfaces/WebSocketInterfaces'
+import { BidUpdate } from '@/services/WebSocketService'
 
 interface BidHistoryProps {
   bidHistory: BidUpdate[]

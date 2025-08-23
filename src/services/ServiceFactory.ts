@@ -13,7 +13,7 @@ import {
   IFileService,
   IWebSocketService 
 } from './interfaces'
-import { ApiAuthService } from './AuthService'
+import { AuthService } from './AuthService'
 import { getWebSocketService } from './WebSocketService'
 // import { MockAuthService } from './MockAuthService' // Commented out - using real API
 // Import other concrete implementations when they're created
@@ -67,7 +67,7 @@ export class ServiceFactory {
 
   static initialize(): void {
     // Register all services - using API services for real backend integration
-    this.registry.register('auth', new ApiAuthService()) // Use real API service
+    this.registry.register('auth', new AuthService()) // Use real API service
     // this.registry.register('auth', new MockAuthService()) // Commented out mock service
     // this.registry.register('category', new ApiCategoryService())
     // this.registry.register('auction', new ApiAuctionService())

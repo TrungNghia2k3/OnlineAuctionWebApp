@@ -4,7 +4,7 @@
  */
 
 import bidApi from '@/api/bid'
-import { IBidServiceResponse } from './interfaces/BidServiceInterfaces'
+import { IBidServiceResponse } from './interfaces'
 
 /**
  * Bid Service that integrates with existing API

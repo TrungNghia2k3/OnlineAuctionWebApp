@@ -2,18 +2,56 @@ import { useCallback, useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { USER_ROLES, STORAGE_KEYS } from '@/common'
+import { ILoginCredentials, IUser } from '@/models'
+
+interface JwtDecoded {
+  sub: string
+  userId: string
+  scope: string
+  iss: string
+  jti: string
+  iat: number
+  exp: number
+}
+
+interface AuthUser extends Partial<IUser> {
+  username: string
+  userId: string
+  role: number
+  roleString: string
+  issuer: string
+  tokenId: string
+  issuedAt: number
+  expiresAt: number
+  token: string
+}
+
+interface UseAuthReturn {
+  currentUser: AuthUser | null
+  isLoading: boolean
+  login: (credentials: ILoginCredentials) => Promise<{ success: boolean; error?: string }>
+  logout: () => void
+  checkAuthStatus: () => void
+  isAuthenticated: () => boolean
+  hasRole: (role: number) => boolean
+  isAdmin: () => boolean
+  isUser: () => boolean
+  getDisplayName: () => string | null
+  getUsername: () => string | null
+  getUserRole: () => string | null
+}
 
 /**
  * Custom hook for authentication management
  * Follows SRP by handling only authentication logic
  */
-export const useAuth = () => {
+export const useAuth = (): UseAuthReturn => {
   const navigate = useNavigate()
-  const [currentUser, setCurrentUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   // Helper function to convert string roles to numeric roles for backward compatibility
-  const getRoleNumber = useCallback((roleString) => {
+  const getRoleNumber = useCallback((roleString: string): number => {
     switch (roleString) {
       case 'ROLE_ADMIN':
         return USER_ROLES.ADMIN
@@ -25,9 +63,9 @@ export const useAuth = () => {
   }, [])
 
   // Helper function to decode user data from token
-  const getUserFromToken = useCallback((token) => {
+  const getUserFromToken = useCallback((token: string): AuthUser | null => {
     try {
-      const decoded = jwtDecode(token)
+      const decoded = jwtDecode<JwtDecoded>(token)
       const roleString = decoded.scope
       return {
         username: decoded.sub,
@@ -46,7 +84,7 @@ export const useAuth = () => {
     }
   }, [getRoleNumber])
 
-  const login = useCallback(async (credentials) => {
+  const login = useCallback(async (credentials: ILoginCredentials): Promise<{ success: boolean; error?: string }> => {
     console.log('🚀 Login function called with credentials:', {
       username: credentials.username,
       password: credentials.password ? '***' : 'NO PASSWORD',
@@ -115,7 +153,8 @@ export const useAuth = () => {
       }
     } catch (error) {
       console.error('💥 Login error:', error)
-      return { success: false, error: error.message || 'An unexpected error occurred' }
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
+      return { success: false, error: errorMessage }
     } finally {
       console.log('🏁 Setting loading to false')
       setIsLoading(false)
@@ -175,7 +214,7 @@ export const useAuth = () => {
     return currentUser !== null
   }, [currentUser])
 
-  const hasRole = useCallback((requiredRole) => {
+  const hasRole = useCallback((requiredRole: number) => {
     if (!currentUser) return false
     return currentUser.role >= requiredRole
   }, [currentUser])

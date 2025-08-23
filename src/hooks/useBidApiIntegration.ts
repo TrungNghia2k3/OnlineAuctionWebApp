@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import BidService from '@/services/BidService'
-import { BidApiIntegration } from './interfaces/BidApiIntegrationInterfaces'
+import { BidApiIntegration } from '@/models'
 
 /**
  * Hook to integrate with existing bid API

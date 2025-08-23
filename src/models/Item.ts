@@ -2,7 +2,31 @@
  * Item and AuctionItem-related interfaces and types
  */
 
-import { BaseEntity } from '@/types'
+import { BaseEntity } from '../types/common'
+
+export enum ItemStatus {
+  DRAFT = 'DRAFT',
+  ACTIVE = 'ACTIVE',
+  ENDED = 'ENDED',
+  CANCELLED = 'CANCELLED',
+  SOLD = 'SOLD'
+}
+
+export enum ItemCondition {
+  NEW = 'NEW',
+  LIKE_NEW = 'LIKE_NEW',
+  EXCELLENT = 'EXCELLENT',
+  VERY_GOOD = 'VERY_GOOD',
+  GOOD = 'GOOD',
+  FAIR = 'FAIR',
+  POOR = 'POOR'
+}
+
+export enum ImageType {
+  MAIN = 'MAIN',
+  ADDITIONAL = 'ADDITIONAL',
+  THUMBNAIL = 'THUMBNAIL'
+}
 
 export interface IItem extends BaseEntity {
   title: string

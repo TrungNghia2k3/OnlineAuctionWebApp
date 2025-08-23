@@ -99,7 +99,7 @@ export class WebSocketTest {
   /**
    * Get current connection status
    */
-  getConnectionStatus(): boolean {
+  getConnectionStatus(): string {
     return this.webSocketService.getConnectionStatus()
   }
 }
@@ -115,7 +115,7 @@ declare global {
       subscribeToBids: (itemId: string | number) => () => void
       placeBid: (itemId: string | number, amount: number, buyerId?: string | number) => Promise<boolean>
       disconnect: () => void
-      getStatus: () => boolean
+      getStatus: () => string
     }
   }
 }

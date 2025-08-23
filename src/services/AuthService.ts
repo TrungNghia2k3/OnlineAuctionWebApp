@@ -1,4 +1,4 @@
-import { IAuthService } from './interfaces/AuthServiceInterfaces'
+import { IAuthService } from './interfaces'
 import { BaseResponse } from '@/types'
 import { 
   IUser, 
@@ -14,7 +14,7 @@ import authentication from '../api/authentication'
  * Concrete implementation of IAuthService
  * Follows DIP by implementing the abstract interface
  */
-export class ApiAuthService implements IAuthService {
+export class AuthService implements IAuthService {
   async login(credentials: ILoginCredentials): Promise<BaseResponse<IAuthToken>> {
     try {
       const response = await authentication.authenticate(credentials.username, credentials.password)
@@ -67,7 +67,7 @@ export class ApiAuthService implements IAuthService {
       const user = User.fromApiResponse(response)
       return {
         success: true,
-        data: user.toJSON(),
+        data: user,
         message: 'Registration successful'
       }
     } catch (error: any) {
@@ -136,7 +136,7 @@ export class ApiAuthService implements IAuthService {
       const user = User.fromApiResponse(response)
       return {
         success: true,
-        data: user.toJSON(),
+        data: user,
         message: 'Token is valid'
       }
     } catch (error: any) {

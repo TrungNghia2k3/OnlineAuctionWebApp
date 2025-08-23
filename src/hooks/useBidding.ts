@@ -5,9 +5,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getWebSocketService } from '@/services/WebSocketService'
-import { BidUpdate, BidConfirmation } from '@/services/interfaces/WebSocketInterfaces'
-import { UseBiddingOptions, BiddingState, BidSubmission } from './interfaces/BiddingInterfaces'
+import { UseBiddingOptions, BiddingState, BidSubmission } from '@/models'
 import { useAuth } from './useAuth'
+import { BidUpdate, BidConfirmation } from '@/services/WebSocketService'
 
 /**
  * Custom hook for real-time bidding on auction items
@@ -183,7 +183,7 @@ export const useBidding = ({ itemId, autoConnect = true }: UseBiddingOptions) =>
       const buyerId = (currentUser as any)?.userId || (currentUser as any)?.id || (currentUser as any)?.username
       console.log('Placing bid with buyerId:', buyerId, 'from currentUser:', currentUser)
       const success = await webSocketService.current.placeBid(itemId, amount, buyerId)
-      
+
       if (!success) {
         setBidSubmission({
           isSubmitting: false,
@@ -260,7 +260,7 @@ export const useBidding = ({ itemId, autoConnect = true }: UseBiddingOptions) =>
     // State
     ...biddingState,
     bidSubmission,
-    
+
     // Actions
     connect,
     disconnect,
@@ -268,7 +268,7 @@ export const useBidding = ({ itemId, autoConnect = true }: UseBiddingOptions) =>
     updateCurrentPrice,
     clearBidSubmission,
     retry,
-    
+
     // Computed values
     canBid: !!(currentUser && biddingState.isConnected && !bidSubmission.isSubmitting),
     isAuthenticated: !!currentUser
