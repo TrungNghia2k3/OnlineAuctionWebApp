@@ -11,3 +11,7 @@ export {default as SmartUserActions} from './Header/SmartUserActions'
 
 // Footer
 export {default as Footer} from './Footer'
+
+// Homepage
+export {default as ApiItemsList} from './ApiItemsList'
+export {default as RealtimeBidding} from './RealtimeBidding'

@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { USER_ROLES, STORAGE_KEYS } from '@/common'
-import { ILoginCredentials, IUser } from '@/models'
+import { IUser } from '@/models'
+import { ILoginCredentials } from '@/services/interfaces'
 
 interface JwtDecoded {
   sub: string

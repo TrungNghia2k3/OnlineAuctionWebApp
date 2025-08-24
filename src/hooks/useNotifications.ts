@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import NotificationApi from '../api/notification'
+import NotificationApi from '@/api/notification'
 import { INotification } from '@/models'
 
 interface AuthUser {

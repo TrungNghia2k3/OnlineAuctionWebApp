@@ -1,8 +1,8 @@
 import { useAuth } from '@/hooks'
 import { useDropdown } from '@/hooks/useDropdown'
 import { useNavigation } from '@/hooks/useNavigation'
-import { UserMenu, IconButton } from '../../../molecules'
 import { Button } from '../../../atoms'
+import { IconButton, UserMenu } from '../../../molecules'
 import './SmartUserActions.scss'
 
 /**
@@ -12,7 +12,7 @@ import './SmartUserActions.scss'
  */
 const SmartUserActions = ({ className = '' }) => {
   // Business logic hooks
-  const { isAuthenticated, currentUser, logout, getDisplayName } = useAuth()
+  const { isAuthenticated, currentUser, logout } = useAuth()
   const { isOpen, toggle, handleItemClick } = useDropdown()
   const { navigateTo } = useNavigation()
 

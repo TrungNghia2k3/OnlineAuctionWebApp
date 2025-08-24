@@ -1,66 +1,25 @@
 /**
  * Bid History Component
- * Displays real-time bid history for auction items
+ * UI-only component for displaying bid history - logic handled by useBidHistory hook
  */
 
 import React from 'react'
-import { BidUpdate } from '@/services/WebSocketService'
-
-interface BidHistoryProps {
-  bidHistory: BidUpdate[]
-  currentUserId?: string | number
-  isLoading?: boolean
-  className?: string
-  maxItems?: number
-}
+import PropTypes from 'prop-types'
 
 /**
- * Component to display bid history with real-time updates
+ * Pure UI component for bid history display
  */
-const BidHistory: React.FC<BidHistoryProps> = ({
-  bidHistory,
-  currentUserId,
-  isLoading = false,
+const BidHistory = ({
+  displayedBids,
+  totalBids,
+  currentHighBid,
+  uniqueBidders,
+  isLoading,
   className = '',
-  maxItems = 10
+  maxItems,
+  formatTimestamp,
+  isCurrentUserBid
 }) => {
-  const displayedBids = bidHistory.slice(0, maxItems)
-
-  /**
-   * Format timestamp for display
-   */
-  const formatTimestamp = (timestamp?: Date): string => {
-    if (!timestamp) {
-      return 'Just now'
-    }
-    
-    const now = new Date()
-    const diff = now.getTime() - timestamp.getTime()
-    const minutes = Math.floor(diff / 60000)
-    const hours = Math.floor(diff / 3600000)
-    const days = Math.floor(diff / 86400000)
-
-    if (days > 0) {
-      return `${days}d ago`
-    } else if (hours > 0) {
-      return `${hours}h ago`
-    } else if (minutes > 0) {
-      return `${minutes}m ago`
-    } else {
-      return 'Just now'
-    }
-  }
-
-  /**
-   * Check if bid is from current user
-   */
-  const isCurrentUserBid = (bidder: { id: string | number } | undefined): boolean => {
-    if (!bidder || currentUserId === undefined) {
-      return false
-    }
-    return bidder.id.toString() === currentUserId.toString()
-  }
-
   if (isLoading) {
     return (
       <div className={`bid-history ${className}`}>
@@ -107,7 +66,7 @@ const BidHistory: React.FC<BidHistoryProps> = ({
         <h5 className="mb-3">
           <i className="bi bi-clock-history me-2"></i>
           Bid History
-          <span className="badge bg-secondary ms-2">{bidHistory.length}</span>
+          <span className="badge bg-secondary ms-2">{totalBids}</span>
         </h5>
       </div>
 
@@ -151,10 +110,10 @@ const BidHistory: React.FC<BidHistoryProps> = ({
           ))}
         </div>
 
-        {bidHistory.length > maxItems && (
+        {totalBids > maxItems && (
           <div className="bid-history__more text-center mt-3">
             <small className="text-muted">
-              Showing {maxItems} of {bidHistory.length} bids
+              Showing {maxItems} of {totalBids} bids
             </small>
           </div>
         )}
@@ -164,24 +123,42 @@ const BidHistory: React.FC<BidHistoryProps> = ({
         <div className="row text-center">
           <div className="col-4">
             <small className="text-muted d-block">Total Bids</small>
-            <strong>{bidHistory.length}</strong>
+            <strong>{totalBids}</strong>
           </div>
           <div className="col-4">
             <small className="text-muted d-block">Current High</small>
             <strong className="text-success">
-              €{displayedBids[0]?.bidAmount.toLocaleString() || '0'}
+              €{currentHighBid.toLocaleString()}
             </strong>
           </div>
           <div className="col-4">
             <small className="text-muted d-block">Bidders</small>
-            <strong>
-              {new Set(bidHistory.map(bid => bid.bidder?.id).filter(id => id !== undefined)).size}
-            </strong>
+            <strong>{uniqueBidders}</strong>
           </div>
         </div>
       </div>
     </div>
   )
+}
+
+BidHistory.propTypes = {
+  displayedBids: PropTypes.arrayOf(PropTypes.shape({
+    bidAmount: PropTypes.number.isRequired,
+    timestamp: PropTypes.instanceOf(Date),
+    bidder: PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      username: PropTypes.string
+    }),
+    buyerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  })).isRequired,
+  totalBids: PropTypes.number.isRequired,
+  currentHighBid: PropTypes.number.isRequired,
+  uniqueBidders: PropTypes.number.isRequired,
+  isLoading: PropTypes.bool,
+  className: PropTypes.string,
+  maxItems: PropTypes.number,
+  formatTimestamp: PropTypes.func.isRequired,
+  isCurrentUserBid: PropTypes.func.isRequired
 }
 
 export default BidHistory

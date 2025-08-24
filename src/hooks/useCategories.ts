@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import category from '../api/category'
+import categoryApi from '@/api/category'
 import { ICategory } from '@/models'
 
 interface UseCategoriesReturn {
@@ -25,7 +25,7 @@ export const useCategories = (): UseCategoriesReturn => {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await category.getAllCategory()
+      const response = await categoryApi.getAllCategory()
       setCategories(response.result || [])
     } catch (error) {
       console.error('Error fetching categories:', error)

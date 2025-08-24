@@ -1,5 +1,4 @@
-import React from 'react';
-import './style.css';
+import './SubCategoryCard.scss';
 
 /**
  * SubCategoryCard Molecule Component

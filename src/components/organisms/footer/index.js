@@ -1,5 +1,5 @@
 ﻿import React from 'react'
-import './style.scss'
+import './Footer.scss'
 
 /**
  * Footer Organism Component

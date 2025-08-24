@@ -15,14 +15,6 @@ import {
 } from './interfaces'
 import { AuthService } from './AuthService'
 import { getWebSocketService } from './WebSocketService'
-// import { MockAuthService } from './MockAuthService' // Commented out - using real API
-// Import other concrete implementations when they're created
-// import { ApiCategoryService } from './CategoryService'
-// import { ApiAuctionService } from './AuctionService'
-// import { ApiBidService } from './BidService'
-// import { ApiNotificationService } from './NotificationService'
-// import { ApiUserService } from './UserService'
-// import { ApiFileService } from './FileService'
 
 /**
  * Service Registry

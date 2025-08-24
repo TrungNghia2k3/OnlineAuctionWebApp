@@ -3,16 +3,63 @@
  * Handles WebSocket connections and bid management for auction items
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { getWebSocketService } from '@/services/WebSocketService'
-import { UseBiddingOptions, BiddingState, BidSubmission } from '@/models'
+import { BidConfirmation, BidUpdate, getWebSocketService } from '@/services/WebSocketService'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from './useAuth'
-import { BidUpdate, BidConfirmation } from '@/services/WebSocketService'
+
+
+interface UseBiddingOptions {
+  itemId: string | number
+  autoConnect?: boolean
+}
+
+interface BiddingState {
+  currentPrice: number
+  totalBids: number
+  lastBid: any | null
+  bidHistory: any[]
+  isConnected: boolean
+  isLoading: boolean
+  error: string | null
+}
+
+interface BidSubmission {
+  isSubmitting: boolean
+  success: boolean
+  error: string | null
+}
+
+interface BidSubmission {
+  isSubmitting: boolean
+  success: boolean
+  error: string | null
+}
+
+interface UseBiddingReturn {
+  currentPrice: number
+  totalBids: number
+  lastBid: any | null
+  bidHistory: any[]
+  isConnected: boolean
+  isLoading: boolean
+  error: string | null
+  bidSubmission: BidSubmission
+
+  connect: () => Promise<void>
+  disconnect: () => void
+  placeBid: (amount: number) => Promise<boolean>
+  updateCurrentPrice: (price: number, totalBids?: number) => void
+  clearBidSubmission: () => void
+  retry: () => void
+  
+  canBid: boolean
+  isAuthenticated: boolean
+}
 
 /**
  * Custom hook for real-time bidding on auction items
  */
-export const useBidding = ({ itemId, autoConnect = true }: UseBiddingOptions) => {
+export const useBidding = ({ itemId, autoConnect = true }: UseBiddingOptions): UseBiddingReturn => {
   const { currentUser } = useAuth()
   const webSocketService = useRef(getWebSocketService())
 

@@ -2,7 +2,6 @@ export {default as AuctionManagementPage} from './AuctionManagementPage';
 export {default as BidDetailPage} from './BidDetailPage';
 export {default as CategoryBrowserPage} from './CategoryBrowserPage';
 export {default as CategoryManagementPage} from './CategoryManagementPage';
-export {default as EnhancedBidDetailPage} from './EnhancedBidDetailPage';
 export {default as ForgotPasswordPage} from './ForgotPasswordPage';
 export {default as HomePage} from './HomePage';
 export {default as LoginPage} from './LoginPage';

@@ -1,5 +1,5 @@
 import { Item } from '../../../models';
-import './style.css';
+import './AuctionCard.scss';
 
 /**
  * AuctionCard Molecule Component

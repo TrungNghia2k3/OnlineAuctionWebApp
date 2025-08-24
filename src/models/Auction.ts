@@ -29,50 +29,6 @@ export enum BidStatus {
   OUTBID = 'OUTBID'
 }
 
-
-
-
-
-export interface IBidApiIntegration {
-  initialBids: any[]
-  isLoading: boolean
-  error: string | null
-  refreshBids: () => Promise<void>
-}
-
-// Alias for backward compatibility  
-export interface BidApiIntegration extends IBidApiIntegration {}
-
-export interface IUseBiddingOptions {
-  itemId: string | number
-  autoConnect?: boolean
-}
-
-// Alias for backward compatibility
-export interface UseBiddingOptions extends IUseBiddingOptions {}
-
-export interface IBiddingState {
-  currentPrice: number
-  totalBids: number
-  lastBid: any | null
-  bidHistory: any[]
-  isConnected: boolean
-  isLoading: boolean
-  error: string | null
-}
-
-// Alias for backward compatibility
-export interface BiddingState extends IBiddingState {}
-
-export interface IBidSubmission {
-  isSubmitting: boolean
-  success: boolean
-  error: string | null
-}
-
-// Alias for backward compatibility
-export interface BidSubmission extends IBidSubmission {}
-
 export interface IAuctionItem extends BaseEntity {
   title: string
   description: string

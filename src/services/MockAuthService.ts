@@ -3,16 +3,18 @@
  * Simulates API responses without making actual HTTP requests
  */
 
-import { IAuthService } from './interfaces'
-import { BaseResponse } from '@/types'
-import { 
-  IUser, 
-  ILoginCredentials, 
-  IRegisterData, 
-  IForgotPasswordRequest, 
-  IAuthToken,
+import {
+  IUser,
   UserStatus
 } from '@/models'
+import { BaseResponse } from '@/types'
+import {
+  IAuthService,
+  IAuthToken,
+  IForgotPasswordRequest,
+  ILoginCredentials,
+  IRegisterData,
+} from './interfaces'
 
 export class MockAuthService implements IAuthService {
   private mockUsers = [

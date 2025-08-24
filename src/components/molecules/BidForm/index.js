@@ -1,118 +1,35 @@
 /**
  * Bid Form Component
- * Allows users to place bids on auction items with real-time validation
+ * UI-only component for placing bids - logic handled by useBidForm hook
  */
 
-import React, { useState, useEffect } from 'react'
-
-interface BidFormProps {
-  currentPrice: number
-  minBidIncrement: number
-  isSubmitting: boolean
-  canBid: boolean
-  onSubmit: (amount: number) => void
-  error?: string | null
-  success?: boolean
-  className?: string
-}
+import React from 'react'
+import PropTypes from 'prop-types'
 
 /**
- * Form component for placing bids on auction items
+ * Pure UI component for bid form
  */
-const BidForm: React.FC<BidFormProps> = ({
-  currentPrice,
+const BidForm = ({
+  bidAmount,
+  validationError,
+  displayError,
+  minBidAmount,
   minBidIncrement,
   isSubmitting,
   canBid,
-  onSubmit,
-  error,
   success,
-  className = ''
+  className = '',
+  onBidAmountChange,
+  onSubmit,
+  onQuickBid
 }) => {
-  const [bidAmount, setBidAmount] = useState('')
-  const [validationError, setValidationError] = useState<string | null>(null)
-
-  const minBidAmount = currentPrice + minBidIncrement
-
-  /**
-   * Validate bid amount
-   */
-  const validateBidAmount = (amount: string): string | null => {
-    const numericAmount = parseFloat(amount)
-
-    if (!amount || isNaN(numericAmount)) {
-      return 'Please enter a valid bid amount'
-    }
-
-    if (numericAmount < minBidAmount) {
-      return `Minimum bid is €${minBidAmount.toLocaleString()}`
-    }
-
-    if (numericAmount > 1000000) {
-      return 'Bid amount cannot exceed €1,000,000'
-    }
-
-    return null
+  const handleInputChange = (e) => {
+    onBidAmountChange(e.target.value)
   }
-
-  /**
-   * Handle form submission
-   */
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const error = validateBidAmount(bidAmount)
-    if (error) {
-      setValidationError(error)
-      return
-    }
-
-    const numericAmount = parseFloat(bidAmount)
-    onSubmit(numericAmount)
-  }
-
-  /**
-   * Handle bid amount change
-   */
-  const handleBidAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setBidAmount(value)
-
-    // Clear validation error when user starts typing
-    if (validationError) {
-      setValidationError(null)
-    }
-  }
-
-  /**
-   * Set quick bid amounts
-   */
-  const setQuickBid = (amount: number) => {
-    setBidAmount(amount.toString())
-    setValidationError(null)
-  }
-
-  // Clear form when bid is successful
-  useEffect(() => {
-    if (success) {
-      setBidAmount('')
-      setValidationError(null)
-    }
-  }, [success])
-
-  // Update minimum bid when current price changes
-  useEffect(() => {
-    const currentBidAmount = parseFloat(bidAmount)
-    if (bidAmount && !isNaN(currentBidAmount) && currentBidAmount < minBidAmount) {
-      setValidationError(`Minimum bid is €${minBidAmount.toLocaleString()}`)
-    }
-  }, [minBidAmount, bidAmount])
-
-  const displayError = validationError || error
 
   return (
     <div className={`bid-form ${className}`}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <div className="bid-form__input-section">
           <div className="input-group mb-3">
             <span className="input-group-text">€</span>
@@ -124,7 +41,7 @@ const BidForm: React.FC<BidFormProps> = ({
               className={`form-control ${displayError ? 'is-invalid' : ''} ${success ? 'is-valid' : ''}`}
               placeholder={`Min. €${minBidAmount.toLocaleString()}`}
               value={bidAmount}
-              onChange={handleBidAmountChange}
+              onChange={handleInputChange}
               disabled={!canBid || isSubmitting}
               aria-label="Bid amount"
             />
@@ -151,7 +68,7 @@ const BidForm: React.FC<BidFormProps> = ({
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => setQuickBid(minBidAmount)}
+                onClick={() => onQuickBid(minBidAmount)}
                 disabled={!canBid || isSubmitting}
               >
                 €{minBidAmount.toLocaleString()}
@@ -159,7 +76,7 @@ const BidForm: React.FC<BidFormProps> = ({
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => setQuickBid(minBidAmount + minBidIncrement)}
+                onClick={() => onQuickBid(minBidAmount + minBidIncrement)}
                 disabled={!canBid || isSubmitting}
               >
                 €{(minBidAmount + minBidIncrement).toLocaleString()}
@@ -167,7 +84,7 @@ const BidForm: React.FC<BidFormProps> = ({
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => setQuickBid(minBidAmount + minBidIncrement * 2)}
+                onClick={() => onQuickBid(minBidAmount + minBidIncrement * 2)}
                 disabled={!canBid || isSubmitting}
               >
                 €{(minBidAmount + minBidIncrement * 2).toLocaleString()}
@@ -195,7 +112,6 @@ const BidForm: React.FC<BidFormProps> = ({
           <small className="text-muted">
             <i className="bi bi-info-circle me-1"></i>
             Minimum bid: €{minBidAmount.toLocaleString()} 
-            (Current: €{currentPrice.toLocaleString()} + €{minBidIncrement.toLocaleString()})
           </small>
         </div>
       </form>
@@ -205,12 +121,27 @@ const BidForm: React.FC<BidFormProps> = ({
         {!canBid && (
           <div className="alert alert-warning alert-sm" role="alert">
             <i className="bi bi-exclamation-triangle me-2"></i>
-            {!canBid ? 'Unable to bid at this time' : 'Please log in to place bids'}
+            Unable to bid at this time
           </div>
         )}
       </div>
     </div>
   )
+}
+
+BidForm.propTypes = {
+  bidAmount: PropTypes.string.isRequired,
+  validationError: PropTypes.string,
+  displayError: PropTypes.string,
+  minBidAmount: PropTypes.number.isRequired,
+  minBidIncrement: PropTypes.number.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  canBid: PropTypes.bool.isRequired,
+  success: PropTypes.bool,
+  className: PropTypes.string,
+  onBidAmountChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onQuickBid: PropTypes.func.isRequired
 }
 
 export default BidForm

@@ -1,14 +1,14 @@
-import { Navigation } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Breadcrumb } from '@/components/atoms';
+import { AuctionCard, CategoryItem, SubCategoryCard } from '@/components/molecules';
 import { sampleAuctionItems } from '@/data';
 import { useCategoryNavigation, useNavigation } from '@/hooks';
-import { AuctionCard, CategoryItem, SubCategoryCard } from '@/components/molecules';
-import { Breadcrumb } from '@/components/atoms';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
-import './style.css';
+import './CategoryNavigation.scss';
 
 /**
  * CategoryNavigation Organism Component

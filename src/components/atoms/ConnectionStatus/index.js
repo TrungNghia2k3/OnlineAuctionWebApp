@@ -4,19 +4,12 @@
  */
 
 import React from 'react'
-
-interface ConnectionStatusProps {
-  isConnected: boolean
-  isLoading?: boolean
-  error?: string | null
-  onRetry?: () => void
-  className?: string
-}
+import PropTypes from 'prop-types'
 
 /**
  * Component to display real-time connection status
  */
-const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
+const ConnectionStatus = ({
   isConnected,
   isLoading = false,
   error,
@@ -84,6 +77,14 @@ const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
       </div>
     </div>
   )
+}
+
+ConnectionStatus.propTypes = {
+  isConnected: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool,
+  error: PropTypes.string,
+  onRetry: PropTypes.func,
+  className: PropTypes.string
 }
 
 export default ConnectionStatus

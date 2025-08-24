@@ -3,29 +3,16 @@
  * Main component that orchestrates real-time bidding functionality
  */
 
-import React, { useEffect } from 'react'
-import { useBidding } from '@/hooks/useBidding'
-import { useBidApiIntegration } from '@/hooks/useBidApiIntegration'
-import BidForm from '@/components/molecules/BidForm'
-import BidHistory from '@/components/molecules/BidHistory'
 import ConnectionStatus from '@/components/atoms/ConnectionStatus'
-
-interface RealtimeBiddingProps {
-  itemId: string | number
-  initialPrice: number
-  initialTotalBids?: number
-  minBidIncrement: number
-  isAuctionActive: boolean
-  currentUserId?: string | number
-  className?: string
-  showHistory?: boolean
-  showConnectionStatus?: boolean
-}
+import { BidForm, BidHistory } from '@/components/molecules'
+import { useBidApiIntegration, useBidding, useBidForm, useBidHistory } from '@/hooks'
+import PropTypes from 'prop-types'
+import React, { useEffect } from 'react'
 
 /**
  * Real-time bidding component with WebSocket integration
  */
-const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
+const RealtimeBidding = ({
   itemId,
   initialPrice,
   initialTotalBids = 0,
@@ -56,8 +43,6 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
   const {
     initialBids,
     isLoading: bidsLoading,
-    error: bidsError,
-    refreshBids
   } = useBidApiIntegration(itemId)
 
   // Update initial price when prop changes
@@ -71,7 +56,7 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
   const effectiveCurrentPrice = currentPrice || initialPrice
   const effectiveTotalBids = totalBids || initialTotalBids
 
-  const handleBidSubmit = async (amount: number) => {
+  const handleBidSubmit = async (amount) => {
     await placeBid(amount)
   }
 
@@ -81,6 +66,24 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
   }
 
   const canPlaceBid = canBid && isAuctionActive && isAuthenticated
+
+  // Initialize BidForm hook
+  const bidFormHook = useBidForm({
+    currentPrice: effectiveCurrentPrice,
+    minBidIncrement,
+    isSubmitting: bidSubmission.isSubmitting,
+    canBid: canPlaceBid || false,
+    onSubmit: handleBidSubmit,
+    error: bidSubmission.error,
+    success: bidSubmission.success
+  })
+
+  // Initialize BidHistory hook
+  const bidHistoryHook = useBidHistory({
+    bidHistory: allBids,
+    currentUserId,
+    maxItems: 10
+  })
 
   return (
     <div className={`realtime-bidding ${className}`}>
@@ -166,13 +169,17 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
               </div>
             ) : (
               <BidForm
-                currentPrice={effectiveCurrentPrice}
+                bidAmount={bidFormHook.bidAmount}
+                validationError={bidFormHook.validationError}
+                displayError={bidFormHook.displayError}
+                minBidAmount={bidFormHook.minBidAmount}
                 minBidIncrement={minBidIncrement}
                 isSubmitting={bidSubmission.isSubmitting}
                 canBid={canPlaceBid || false}
-                onSubmit={handleBidSubmit}
-                error={bidSubmission.error}
                 success={bidSubmission.success}
+                onBidAmountChange={bidFormHook.handleBidAmountChange}
+                onSubmit={bidFormHook.handleSubmit}
+                onQuickBid={bidFormHook.setQuickBid}
               />
             )}
           </div>
@@ -185,10 +192,14 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
           <div className="card">
             <div className="card-body">
               <BidHistory
-                bidHistory={allBids}
-                currentUserId={currentUserId}
+                displayedBids={bidHistoryHook.displayedBids}
+                totalBids={bidHistoryHook.totalBids}
+                currentHighBid={bidHistoryHook.currentHighBid}
+                uniqueBidders={bidHistoryHook.uniqueBidders}
                 isLoading={(isLoading && bidHistory.length === 0) || bidsLoading}
                 maxItems={10}
+                formatTimestamp={bidHistoryHook.formatTimestamp}
+                isCurrentUserBid={bidHistoryHook.isCurrentUserBid}
               />
             </div>
           </div>
@@ -218,6 +229,18 @@ const RealtimeBidding: React.FC<RealtimeBiddingProps> = ({
       )}
     </div>
   )
+}
+
+RealtimeBidding.propTypes = {
+  itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  initialPrice: PropTypes.number.isRequired,
+  initialTotalBids: PropTypes.number,
+  minBidIncrement: PropTypes.number.isRequired,
+  isAuctionActive: PropTypes.bool.isRequired,
+  currentUserId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  className: PropTypes.string,
+  showHistory: PropTypes.bool,
+  showConnectionStatus: PropTypes.bool
 }
 
 export default RealtimeBidding

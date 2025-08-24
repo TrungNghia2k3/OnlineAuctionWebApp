@@ -1,7 +1,7 @@
 import { useCategories } from '@/hooks'
 import { useDropdown } from '@/hooks/useDropdown'
 import { useNavigation } from '@/hooks/useNavigation'
-import { CategorySelector } from '../../../molecules'
+import { CategorySelector } from '@/components/molecules'
 
 /**
  * SmartCategorySelector Organism Component

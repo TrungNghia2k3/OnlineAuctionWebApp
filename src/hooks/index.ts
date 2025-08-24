@@ -2,6 +2,8 @@
 export { useAuth } from './useAuth'
 export { useBidding } from './useBidding'
 export { useBidApiIntegration } from './useBidApiIntegration'
+export { useBidForm } from './useBidForm'
+export { useBidHistory } from './useBidHistory'
 export { useCategories } from './useCategories'
 export { useCategoryNavigation } from './useCategoryNavigation'
 export { useDropdown } from './useDropdown'

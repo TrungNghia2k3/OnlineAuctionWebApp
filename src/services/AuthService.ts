@@ -1,14 +1,16 @@
-import { IAuthService } from './interfaces'
-import { BaseResponse } from '@/types'
-import { 
-  IUser, 
-  ILoginCredentials, 
-  IRegisterData, 
-  IForgotPasswordRequest, 
-  IAuthToken,
-  User 
+import authenticationApi from '@/api/authentication'
+import {
+  IUser,
+  User
 } from '@/models'
-import authentication from '../api/authentication'
+import { BaseResponse } from '@/types'
+import {
+  IAuthService,
+  IAuthToken,
+  IForgotPasswordRequest,
+  ILoginCredentials,
+  IRegisterData,
+} from './interfaces'
 
 /**
  * Concrete implementation of IAuthService
@@ -17,7 +19,7 @@ import authentication from '../api/authentication'
 export class AuthService implements IAuthService {
   async login(credentials: ILoginCredentials): Promise<BaseResponse<IAuthToken>> {
     try {
-      const response = await authentication.authenticate(credentials.username, credentials.password)
+      const response = await authenticationApi.authenticate(credentials.username, credentials.password)
 
       console.log('API response:', response)
 
@@ -30,7 +32,7 @@ export class AuthService implements IAuthService {
           expiresAt: new Date(Date.now() + 3600 * 1000),
           scope: ['USER'] // Default scope, could be extracted from JWT
         }
-        
+
         return {
           success: true,
           data: authToken,
@@ -63,7 +65,7 @@ export class AuthService implements IAuthService {
 
   async register(userData: IRegisterData): Promise<BaseResponse<IUser>> {
     try {
-      const response = await authentication.register(userData.username, userData.password)
+      const response = await authenticationApi.register(userData.username, userData.password)
       const user = User.fromApiResponse(response)
       return {
         success: true,
@@ -81,7 +83,7 @@ export class AuthService implements IAuthService {
 
   async forgotPassword(request: IForgotPasswordRequest): Promise<BaseResponse<void>> {
     try {
-      const response = await authentication.forgotPassword(request.email)
+      const response = await authenticationApi.forgotPassword(request.email)
       return {
         success: true,
         data: response,
@@ -98,7 +100,7 @@ export class AuthService implements IAuthService {
 
   async resetPassword(token: string, newPassword: string): Promise<BaseResponse<void>> {
     try {
-      const response = await authentication.resetPassword(token, newPassword)
+      const response = await authenticationApi.resetPassword(token, newPassword)
       return {
         success: true,
         data: response,
@@ -115,7 +117,7 @@ export class AuthService implements IAuthService {
 
   async refreshToken(token: string): Promise<BaseResponse<IAuthToken>> {
     try {
-      const response = await authentication.refreshToken(token)
+      const response = await authenticationApi.refreshToken(token)
       return {
         success: true,
         data: response,
@@ -132,7 +134,7 @@ export class AuthService implements IAuthService {
 
   async validateToken(token: string): Promise<BaseResponse<IUser>> {
     try {
-      const response = await authentication.validateToken(token)
+      const response = await authenticationApi.validateToken(token)
       const user = User.fromApiResponse(response)
       return {
         success: true,
@@ -150,7 +152,7 @@ export class AuthService implements IAuthService {
 
   async changePassword(userId: string | number, currentPassword: string, newPassword: string): Promise<BaseResponse<void>> {
     try {
-      const response = await authentication.changePassword('', currentPassword, newPassword)
+      const response = await authenticationApi.changePassword('', currentPassword, newPassword)
       return {
         success: true,
         data: response,

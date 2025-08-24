@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
-import categories from '../data/categories';
+import {categories} from '@/data';
 
 interface CategoryBreadcrumb {
   name: string

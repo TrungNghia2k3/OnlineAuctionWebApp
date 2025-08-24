@@ -36,46 +36,6 @@ export interface IUser extends BaseEntity {
   profileCompleteness: number
 }
 
-export interface IUserProfile extends BaseEntity {
-  user: IUser
-  bio?: string
-  location?: string
-  website?: string
-  socialMedia?: Record<string, string>
-  preferences?: Record<string, any>
-  lastActive?: Date
-}
-
-export interface ILoginCredentials {
-  username: string
-  password: string
-  rememberMe?: boolean
-}
-
-export interface IRegisterData {
-  username: string
-  email: string
-  password: string
-  confirmPassword: string
-  firstName?: string
-  lastName?: string
-  agreeToTerms: boolean
-}
-
-export interface IForgotPasswordRequest {
-  email: string
-}
-
-export interface IAuthToken {
-  accessToken: string
-  tokenType: string
-  expiresIn: number
-  expiresAt: Date
-  scope: string[]
-  refreshToken?: string
-  user?: IUser
-}
-
 /**
  * User model class with methods
  */

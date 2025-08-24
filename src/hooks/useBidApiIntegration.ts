@@ -5,7 +5,14 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import BidService from '@/services/BidService'
-import { BidApiIntegration } from '@/models'
+
+// Alias for backward compatibility  
+export interface BidApiIntegration {
+  initialBids: any[]
+  isLoading: boolean
+  error: string | null
+  refreshBids: () => Promise<void>
+}
 
 /**
  * Hook to integrate with existing bid API
@@ -24,13 +31,13 @@ export const useBidApiIntegration = (itemId: string | number): BidApiIntegration
       setError(null)
 
       const result = await BidService.getItemBids(itemId)
-      
+
       if (result.success && result.data) {
         // Format bids for display
-        const formattedBids = Array.isArray(result.data) 
+        const formattedBids = Array.isArray(result.data)
           ? result.data.map(bid => BidService.formatBidForDisplay(bid))
           : []
-        
+
         setInitialBids(formattedBids)
       } else {
         setError(result.error || 'Failed to load bids')
