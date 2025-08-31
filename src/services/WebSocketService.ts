@@ -8,9 +8,7 @@ import { Client, IStompSocket } from '@stomp/stompjs'
 import BidService from './BidService'
 import { IWebSocketService } from './interfaces'
 
-// Define missing callback types
-export type ConnectionStatusCallback = (connected: boolean) => void
-export type ErrorCallback = (error: string) => void
+
 export interface BidUpdate {
   itemId: string | number
   bidAmount: number
@@ -24,14 +22,17 @@ export interface BidUpdate {
   totalBids: number
 }
 
-export type BidConfirmationCallback = (confirmation: BidConfirmation) => void
-
 export interface BidConfirmation {
   success: boolean
   message: string
   error?: string
   bid?: any
 }
+
+// Define missing callback types
+export type ConnectionStatusCallback = (connected: boolean) => void
+export type ErrorCallback = (error: string) => void
+export type BidConfirmationCallback = (confirmation: BidConfirmation) => void
 export type BidUpdateCallback = (bidUpdate: BidUpdate) => void
 
 // Import SockJS using require to avoid TypeScript module resolution issues

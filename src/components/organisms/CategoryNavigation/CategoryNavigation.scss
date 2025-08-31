@@ -8,7 +8,6 @@
 
 .category-navigation__container {
     position: relative;
-    padding: 0 60px;
 }
 
 .category-swiper {
@@ -66,81 +65,10 @@
     display: none;
 }
 
-/* Category content section */
-.category-navigation__content {
-    padding: 16px 0;
-    background: #f8f9fa;
-    min-height: 400px;
-}
-
-.category-content__title {
-    font-family: freightBig, serif;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 32px;
-    font-size: 2.8rem;
-    line-height: 1;
-}
-
-.category-content__subcategories {
-    margin: 0 auto;
-}
-
-.category-content__auction-items {
-    margin: 0 auto;
-}
-
-.subcategory-item {
-    height: 100%;
-}
-
-.subcategory-item__image {
-    aspect-ratio: 16/9;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-size: cover;
-    background-position: center;
-}
-
-.subcategory-item__image:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.subcategory-item__name {
-    position: absolute;
-    bottom: 16px;
-    left: 16px;
-    right: 16px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    color: #333;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .category-navigation__container {
         padding: 0 8px;
-    }
-
-    .category-content__title {
-        font-size: 2rem;
-        margin-bottom: 24px;
-    }
-
-    .category-navigation__content {
-        padding: 24px 8px;
     }
 
     .swiper-button-prev-custom,
@@ -156,14 +84,4 @@
     .swiper-button-next-custom {
         right: 4px;
     }
-}
-
-@media (max-width: 576px) {
-    /* Additional mobile styles if needed */
-}
-
-/* Hide default swiper navigation */
-.category-swiper .swiper-button-next,
-.category-swiper .swiper-button-prev {
-    display: none;
 }

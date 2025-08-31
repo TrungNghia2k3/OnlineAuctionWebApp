@@ -23,6 +23,8 @@ $grey-4: #ededed;
 // Fonts
 $font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
+$font-family-freight-big: "freightBig", serif;
+$font-family-basic-grotesque: "basisGrotesque", sans-serif;
 $font-family-base: $font-family-sans-serif;
 $line-height-base: 1.5;
 
@@ -50,6 +52,7 @@ $alert-icon-height: 30px;
   --error: #{$danger};
   --color-main: #0033FF;
   --color-main-hover: #2953FF;
+  --dark : #{$dark};
 
   /*
   * Fonts
@@ -57,4 +60,6 @@ $alert-icon-height: 30px;
   --base-font-family: #{$font-family-base};
   --headers-font-family: #{$font-family-serif};
   --base-font-line-height: #{$line-height-base};
+  --freight-big-font-family: #{$font-family-freight-big};
+  --basic-grotesque-font-family: #{$font-family-basic-grotesque};
 }

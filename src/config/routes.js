@@ -13,6 +13,7 @@ const LoginPage = lazy(() => import('../components/pages/LoginPage'))
 const RegisterPage = lazy(() => import('../components/pages/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('../components/pages/ForgotPasswordPage'))
 const CategoryBrowserPage = lazy(() => import('../components/pages/CategoryBrowserPage'))
+const CategoryPage = lazy(() => import('../components/pages/CategoryPage'))
 const BidDetailPage = lazy(() => import('../components/pages/BidDetailPage'))
 const SearchResultsPage = lazy(() => import('../components/pages/SearchResultsPage'))
 const ProfilePage = lazy(() => import('../components/pages/ProfilePage'))
@@ -100,6 +101,18 @@ export const routeDefinitions = [
     meta: {
       showInNavigation: true,
       navOrder: 2
+    }
+  },
+  {
+    path: '/category/:categoryId',
+    element: <CategoryPage />,
+    type: ROUTE_TYPES.PUBLIC,
+    roles: [USER_ROLES.GUEST, USER_ROLES.USER, USER_ROLES.ADMIN],
+    title: 'Category - Online Auction',
+    description: 'View category items and subcategories',
+    requiresAuth: false,
+    meta: {
+      showInNavigation: false
     }
   },
   {

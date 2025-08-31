@@ -1,0 +1,105 @@
+@import '../../../css/variables.scss';
+
+.category-page {
+  min-height: 100vh;
+  padding: 2rem 0;
+
+  &__breadcrumb {
+    margin-bottom: 2rem;
+  }
+
+  &__content {
+    .category-content {
+      &__title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 2rem;
+        text-align: center;
+
+        @media (max-width: 768px) {
+          font-size: 2rem;
+          margin-bottom: 1.5rem;
+        }
+      }
+
+      &__auction-items {
+        margin-bottom: 3rem;
+
+        .row {
+          margin: 0 -0.5rem;
+
+          > div {
+            padding: 0 0.5rem;
+          }
+        }
+      }
+
+      &__subcategories {
+        .row {
+          margin: 0 -0.5rem;
+
+          > div {
+            padding: 0 0.5rem;
+          }
+        }
+      }
+
+      &__empty {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &__loading {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .category-content__subcategories .col-xl-3 {
+      flex: 0 0 auto;
+      width: 25%;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .category-content__subcategories .col-lg-3 {
+      flex: 0 0 auto;
+      width: 33.333333%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 0;
+
+    &__breadcrumb {
+      margin-bottom: 1.5rem;
+    }
+
+    .category-content__subcategories .col-md-6 {
+      flex: 0 0 auto;
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .category-content__subcategories .col-sm-6 {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+  }
+}

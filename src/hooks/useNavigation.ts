@@ -5,6 +5,7 @@ import { ICategory } from '@/models'
 interface UseNavigationReturn {
   navigateTo: (path: string, options?: NavigateOptions) => void
   navigateToCategory: (category: ICategory) => void
+  navigateToCategoryPage: (categoryId: string | number) => void
   navigateToSearch: (query: string) => void
   navigateToProfile: () => void
   navigateToFavorites: () => void
@@ -27,6 +28,10 @@ export const useNavigation = (): UseNavigationReturn => {
     navigate(`/category/${category.slug}`)
   }, [navigate])
 
+  const navigateToCategoryPage = useCallback((categoryId: string | number) => {
+    navigate(`/category/${categoryId}`)
+  }, [navigate])
+
   const navigateToSearch = useCallback((query: string) => {
     const searchParams = new URLSearchParams({ q: query })
     navigate(`/search?${searchParams.toString()}`)
@@ -47,6 +52,7 @@ export const useNavigation = (): UseNavigationReturn => {
   return {
     navigateTo,
     navigateToCategory,
+    navigateToCategoryPage,
     navigateToSearch,
     navigateToProfile,
     navigateToFavorites,

@@ -1,0 +1,55 @@
+@import '../../../../../css/variables.scss';
+
+.regular-categories {
+    &__breadcrumb {
+        margin: 16px 0;
+    }
+
+    &__content {
+        padding: 0;
+    }
+
+    &__title {
+        font-size: 3rem;
+        color: var(--text-primary);
+        // text-align: center;
+        margin-bottom: 2rem;
+
+        font-family: freightBig, serif;
+        font-weight: 600;
+        font-size: 4rem;
+        line-height: 1;
+
+        @media (max-width: 768px) {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    &__subcategories {
+        .row {
+            margin: 0 -0.5rem;
+
+            >div {
+                padding: 0 0.5rem;
+            }
+        }
+    }
+
+    &__empty {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        &__content {
+            padding: 1.5rem 0;
+        }
+    }
+}

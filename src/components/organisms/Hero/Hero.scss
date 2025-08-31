@@ -1,0 +1,319 @@
+@import url(../../../css//variables.scss);
+
+/* Hero Component Styles */
+.hero {
+    padding: 3rem 0;
+    min-height: 80vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Content Section */
+.hero__content {
+    position: relative;
+    height: 100%;
+
+    /* Use transitions instead of animations - synchronized with image timing */
+    .hero__title {
+        margin-bottom: 1.5rem;
+        color: var(--color-main);
+        font-family: var(--freight-big-font-family);
+        font-weight: 600;
+        font-size: 3.5rem;
+        line-height: 1.25;
+
+        /* Slower transitions to sync with image animations */
+        transition: color 0.8s ease, transform 0.6s ease, opacity 0.8s ease;
+    }
+
+    .hero__title span {
+        color: var(--dark);
+
+        /* Slower transition for span elements to match title */
+        transition: color 0.6s ease, transform 0.6s ease;
+    }
+
+    @media (max-width: 768px) {
+        .hero__title {
+            font-size: 2rem;
+        }
+    }
+
+    .hero__description {
+        font-size: 1.2rem;
+        font-weight: 500;
+        line-height: 1.2;
+        color: var(--grey-1);
+        font-family: var(--basic-grotesque-font-family);
+        max-width: 90%;
+
+        /* Synchronized transitions with staggered timing */
+        transition: opacity 0.9s ease 0.2s, transform 0.7s ease 0.2s, color 0.6s ease;
+    }
+
+    @media (max-width: 768px) {
+        .hero__description {
+            font-size: 1rem;
+            max-width: 100%;
+        }
+    }
+
+    /* Pagination Bar */
+    .hero__pagination {
+        margin-top: 2rem;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        /* Longer transition to sync with image completion */
+        transition: opacity 1s ease 0.4s, transform 0.8s ease 0.4s;
+
+        .pagination-bars {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pagination-bar {
+            height: 4px;
+            flex: 1;
+            background: #D2D9E1;
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+
+            /* Slower transitions for pagination bars with staggered delays */
+            transition: all 0.6s ease, background-color 0.4s ease, transform 0.4s ease;
+            transform-origin: left center;
+        }
+
+        .pagination-bar:hover {
+            transform: scaleY(1.2);
+            background: #bcc5d1;
+        }
+
+        .pagination-bar.active {
+            background: #D2D9E1;
+        }
+
+        .pagination-progress {
+            height: 100%;
+            background: var(--color-main);
+            border-radius: 2px;
+            transition: width 0.05s linear;
+            box-shadow: 0 0 8px rgba(41, 149, 192, 0.6);
+        }
+    }
+}
+
+/* Image Container */
+.hero__image-container {
+    /* Enhanced slideUp animation for image - synchronized with content */
+    animation: slideUpFromBottom 0.8s ease-out forwards;
+    perspective: 1000px;
+}
+
+.hero__image {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    background: #f8f9fa;
+}
+
+.hero__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.hero__image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--grey-2);
+    background: #f8f9fa;
+}
+
+.hero__image-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Featured Items Section */
+.hero__featured-items {
+    margin-top: 4rem;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.hero__items-title {
+    font-family: 'freightBig', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--grey-1);
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.hero__items-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--brand);
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .hero__items-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animations */
+@keyframes slideUpFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(80px) rotateX(10deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg);
+    }
+}
+
+
+@keyframes imageFloatIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95) rotateY(5deg);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: translateY(-5px) scale(1.02) rotateY(-1deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateY(0deg);
+    }
+}
+
+@keyframes imageParallax {
+    0% {
+        transform: scale(1.1) translateY(10px);
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .hero {
+        padding: 2rem 0;
+        min-height: 70vh;
+    }
+
+    .hero__content {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .hero__description {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 1.5rem 0;
+        min-height: auto;
+    }
+
+    .hero__featured-items {
+        margin-top: 2rem;
+    }
+
+    .pagination-bars {
+        gap: 4px;
+    }
+
+    .pagination-bar {
+        height: 3px;
+    }
+}
+
+/* Accessibility */
+.pagination-bar:focus {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .hero__content .hero__title,
+    .hero__content .hero__title span,
+    .hero__content .hero__description,
+    .hero__content .hero__pagination,
+    .hero__content .pagination-bar {
+        transition: none;
+    }
+
+    .hero__image-container,
+    .hero__image,
+    .hero__image img,
+    .hero__featured-items {
+        animation: none;
+    }
+
+    .hero__image,
+    .hero__image img,
+    .pagination-progress {
+        transition: none;
+    }
+}

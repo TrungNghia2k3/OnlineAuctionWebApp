@@ -7,7 +7,7 @@ import ConnectionStatus from '@/components/atoms/ConnectionStatus'
 import { BidForm, BidHistory } from '@/components/molecules'
 import { useBidApiIntegration, useBidding, useBidForm, useBidHistory } from '@/hooks'
 import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 /**
  * Real-time bidding component with WebSocket integration

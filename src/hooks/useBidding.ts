@@ -29,12 +29,6 @@ interface BidSubmission {
   error: string | null
 }
 
-interface BidSubmission {
-  isSubmitting: boolean
-  success: boolean
-  error: string | null
-}
-
 interface UseBiddingReturn {
   currentPrice: number
   totalBids: number

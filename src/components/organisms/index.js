@@ -15,3 +15,5 @@ export {default as Footer} from './Footer'
 // Homepage
 export {default as ApiItemsList} from './ApiItemsList'
 export {default as RealtimeBidding} from './RealtimeBidding'
+export {default as Hero} from './Hero'
+export {default as IconicBrands} from './IconicBrands'

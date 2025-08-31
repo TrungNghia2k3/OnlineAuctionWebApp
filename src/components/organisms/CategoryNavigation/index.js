@@ -1,9 +1,8 @@
-import { Breadcrumb } from '@/components/atoms';
-import { AuctionCard, CategoryItem, SubCategoryCard } from '@/components/molecules';
-import { sampleAuctionItems } from '@/data';
-import { useCategoryNavigation, useNavigation } from '@/hooks';
+import { CategoryItem } from '@/components/molecules';
+import { useCategoryNavigation } from '@/hooks';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { ForYou, RegularCategories, ThisWeek, Trending } from './components';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -22,8 +21,6 @@ const CategoryNavigation = ({ onCategoryChange }) => {
         getFilteredCategories
     } = useCategoryNavigation();
 
-    const { navigateToBidDetail } = useNavigation();
-
     // Get filtered categories
     const allCategories = getFilteredCategories() || [];
     const breadcrumb = getBreadcrumb() || [];
@@ -36,11 +33,6 @@ const CategoryNavigation = ({ onCategoryChange }) => {
         if (onCategoryChange) {
             onCategoryChange(category);
         }
-    };
-
-    const handleAuctionClick = (item) => {
-        // Navigate to bid detail page with item ID
-        navigateToBidDetail(item.id);
     };
 
     return (
@@ -68,7 +60,7 @@ const CategoryNavigation = ({ onCategoryChange }) => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                
+
                 {/* Custom Navigation Buttons */}
                 <div className="swiper-button-prev-custom">
                     <i className="bi bi-chevron-left"></i>
@@ -78,48 +70,21 @@ const CategoryNavigation = ({ onCategoryChange }) => {
                 </div>
             </div>
 
-             {/* Breadcrumb */}
-            <div className="category-navigation__breadcrumb">
-                <Breadcrumb items={breadcrumb} />
-            </div>
-
             {/* Category Content Section */}
             <div className="category-navigation__content">
                 {activeCategory && (
                     <div className="category-content">
-                        <h2 className="category-content__title">{activeCategory.name}</h2>
+                        {/* Group 1 Categories: ThisWeek (id: 1), ForYou (id: 2), Trending (id: 3) */}
+                        {activeCategory.id === 1 && <ThisWeek />}
+                        {activeCategory.id === 2 && <ForYou />}
+                        {activeCategory.id === 3 && <Trending />}
 
-                        {/* Special categories with auction items */}
-                        {(activeCategory.name === "This week" || activeCategory.name === "For you" || activeCategory.name === "Trending") && (
-                            <div className="category-content__auction-items">
-                                <div className="row">
-                                    {sampleAuctionItems[activeCategory.name]?.map((item) => (
-                                        <div key={item.id} className="col-lg-3 col-md-6 col-sm-6 mb-4">
-                                            <AuctionCard
-                                                item={item}
-                                                onClick={handleAuctionClick}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Regular categories with subcategories */}
-                        {activeCategory.sub && activeCategory.sub.length > 0 && activeCategory.name !== "This week" && activeCategory.name !== "For you" && activeCategory.name !== "Trending" && (
-                            <div className="category-content__subcategories">
-                                <div className="row g-2 g-lg-1">
-                                    {activeCategory.sub.map((subCategory, index) => (
-                                        <div key={index} className="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 mb-4">
-                                            <SubCategoryCard
-                                                subCategory={subCategory}
-                                                categoryColor={activeCategory.color}
-                                                onClick={(subCategory) => console.log('Subcategory clicked:', subCategory)}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                        {/* Group 2 Categories: Regular categories (id > 3) */}
+                        {activeCategory.id > 3 && (
+                            <RegularCategories 
+                                category={activeCategory} 
+                                breadcrumb={breadcrumb}
+                            />
                         )}
                     </div>
                 )}
