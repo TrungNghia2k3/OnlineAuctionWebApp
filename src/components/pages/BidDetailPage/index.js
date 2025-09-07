@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useItem, useAuth } from '@/hooks';
+import { useItem, useAuth, useProductSuggestion } from '@/hooks';
 import { PageLayout } from '@/components/templates';
 import { LoadingSpinner } from '@/components/atoms';
+import { ProductSuggestionTracker } from '@/components/molecules';
+import { SuggestedProducts } from '@/components/organisms';
 import RealtimeBidding from '@/components/organisms/RealtimeBidding';
 import './BidDetailPage.scss';
 
@@ -14,6 +16,25 @@ const BidDetailPage = () => {
   const { id } = useParams();
   const { item, loading, error } = useItem(id);
   const { currentUser } = useAuth();
+  const { trackProductView } = useProductSuggestion();
+
+  // Track product view when item is loaded
+  useEffect(() => {
+    if (item && id) {
+      // Track this product view for suggestions
+      trackProductView(id, {
+        category: typeof item.category === 'object' ? item.category?.name : item.category,
+        title: item.title,
+        currentBid: item.currentBid
+      });
+      
+      console.log('Product view tracked for suggestions:', {
+        productId: id,
+        title: item.title,
+        category: typeof item.category === 'object' ? item.category?.name : item.category
+      });
+    }
+  }, [item, id, trackProductView]);
 
   // Debug logging
   console.log('BidDetailPage - ID:', id);
@@ -260,6 +281,28 @@ const BidDetailPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Cached Suggested Products */}
+        <div className="row mt-5">
+          <div className="col-12">
+            {/* @ts-ignore */}
+            <SuggestedProducts 
+              currentProductId={id}
+              category={typeof item.category === 'object' ? item.category?.name : item.category}
+              maxItems={8}
+              showTitle={true}
+            />
+          </div>
+        </div>
+
+        {/* Product Suggestion Tracker - Development/Testing Component */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="row mt-4">
+            <div className="col-12">
+              <ProductSuggestionTracker showDetails={false} />
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );

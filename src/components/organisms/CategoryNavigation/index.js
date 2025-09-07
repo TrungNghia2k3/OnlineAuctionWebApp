@@ -74,13 +74,14 @@ const CategoryNavigation = ({ onCategoryChange }) => {
             <div className="category-navigation__content">
                 {activeCategory && (
                     <div className="category-content">
-                        {/* Group 1 Categories: ThisWeek (id: 1), ForYou (id: 2), Trending (id: 3) */}
-                        {activeCategory.id === 1 && <ThisWeek />}
-                        {activeCategory.id === 2 && <ForYou />}
-                        {activeCategory.id === 3 && <Trending />}
+                        {/* Special Categories: This week, For you, Trending */}
+                        {(activeCategory.id === 'this-week' || activeCategory.name === 'This week') && <ThisWeek />}
+                        {(activeCategory.id === 'for-you' || activeCategory.name === 'For you') && <ForYou />}
+                        {(activeCategory.id === 'trending' || activeCategory.name === 'Trending') && <Trending />}
 
-                        {/* Group 2 Categories: Regular categories (id > 3) */}
-                        {activeCategory.id > 3 && (
+                        {/* Regular Categories: API categories with numeric IDs */}
+                        {(typeof activeCategory.id === 'number' || 
+                          (typeof activeCategory.id === 'string' && !['this-week', 'for-you', 'trending'].includes(activeCategory.id))) && (
                             <RegularCategories 
                                 category={activeCategory} 
                                 breadcrumb={breadcrumb}

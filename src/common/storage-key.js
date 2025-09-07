@@ -11,5 +11,7 @@ export const STORAGE_KEYS = {
   CART_ITEMS: 'cartItems',
   RECENT_SEARCHES: 'recentSearches',
   THEME: 'theme',
-  LANGUAGE: 'language'
+  LANGUAGE: 'language',
+  VIEWED_PRODUCTS: 'viewedProducts',
+  PRODUCT_SUGGESTION_QUEUE: 'productSuggestionQueue'
 }

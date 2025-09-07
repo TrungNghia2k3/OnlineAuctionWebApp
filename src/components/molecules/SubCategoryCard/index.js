@@ -21,7 +21,7 @@ const SubCategoryCard = ({ subCategory, categoryColor, onClick }) => {
                         {subCategory.image ? (
                             <div className="sub-category-card__image-container">
                             <img
-                                src={`/images/${subCategory.image}`}
+                                src={`${subCategory.image}`}
                                 alt={subCategory.name}
                                 className="sub-category-card__image"
                             />

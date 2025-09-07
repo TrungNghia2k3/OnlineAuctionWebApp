@@ -1,136 +1,75 @@
-import { API_URL } from '@/common'
+import { publicApiClient, authApiClient } from '@/config/axios';
 
 const item = {
   getAllItem: async () => {
-    const response = await fetch(`${API_URL}/items`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-
-    if (response.ok) {
-      const result = await response.json()
-      return result
-    } else {
-      throw new Error('Failed to get items')
+    try {
+      const response = await publicApiClient.get('/items');
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to get items');
     }
   },
 
   getAllItemPublic: async () => {
-    const response = await fetch(`${API_URL}/items`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (response.ok) {
-      const result = await response.json()
-      return result
-    } else {
-      throw new Error('Failed to get public items')
+    try {
+      const response = await publicApiClient.get('/items');
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to get public items');
     }
   },
 
   getById: async (id) => {
-    const response = await fetch(`${API_URL}/items/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to found item')
+    try {
+      const response = await publicApiClient.get(`/items/${id}`);
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to found item');
     }
   },
 
-  create: async (data, token) => {
-    const response = await fetch(`${API_URL}/items`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to create item')
+  create: async (data) => {
+    try {
+      const response = await authApiClient.post('/items', data);
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to create item');
     }
   },
 
-  update: async (data, token) => {
-    const response = await fetch(`${API_URL}/items/update`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to update item')
+  update: async (data) => {
+    try {
+      const response = await authApiClient.put('/items/update', data);
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to update item');
     }
   },
 
   searchItem: async (data) => {
-    const response = await fetch(`${API_URL}/items/search?keyword=${data}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to found item')
+    try {
+      const response = await publicApiClient.get(`/items/search?keyword=${data}`);
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to found item');
     }
   },
 
   getItemByUserId: async () => {
-    const response = await fetch(`${API_URL}/items/myitems`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to found item')
+    try {
+      const response = await authApiClient.get('/items/myitems');
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to found item');
     }
   },
 
   getStatisticsItem: async (data) => {
-    const response = await fetch(`${API_URL}/items/report`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to found item')
+    try {
+      const response = await authApiClient.post('/items/report', data);
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to found item');
     }
   },
 }

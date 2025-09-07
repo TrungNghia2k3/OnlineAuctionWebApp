@@ -1,5 +1,5 @@
 import { AuthService } from '../AuthService'
-import { ILoginCredentials, IRegisterData } from '@/models'
+import { ILoginCredentials, IRegisterData } from '../interfaces'
 import authentication from '@/api/authentication'
 
 // Mock the authentication API
@@ -40,7 +40,7 @@ describe('AuthService', () => {
         mockCredentials.username,
         mockCredentials.password
       )
-      
+
       expect(result.success).toBe(true)
       expect(result.data).toEqual({
         accessToken: 'mock-jwt-token-12345',

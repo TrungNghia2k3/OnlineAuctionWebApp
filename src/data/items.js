@@ -4,7 +4,7 @@ const items = {
     {
       id: 1,
       title: "Vintage Art Deco Vase",
-      image: "/images/item/nike-lace-up-shoes.jpg", // Fixed path with leading slash
+      image: "vintage-art-deco-vase.jpg",
       currentBid: 220,
       timeLeft: "2d 14h",
       category: "Art",
@@ -20,7 +20,7 @@ const items = {
     {
       id: 2,
       title: "Swiss Mechanical Watch",
-      image: null,
+      image: "swiss-mechanical-watch.jpg",
       currentBid: 450,
       timeLeft: "1d 8h",
       category: "Watches",
@@ -36,7 +36,7 @@ const items = {
     {
       id: 3,
       title: "Classic Motorcycle Helmet",
-      image: null,
+      image: "classic-motorcycle-helmet.jpg",
       currentBid: 180,
       timeLeft: "3d 2h",
       category: "Cars & Bikes",
@@ -51,8 +51,8 @@ const items = {
     },
     {
       id: 4,
-      title: "Rare Comic Book Collection",
-      image: "/images/item/comic-collection-1.jpg",
+      title: "Rare Comic Book",
+      image: "rare-comic-book.jpg",
       currentBid: 320,
       timeLeft: "4d 12h",
       category: "Comics",
@@ -70,7 +70,7 @@ const items = {
     {
       id: 5,
       title: "Antique Silver Jewelry",
-      image: "/images/item/silver-jewelry-1.jpg",
+      image: "antique-silver-jewelry.jpg",
       currentBid: 280,
       timeLeft: "2d 6h",
       category: "Jewelry",
@@ -89,7 +89,7 @@ const items = {
     {
       id: 6,
       title: "Designer Fashion Bag",
-      image: "/images/item/designer-bag-1.jpg",
+      image: "designer-fashion-bag.jpg",
       currentBid: 150,
       timeLeft: "1d 18h",
       category: "Fashion",
@@ -108,7 +108,7 @@ const items = {
     {
       id: 7,
       title: "Vintage Wine Collection",
-      image: "/images/item/wine-collection-1.jpg",
+      image: "vintage-wine-collection.jpg",
       currentBid: 380,
       timeLeft: "5d 4h",
       category: "Wine, Whisky & Spirits",
@@ -128,7 +128,7 @@ const items = {
     {
       id: 8,
       title: "Asian Art Sculpture",
-      image: "/images/item/asian-sculpture-1.jpg",
+      image: "asian-art-sculpture.jpg",
       currentBid: 520,
       timeLeft: "3d 20h",
       category: "Asian & Tribal",
@@ -150,7 +150,7 @@ const items = {
     {
       id: 9,
       title: "Personalized Art Piece",
-      image: "/images/item/custom-art-1.jpg",
+      image: "personalized-art-piece.jpg",
       currentBid: 195,
       timeLeft: "2d 10h",
       category: "Art",
@@ -170,7 +170,7 @@ const items = {
     {
       id: 10,
       title: "Luxury Watch Collection",
-      image: "/images/item/luxury-watches-1.jpg",
+      image: "luxury-watch-collection.jpg",
       currentBid: 750,
       timeLeft: "1d 16h",
       category: "Watches",
@@ -189,7 +189,7 @@ const items = {
     {
       id: 11,
       title: "Custom Jewelry Set",
-      image: "/images/item/custom-jewelry-1.jpg",
+      image: "custom-jewelry-set.jpg",
       currentBid: 340,
       timeLeft: "3d 8h",
       category: "Jewelry",
@@ -208,7 +208,7 @@ const items = {
     {
       id: 12,
       title: "Collectible Trading Cards",
-      image: "/images/item/trading-cards-1.jpg",
+      image: "collectible-trading-cards.jpg",
       currentBid: 120,
       timeLeft: "4d 6h",
       category: "Trading Cards",
@@ -228,7 +228,7 @@ const items = {
     {
       id: 13,
       title: "Vintage Camera Equipment",
-      image: "/images/item/vintage-camera-1.jpg",
+      image: "vintage-camera-equipment.jpg",
       currentBid: 290,
       timeLeft: "2d 22h",
       category: "Music, Movie & Cameras",
@@ -248,7 +248,7 @@ const items = {
     {
       id: 14,
       title: "Rare Book Collection",
-      image: "/images/item/rare-books-1.jpg",
+      image: "rare-books-collection.jpg",
       currentBid: 180,
       timeLeft: "5d 12h",
       category: "Books & History",
@@ -267,7 +267,7 @@ const items = {
     {
       id: 15,
       title: "Sports Memorabilia",
-      image: "/images/item/sports-memorabilia-1.jpg",
+      image: "sports-memorabilia.jpg",
       currentBid: 410,
       timeLeft: "1d 4h",
       category: "Sports",
@@ -286,7 +286,7 @@ const items = {
     {
       id: 16,
       title: "Antique Home Decor",
-      image: "/images/item/antique-decor-1.jpg",
+      image: "antique-home-decor.jpg",
       currentBid: 260,
       timeLeft: "3d 14h",
       category: "Interiors",
@@ -307,7 +307,7 @@ const items = {
     {
       id: 17,
       title: "Trending Art Photography",
-      image: "/images/item/art-photography-1.jpg",
+      image: "trending-art-photography.jpg",
       currentBid: 380,
       timeLeft: "2d 8h",
       category: "Art",
@@ -327,7 +327,7 @@ const items = {
     {
       id: 18,
       title: "Popular Watch Model",
-      image: "/images/item/popular-watch-1.jpg",
+      image: "popular-watch-model.jpg",
       currentBid: 680,
       timeLeft: "1d 12h",
       category: "Watches",
@@ -347,7 +347,7 @@ const items = {
     {
       id: 19,
       title: "Viral Gaming Console",
-      image: "/images/item/gaming-console-1.jpg",
+      image: "viral-gaming-console.jpg",
       currentBid: 220,
       timeLeft: "3d 6h",
       category: "Toys & Models",
@@ -367,7 +367,7 @@ const items = {
     {
       id: 20,
       title: "Trending Fashion Item",
-      image: "/images/item/trending-fashion-1.jpg",
+      image: "trending-fashion-item.jpg",
       currentBid: 160,
       timeLeft: "4d 10h",
       category: "Fashion",
@@ -388,7 +388,7 @@ const items = {
     {
       id: 21,
       title: "Hot Collectible Cards",
-      image: "/images/item/hot-cards-1.jpg",
+      image: "hot-collectible-cards.jpg",
       currentBid: 95,
       timeLeft: "2d 18h",
       category: "Trading Cards",
@@ -408,7 +408,7 @@ const items = {
     {
       id: 22,
       title: "Popular Comic Series",
-      image: "/images/item/popular-comic-1.jpg",
+      image: "popular-comic-series.jpg",
       currentBid: 140,
       timeLeft: "5d 2h",
       category: "Comics",
@@ -428,7 +428,7 @@ const items = {
     {
       id: 23,
       title: "Trending Music Equipment",
-      image: "/images/item/music-equipment-1.jpg",
+      image: "trending-music-equipment.jpg",
       currentBid: 320,
       timeLeft: "1d 20h",
       category: "Music, Movie & Cameras",
@@ -448,7 +448,7 @@ const items = {
     {
       id: 24,
       title: "Popular Car Accessory",
-      image: "/images/item/car-accessory-1.jpg",
+      image: "popular-car-accessory.jpg",
       currentBid: 480,
       timeLeft: "3d 16h",
       category: "Cars & Bikes",
@@ -470,7 +470,7 @@ const items = {
     {
       id: 25,
       title: "Ferrari - F430 - 2006",
-      image: "/images/item/ferrari-f430-1.jpg",
+      image: "ferrari-f430-2006.jpg",
       currentBid: 85000,
       timeLeft: "6d 14h",
       category: "Cars & Bikes",
@@ -523,7 +523,7 @@ const items = {
     {
       id: 26,
       title: "Harley Davidson Sportster 883 - 2018",
-      image: "/images/item/harley-sportster-1.jpg",
+      image: "harley-davidson-sportster-883-2018.jpg",
       currentBid: 12500,
       timeLeft: "4d 8h",
       category: "Cars & Bikes",
@@ -547,7 +547,7 @@ const items = {
     {
       id: 27,
       title: "BMW M3 E92 - 2011",
-      image: "/images/item/bmw-m3-e92-1.jpg",
+      image: "bmw-m3-e92-2011.jpg",
       currentBid: 35000,
       timeLeft: "5d 12h",
       category: "Cars & Bikes",
@@ -573,7 +573,7 @@ const items = {
     {
       id: 28,
       title: "Original Picasso Lithograph - Le Reve",
-      image: "/images/item/picasso-lithograph-1.jpg",
+      image: "original-picasso-lithograph-le-reve.jpg",
       currentBid: 15000,
       timeLeft: "7d 2h",
       category: "Art",
@@ -591,7 +591,7 @@ const items = {
     {
       id: 29,
       title: "Ming Dynasty Porcelain Vase",
-      image: "/images/item/ming-vase-1.jpg",
+      image: "ming-dynasty-porcelain-vase.jpg",
       currentBid: 28000,
       timeLeft: "3d 16h",
       category: "Asian & Tribal",
@@ -609,7 +609,7 @@ const items = {
     {
       id: 30,
       title: "Rolex Submariner Ref. 16610 - 1999",
-      image: "/images/item/rolex-submariner-1.jpg",
+      image: "rolex-submariner-16610-1999.jpg",
       currentBid: 8500,
       timeLeft: "2d 20h",
       category: "Watches",
@@ -629,7 +629,7 @@ const items = {
     {
       id: 31,
       title: "Hermès Birkin 35 - Togo Leather",
-      image: "/images/item/hermes-birkin-1.jpg",
+      image: "hermes-birkin-35-togo-leather.jpg",
       currentBid: 12000,
       timeLeft: "4d 6h",
       category: "Fashion",
@@ -647,7 +647,7 @@ const items = {
     {
       id: 32,
       title: "Chanel Classic Flap Bag - Medium",
-      image: "/images/item/chanel-flap-1.jpg",
+      image: "chanel-classic-flap-bag-medium.jpg",
       currentBid: 4500,
       timeLeft: "1d 14h",
       category: "Fashion",
@@ -667,7 +667,7 @@ const items = {
     {
       id: 33,
       title: "Nintendo Game & Watch - Zelda Edition",
-      image: "/images/item/nintendo-zelda-gamewatch-1.jpg",
+      image: "nintendo-game-and-watch-zelda-edition.jpg",
       currentBid: 120,
       timeLeft: "3d 4h",
       category: "Toys & Models",
@@ -685,7 +685,7 @@ const items = {
     {
       id: 34,
       title: "Apple iPhone 14 Pro Max - 1TB",
-      image: "/images/item/iphone14-promax-1.jpg",
+      image: "apple-iphone-14-pro-max-1tb.jpg",
       currentBid: 980,
       timeLeft: "2d 10h",
       category: "Electronics",
@@ -705,7 +705,7 @@ const items = {
     {
       id: 35,
       title: "Michael Jordan Signed Basketball",
-      image: "/images/item/jordan-basketball-1.jpg",
+      image: "michael-jordan-signed-basketball.jpg",
       currentBid: 1500,
       timeLeft: "5d 8h",
       category: "Sports",
@@ -723,7 +723,7 @@ const items = {
     {
       id: 36,
       title: "Vintage Golf Club Set - Wilson Staff",
-      image: "/images/item/wilson-golf-set-1.jpg",
+      image: "wilson-golf-set-1970s.jpg",
       currentBid: 320,
       timeLeft: "4d 18h",
       category: "Sports",

@@ -5,8 +5,8 @@ interface UseSearchBarReturn {
   suggestions: string[]
   showSuggestions: boolean
   selectedIndex: number
-  searchRef: React.RefObject<HTMLDivElement>
-  suggestionsRef: React.RefObject<HTMLUListElement>
+  searchRef: React.RefObject<HTMLDivElement | null>
+  suggestionsRef: React.RefObject<HTMLUListElement | null>
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleInputFocus: () => void
   handleSubmit: (e: React.FormEvent) => void
@@ -155,13 +155,13 @@ export const useSearchBar = (onSearch: (query: string) => void): UseSearchBarRet
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
-        setSelectedIndex(prev => 
+        setSelectedIndex((prev: number) => 
           prev < suggestions.length - 1 ? prev + 1 : prev
         )
         break
       case 'ArrowUp':
         e.preventDefault()
-        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1)
+        setSelectedIndex((prev: number) => prev > 0 ? prev - 1 : -1)
         break
       case 'Enter':
         if (selectedIndex >= 0) {

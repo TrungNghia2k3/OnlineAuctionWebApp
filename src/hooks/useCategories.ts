@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useState } from 'react'
-import categoryApi from '@/api/category'
-import { ICategory } from '@/models'
+import categoryService, { type Category } from '@/services/categoryService'
 
 interface UseCategoriesReturn {
-  categories: ICategory[]
+  categories: Category[]
   isLoading: boolean
   error: string | null
   fetchCategories: () => Promise<void>
-  getCategoryById: (id: number) => ICategory | undefined
-  getCategoriesByParentId: (parentId: number) => ICategory[]
+  getCategoryById: (id: string | number) => Category | undefined
+  getSpecialCategories: () => Category[]
+  getApiCategories: () => Category[]
   refreshCategories: () => Promise<void>
 }
 
 /**
- * Custom hook for category management
- * Follows SRP by handling only category-related logic
+ * Custom hook for category management with API integration
+ * Combines special categories (This week, For you, Trending) with API categories
  */
-export const useCategories = (): UseCategoriesReturn => {
-  const [categories, setCategories] = useState<ICategory[]>([])
+export const useCategories = (activeOnly: boolean = false): UseCategoriesReturn => {
+  const [categories, setCategories] = useState<Category[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -25,24 +25,35 @@ export const useCategories = (): UseCategoriesReturn => {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await categoryApi.getAllCategory()
-      setCategories(response.result || [])
+      const response = activeOnly 
+        ? await categoryService.getAllActiveCategories()
+        : await categoryService.getAllCategories()
+      setCategories(response)
     } catch (error) {
       console.error('Error fetching categories:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch categories'
       setError(errorMessage)
-      setCategories([])
+      // Fallback to special categories only
+      setCategories(categoryService.SPECIAL_CATEGORIES)
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [activeOnly])
 
-  const getCategoryById = useCallback((id: number): ICategory | undefined => {
+  const getCategoryById = useCallback((id: string | number): Category | undefined => {
     return categories.find(category => category.id === id)
   }, [categories])
 
-  const getCategoriesByParentId = useCallback((parentId: number): ICategory[] => {
-    return categories.filter(category => category.parentId === parentId)
+  const getSpecialCategories = useCallback((): Category[] => {
+    return categories.filter(category => 
+      typeof category.id === 'string' && category.id.includes('-')
+    )
+  }, [categories])
+
+  const getApiCategories = useCallback((): Category[] => {
+    return categories.filter(category => 
+      typeof category.id === 'number'
+    )
   }, [categories])
 
   const refreshCategories = useCallback(async () => {
@@ -59,7 +70,8 @@ export const useCategories = (): UseCategoriesReturn => {
     error,
     fetchCategories,
     getCategoryById,
-    getCategoriesByParentId,
+    getSpecialCategories,
+    getApiCategories,
     refreshCategories
   }
 }

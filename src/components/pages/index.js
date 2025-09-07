@@ -6,6 +6,8 @@ export {default as CategoryPage} from './CategoryPage';
 export {default as ForgotPasswordPage} from './ForgotPasswordPage';
 export {default as HomePage} from './HomePage';
 export {default as LoginPage} from './LoginPage';
+export {default as ProductSuggestionDebugPage} from './ProductSuggestionDebugPage';
+export {default as ProductSuggestionTest} from './ProductSuggestionTest';
 export {default as ProfilePage} from './ProfilePage';
 export {default as RegisterPage} from './RegisterPage';
 export {default as SearchResultsPage} from './SearchResultsPage';

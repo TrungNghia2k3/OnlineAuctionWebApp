@@ -1,8 +1,8 @@
 import Hero from '../../../Hero';
 import IconicBrands from '../../../IconicBrands';
-import { AuctionCard, Slides } from '@/components/molecules';
+import { AuctionCard, ExpertCard, Slides } from '@/components/molecules';
 import { items } from '@/data';
-import { useNavigation } from '@/hooks';
+import { useNavigation, useExperts } from '@/hooks';
 import './ThisWeek.scss';
 
 /**
@@ -11,9 +11,15 @@ import './ThisWeek.scss';
  */
 const ThisWeek = () => {
     const { navigateToBidDetail } = useNavigation();
+    const { experts, isLoading: expertsLoading } = useExperts(true); // Get active experts
 
     const handleAuctionClick = (item) => {
         navigateToBidDetail(item.id);
+    };
+
+    const handleExpertClick = (expert) => {
+        // You can add navigation to expert detail page here
+        console.log('Expert clicked:', expert);
     };
 
     const thisWeekItems = items["This week"] || [];
@@ -47,6 +53,19 @@ const ThisWeek = () => {
 
                 {/* Iconic brands */}
                 <IconicBrands />
+
+                {/* Experts Slides - Using API data */}
+                {!expertsLoading && experts.length > 0 && (
+                    <Slides
+                        items={experts}
+                        CardComponent={ExpertCard}
+                        cardProps={{ onClick: handleExpertClick }}
+                        title="Top Experts"
+                        className="this-week__expert-slides"
+                        slidesPerView={4}
+                    />
+                )}
+
             </div>
         </div>
     );

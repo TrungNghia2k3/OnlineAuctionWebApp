@@ -2,6 +2,7 @@ import { AuthProvider } from './AuthProvider'
 import { CategoriesProvider } from './CategoriesProvider'
 import { LoadingProvider } from './LoadingProvider'
 import { ModalProvider } from './ModalProvider'
+import { ReactQueryProvider } from './ReactQueryProvider'
 
 /**
  * Combined Provider Component
@@ -10,14 +11,16 @@ import { ModalProvider } from './ModalProvider'
  */
 export const AppProviders = ({ children }) => {
   return (
-    <AuthProvider>
-      <CategoriesProvider>
-        <LoadingProvider>
-          <ModalProvider>
-            {children}
-          </ModalProvider>
-        </LoadingProvider>
-      </CategoriesProvider>
-    </AuthProvider>
+    <ReactQueryProvider>
+      <AuthProvider>
+        <CategoriesProvider>
+          <LoadingProvider>
+            <ModalProvider>
+              {children}
+            </ModalProvider>
+          </LoadingProvider>
+        </CategoriesProvider>
+      </AuthProvider>
+    </ReactQueryProvider>
   )
 }

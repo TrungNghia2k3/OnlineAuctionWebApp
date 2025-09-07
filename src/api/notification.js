@@ -1,36 +1,21 @@
-import {API_URL} from '@/common'
+import { authApiClient } from '@/config/axios';
 
 const notification = {
-  getAllNotificationsByIdUser: async (token) => {
-    const response = await fetch(`${API_URL}/notification`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to found notification')
+  getAllNotificationsByIdUser: async () => {
+    try {
+      const response = await authApiClient.get('/notification');
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to found notification');
     }
   },
 
-  updateNotification: async (token) => {
-    const response = await fetch(`${API_URL}/notification/update`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content
-    } else {
-      throw new Error('Failed to found notification')
+  updateNotification: async () => {
+    try {
+      const response = await authApiClient.put('/notification/update');
+      return response.data.result;
+    } catch (error) {
+      throw new Error('Failed to found notification');
     }
   },
 }

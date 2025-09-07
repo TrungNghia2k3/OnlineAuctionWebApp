@@ -20,6 +20,7 @@ const ProfilePage = lazy(() => import('../components/pages/ProfilePage'))
 const CategoryManagementPage = lazy(() => import('../components/pages/CategoryManagementPage'))
 const UserManagementPage = lazy(() => import('../components/pages/UserManagementPage'))
 const AuctionManagementPage = lazy(() => import('../components/pages/AuctionManagementPage'))
+const ProductSuggestionTest = lazy(() => import('../components/pages/ProductSuggestionTest'))
 
 /**
  * Route definition interface
@@ -196,6 +197,22 @@ export const routeDefinitions = [
       showInNavigation: true,
       navOrder: 22,
       adminOnly: true
+    }
+  },
+  
+  // Development/Testing routes
+  {
+    path: '/test-suggestions',
+    element: <ProductSuggestionTest />,
+    type: ROUTE_TYPES.PUBLIC,
+    roles: [USER_ROLES.GUEST, USER_ROLES.USER, USER_ROLES.ADMIN],
+    title: 'Product Suggestion Test - Online Auction',
+    description: 'Test product suggestion functionality',
+    requiresAuth: false,
+    meta: {
+      showInNavigation: process.env.NODE_ENV === 'development',
+      navOrder: 99,
+      isDevelopmentOnly: true
     }
   }
 ]

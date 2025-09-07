@@ -17,3 +17,6 @@ export {default as ApiItemsList} from './ApiItemsList'
 export {default as RealtimeBidding} from './RealtimeBidding'
 export {default as Hero} from './Hero'
 export {default as IconicBrands} from './IconicBrands'
+
+// Suggestions with caching
+export {default as SuggestedProducts} from './SuggestedProducts'

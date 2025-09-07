@@ -144,6 +144,7 @@ const Hero = () => {
                                     console.log('Clicked item:', clickedItem);
                                     // Handle item click navigation
                                 }}
+                                variant="simple"
                             />
                         </div>
                     ))}

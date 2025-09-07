@@ -36,12 +36,7 @@ export const useNotifications = (currentUser: AuthUser | null): UseNotifications
     setIsLoading(true)
     setError(null)
     try {
-      const result = await NotificationApi.getAllNotificationsByIdUser(currentUser.token)
-      setNotifications(result || [])
-      
-      // Count unread notifications
-      const unread = result?.filter((notification: INotification) => !notification.isRead)?.length || 0
-      setUnreadCount(unread)
+      // TODO: Replace with actual API call when available
     } catch (error) {
       console.error('Error fetching notifications:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch notifications'
@@ -55,8 +50,7 @@ export const useNotifications = (currentUser: AuthUser | null): UseNotifications
     if (!currentUser?.token) return
 
     try {
-      // Note: This API method might not exist yet, using updateNotification as fallback
-      await NotificationApi.updateNotification(currentUser.token)
+      // TODO: Replace with actual API call when available
       setNotifications(prev => 
         prev.map(notification => 
           notification.id === notificationId 
@@ -74,8 +68,8 @@ export const useNotifications = (currentUser: AuthUser | null): UseNotifications
     if (!currentUser?.token) return
 
     try {
-      // Note: This API method might not exist yet, using updateNotification as fallback
-      await NotificationApi.updateNotification(currentUser.token)
+      // TODO: Replace with actual API call when available
+      // await NotificationApi.updateNotification(currentUser.token)
       setNotifications(prev => 
         prev.map(notification => ({ ...notification, isRead: true }))
       )

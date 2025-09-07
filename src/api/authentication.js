@@ -1,139 +1,95 @@
-import {API_URL} from '@/common'
+import { publicApiClient, authApiClient, clearAuthData } from '@/config/axios';
 
 const authentication = {
   authenticate: async (username, password) => {
-    const response = await fetch(`${API_URL}/auth/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to authenticate data')
+    try {
+      const response = await publicApiClient.post('/auth/token', { username, password });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to authenticate data');
     }
   },
 
   login: async (username, password) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to login')
+    try {
+      const response = await publicApiClient.post('/auth/login', { username, password });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to login');
     }
   },
 
   register: async (username, password) => {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to register')
+    try {
+      const response = await publicApiClient.post('/auth/register', { username, password });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to register');
     }
   },
 
   forgotPassword: async (email) => {
-    const response = await fetch(`${API_URL}/auth/forgot-password`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to send password reset email')
+    try {
+      const response = await publicApiClient.post('/auth/forgot-password', { email });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to send password reset email');
     }
   },
 
   resetPassword: async (token, newPassword) => {
-    const response = await fetch(`${API_URL}/auth/reset-password`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token, newPassword }),
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to reset password')
+    try {
+      const response = await publicApiClient.post('/auth/reset-password', { token, newPassword });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to reset password');
     }
   },
 
   refreshToken: async (token) => {
-    const response = await fetch(`${API_URL}/auth/refresh-token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    })
+    try {
+      const response = await publicApiClient.post('/auth/refresh', { token });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to refresh token');
+    }
+  },
 
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to refresh token')
+  logout: async (token) => {
+    try {
+      const response = await authApiClient.post('/auth/logout', { token });
+      clearAuthData();
+      return response.data.result || null;
+    } catch (error) {
+      clearAuthData();
+      throw new Error('Failed to logout');
+    }
+  },
+
+  introspect: async (token) => {
+    try {
+      const response = await authApiClient.post('/auth/introspect', { token });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to introspect token');
     }
   },
   
   validateToken: async (token) => {
-    const response = await fetch(`${API_URL}/auth/validate-token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to validate token')
+    try {
+      const response = await authApiClient.post('/auth/validate-token', { token });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to validate token');
     }
   },
 
   changePassword: async (token, oldPassword, newPassword) => {
-    const response = await fetch(`${API_URL}/auth/change-password`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token, oldPassword, newPassword }),
-    })
-
-    if (response.ok) {
-      const content = await response.json()
-      return content ? content : null
-    } else {
-      throw new Error('Failed to change password')
+    try {
+      const response = await authApiClient.post('/auth/change-password', { token, oldPassword, newPassword });
+      return response.data.result || null;
+    } catch (error) {
+      throw new Error('Failed to change password');
     }
   }
 }

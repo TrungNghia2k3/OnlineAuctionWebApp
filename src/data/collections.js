@@ -6,7 +6,7 @@ const collections = [
         items: [{
             id: 1,
             title: "Vintage Art Deco Vase",
-            image: "/images/item/nike-lace-up-shoes.jpg", // Fixed path with leading slash
+            image: "vintage-art-deco-vase.jpg",
             currentBid: 220,
             timeLeft: "2d 14h",
             category: "Art",
@@ -22,7 +22,7 @@ const collections = [
         {
             id: 2,
             title: "Swiss Mechanical Watch",
-            image: null,
+            image: "swiss-mechanical-watch.jpg",
             currentBid: 450,
             timeLeft: "1d 8h",
             category: "Watches",
@@ -38,7 +38,7 @@ const collections = [
         {
             id: 3,
             title: "Classic Motorcycle Helmet",
-            image: null,
+            image: "classic-motorcycle-helmet.jpg",
             currentBid: 180,
             timeLeft: "3d 2h",
             category: "Cars & Bikes",
@@ -53,8 +53,8 @@ const collections = [
         },
         {
             id: 4,
-            title: "Rare Comic Book Collection",
-            image: "/images/item/comic-collection-1.jpg",
+            title: "Rare Comic Book",
+            image: "rare-comic-book.jpg",
             currentBid: 320,
             timeLeft: "4d 12h",
             category: "Comics",
@@ -87,7 +87,7 @@ const collections = [
         items: [{
             id: 5,
             title: "Antique Silver Jewelry",
-            image: "/images/item/silver-jewelry-1.jpg",
+            image: "antique-silver-jewelry.jpg",
             currentBid: 280,
             timeLeft: "2d 6h",
             category: "Jewelry",
@@ -106,7 +106,7 @@ const collections = [
         {
             id: 6,
             title: "Designer Fashion Bag",
-            image: "/images/item/designer-bag-1.jpg",
+            image: "designer-fashion-bag.jpg",
             currentBid: 150,
             timeLeft: "1d 18h",
             category: "Fashion",
@@ -125,7 +125,7 @@ const collections = [
         {
             id: 7,
             title: "Vintage Wine Collection",
-            image: "/images/item/wine-collection-1.jpg",
+            image: "vintage-wine-collection.jpg",
             currentBid: 380,
             timeLeft: "5d 4h",
             category: "Wine, Whisky & Spirits",
@@ -145,7 +145,7 @@ const collections = [
         {
             id: 8,
             title: "Asian Art Sculpture",
-            image: "/images/item/asian-sculpture-1.jpg",
+            image: "asian-art-sculpture.jpg",
             currentBid: 520,
             timeLeft: "3d 20h",
             category: "Asian & Tribal",
@@ -182,7 +182,7 @@ const collections = [
             {
                 id: 9,
                 title: "Emerald Cut Diamond Ring",
-                image: "/images/item/emerald-cut-ring-1.jpg",
+                image: "emerald-cut-diamond-ring.jpg",
                 currentBid: 12000,
                 timeLeft: "2d 12h",
                 category: "Jewelry",
@@ -200,7 +200,7 @@ const collections = [
             {
                 id: 10,
                 title: "Antique Gold Brooch",
-                image: "/images/item/gold-brooch-1.jpg",
+                image: "antique-gold-brooch.jpg",
                 currentBid: 4500,
                 timeLeft: "3d 4h",
                 category: "Jewelry",
@@ -218,7 +218,7 @@ const collections = [
             {
                 id: 11,
                 title: "Sapphire and Diamond Earrings",
-                image: "/images/item/sapphire-earrings-1.jpg",
+                image: "sapphire-diamond-earrings.jpg",
                 currentBid: 7500,
                 timeLeft: "4d 8h",
                 category: "Jewelry",
@@ -236,7 +236,7 @@ const collections = [
             {
                 id: 12,
                 title: "Vintage Pearl Necklace",
-                image: "/images/item/pearl-necklace-1.jpg",
+                image: "vintage-pearl-necklace.jpg",
                 currentBid: 3200,
                 timeLeft: "1d 10h",
                 category: "Jewelry",
@@ -270,7 +270,7 @@ const collections = [
             {
                 id: 13,
                 title: "Japanese Tea Set",
-                image: "/images/item/japanese-tea-set.jpg",
+                image: "japanese-tea-set.jpg",
                 currentBid: 1500,
                 timeLeft: "2d 5h",
                 category: "Home & Garden",
@@ -288,7 +288,7 @@ const collections = [
             {
                 id: 14,
                 title: "Bamboo Sushi Rolling Mat",
-                image: "/images/item/sushi-mat.jpg",
+                image: "bamboo-sushi-rolling-mat.jpg",
                 currentBid: 25,
                 timeLeft: "1d 12h",
                 category: "Home & Garden",
@@ -306,7 +306,7 @@ const collections = [
             {
                 id: 15,
                 title: "Tatami Floor Mat",
-                image: "/images/item/tatami-mat.jpg",
+                image: "tatami-floor-mat.jpg",
                 currentBid: 300,
                 timeLeft: "3d 8h",
                 category: "Home & Garden",
@@ -324,7 +324,7 @@ const collections = [
             {
                 id: 16,
                 title: "Ceramic Sake Set",
-                image: "/images/item/sake-set.jpg",
+                image: "ceramic-sake-set.jpg",
                 currentBid: 80,
                 timeLeft: "2d 2h",
                 category: "Home & Garden",
@@ -358,7 +358,7 @@ const collections = [
             {
                 id: 17,
                 title: "Abstract Landscape Painting",
-                image: "/images/item/abstract-landscape.jpg",
+                image: "abstract-landscape.jpg",
                 currentBid: 500,
                 timeLeft: "2d 5h",
                 category: "Art",
@@ -376,7 +376,7 @@ const collections = [
             {
                 id: 18,
                 title: "Vintage Poster - Tokyo",
-                image: "/images/item/vintage-poster-tokyo.jpg",
+                image: "vintage-poster-tokyo.jpg",
                 currentBid: 150,
                 timeLeft: "1d 12h",
                 category: "Art",
@@ -394,7 +394,7 @@ const collections = [
             {
                 id: 19,
                 title: "Ceramic Wall Art",
-                image: "/images/item/ceramic-wall-art.jpg",
+                image: "ceramic-wall-art.jpg",
                 currentBid: 300,
                 timeLeft: "3d 8h",
                 category: "Art",
@@ -412,7 +412,7 @@ const collections = [
             {
                 id: 20,
                 title: "Japanese Calligraphy Scroll",
-                image: "/images/item/calligraphy-scroll.jpg",
+                image: "japanese-calligraphy-scroll.jpg",
                 currentBid: 80,
                 timeLeft: "2d 2h",
                 category: "Art",
@@ -446,7 +446,7 @@ const collections = [
             {
                 id: 21,
                 title: "Luxury Watch - Model A",
-                image: "/images/item/luxury-watch-a.jpg",
+                image: "luxury-watch-model-a.jpg",
                 currentBid: 1500,
                 timeLeft: "5d 12h",
                 category: "Watches",
@@ -464,7 +464,7 @@ const collections = [
             {
                 id: 22,
                 title: "Vintage Watch - Model B",
-                image: "/images/item/vintage-watch-b.jpg",
+                image: "vintage-watch-model-b.jpg",
                 currentBid: 800,
                 timeLeft: "3d 5h",
                 category: "Watches",
@@ -482,7 +482,7 @@ const collections = [
             {
                 id: 23,
                 title: "Smart Watch - Model C",
-                image: "/images/item/smart-watch-c.jpg",
+                image: "smart-watch-model-c.jpg",
                 currentBid: 300,
                 timeLeft: "2d 8h",
                 category: "Watches",
@@ -500,7 +500,7 @@ const collections = [
             {
                 id: 24,
                 title: "Diving Watch - Model D",
-                image: "/images/item/diving-watch-d.jpg",
+                image: "diving-watch-model-d.jpg",
                 currentBid: 600,
                 timeLeft: "4d 2h",
                 category: "Watches",
